@@ -57,17 +57,23 @@ def getallgroups(request, userid):
 
     return JsonResponse(groups, safe=False)
 
-def add_friend():
 
-    return
+def add_friend():
+    with connection.cursor() as cursor:
+        cursor.execute("INSERT INTO GROUPS (group_name,users) VALUES(%s, %s)", (groupname, userid))
+        groupid=cursor.execute("SELECT group_id from GROUPS where group_name='"+groupname+"'")
+        cursor.execute("UPDATE UserProfile SET groups= '{0}' where user_id='{1}'".format(groupid,userid))
+    return HttpResponse("Successfully created "+groupname)
+
 def pay_friend():
     return
 def pay_in_group():
     return
 def new_group(request, userid, groupname):
     with connection.cursor() as cursor:
-        cursor.execute("INSERT INTO GROUPS VALUES(?, ?)", (groupname, userid))
-        cursor.execute()
-    return
+        cursor.execute("INSERT INTO GROUPS (group_name,users) VALUES(%s, %s)", (groupname, userid))
+        groupid=cursor.execute("SELECT group_id from GROUPS where group_name='"+groupname+"'")
+        cursor.execute("UPDATE UserProfile SET groups= '{0}' where user_id='{1}'".format(groupid,userid))
+    return HttpResponse("Successfully created "+groupname)
 def add_friend_in_group():
     return
