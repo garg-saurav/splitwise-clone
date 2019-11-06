@@ -8,6 +8,7 @@ import { FriendTabComponent } from './friend-tab/friend-tab.component';
 import { GroupTabComponent } from './group-tab/group-tab.component';
 import { ActivityTabComponent } from './activity-tab/activity-tab.component';
 import { SignupComponent } from './signup/signup.component';
+import { LoginformComponent } from './loginform/loginform.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { SignupComponent } from './signup/signup.component';
     FriendTabComponent,
     GroupTabComponent,
     ActivityTabComponent,
-    SignupComponent
+    SignupComponent,
+    LoginformComponent
   ],
   imports: [
     BrowserModule,
