@@ -7,18 +7,18 @@ import { ActivityTabComponent } from './activity-tab/activity-tab.component';
 import { SignupComponent } from './signup/signup.component';
 import { LoginformComponent } from './loginform/loginform.component';
 const routes: Routes = [
-  {
-<<<<<<< HEAD
-  path:'',
+  { path:'',redirectTo: '/login', pathMatch:'full'},
+  { path:'login',component:LoginformComponent},
+  { path:'signup',component:LoginformComponent},
+  { path :'dashboard',component:DashboardComponent},
+  { path:'friend-tab',component:FriendTabComponent},
+  { path:'group-tab',component:GroupTabComponent},
+  { path:'activity-tab',component:ActivityTabComponent}
   // path:'signup',
   // path:'dashboard/friends'
   //   path:'dashboard'
 
-  component: DashboardComponent
-=======
-  path:'', component:LoginformComponent
->>>>>>> a790c5fea0830339e34b7b434368d469e70bea40
-  }
+ 
 ];
 
 @NgModule({
