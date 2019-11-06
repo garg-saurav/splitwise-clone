@@ -6,7 +6,7 @@ from django.core.validators import int_list_validator
 
 
 class UserProfile(models.Model):
-    user_id = models.AutoField(primary_key=True)
+    user_name = models.CharField(primary_key=True,max_length=30)
     name = models.CharField(max_length=30)
     profile_pic = models.ImageField(default='default.png', blank=True)
     password = models.CharField(max_length=30)
