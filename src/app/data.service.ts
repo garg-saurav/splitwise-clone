@@ -8,7 +8,8 @@ export class DataService {
 
   _URL = 'http://localhost:8000/account/login/';
   _URL_reg = 'http://127.0.0.1:8000/account/signup/';
-  my_id:any;
+  _URL_user = 'http://127.0.0.1:8000/user/';
+  my_username:any;
   profile:any;
   friends:any;
   groups:any;
@@ -18,11 +19,12 @@ export class DataService {
   ) { }
 
   get_profile_data(){
-    return {'Name':'Rajat Jain','User_Name':'Rajjo'}
-    // this.http.get(this._URL_profile)
-    //     .subscribe(data => {
-    //       this.profile = data;
-    //     })
+    // return {'Name':'Rajat Jain','User_Name':'Rajjo'}
+    this.http.get(this._URL_user+this.my_username)
+        .subscribe(data => {
+          console.log("Here you are!!",data)
+          this.profile = data;
+        })
   }
 
 
@@ -48,8 +50,8 @@ export class DataService {
       })
     })
     .subscribe(data =>{
-          console.log(data);
-          this.my_id=data;
+          // console.log(entry.userid);
+          this.my_username=entry.userid;
     }
     )
   }

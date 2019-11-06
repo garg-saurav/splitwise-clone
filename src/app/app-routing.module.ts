@@ -9,7 +9,7 @@ import { LoginformComponent } from './loginform/loginform.component';
 const routes: Routes = [
   { path:'',redirectTo: '/login', pathMatch:'full'},
   { path:'login',component:LoginformComponent},
-  { path:'signup',component:LoginformComponent},
+  { path:'signup',component:SignupComponent},
   { path :'dashboard',component:DashboardComponent},
   { path:'friend-tab',component:FriendTabComponent},
   { path:'group-tab',component:GroupTabComponent},
