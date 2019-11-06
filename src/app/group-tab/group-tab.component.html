@@ -1,8 +1,8 @@
 <div class="sidebar">
-    <a href="#home">Home</a>
-    <a href="#friends">Friends</a>
-    <a class="active" href="#Group">Group</a>
-    <a href="#Activity">Activity</a>
+    <a routerLink="/dashboard">Home</a>
+    <a routerLink="/friend-tab">Friends</a>
+    <a class="active" routerLink="/group-tab">Group</a>
+    <a routerLink="/activity-tab">Activity</a>
   </div>
   <div class="content">
         <table id="customers">
@@ -10,15 +10,15 @@
                 <th>Group Name</th>
                 <th>Amount you owe to the group</th>
                 <th>Amount the group owes to you</th>
-                <th></th>
+                <th>Members</th>
                 <th></th>
                 <th></th>
             </tr>
             <tr>
-                <td>Trip</td>
-                <td>5000</td>
-                <td>3000</td>
-                <td><button class="button">Change amounts</button></td>
+                <td>{{group.group}}</td>
+                <td>{{group.lent}}</td>
+                <td>{{group.borrowed}}</td>
+                <td>{{group.members}}</td>
                 <td><button class="button">Settle accounts</button></td>
                 <td><button class="button">Leave Group</button></td>
             </tr>

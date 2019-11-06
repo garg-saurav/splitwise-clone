@@ -1,8 +1,8 @@
 <div class="sidebar">
-    <a href="#home">Home</a>
-    <a class="active" href="#friends">Friends</a>
-    <a href="#Group">Group</a>
-    <a href="#Activity">Activity</a>
+    <a routerLink="/dashboard">Home</a>
+    <a class="active" routerLink="/friend-tab">Friends</a>
+    <a routerLink="/group-tab">Group</a>
+    <a routerLink="/activity-tab">Activity</a>
   </div>
   <div class="content">
    <table id="customers">
@@ -13,15 +13,19 @@
            <th></th>
            <th></th>
        </tr>
+       
        <tr>
-           
+        <!-- {% for g in friend %}   -->
+        
            <td>{{friend.friend}}</td>
            <td>{{friend.borrowed}}</td>
            <td>{{friend.lent}}</td>
            <td><button class="button">Change amounts</button></td>
            <td><button class="button">Settle accounts</button></td>
-       </tr>
+        <!-- {% endfor %} -->
+        </tr>
+       
    </table>
    <br>
-   <button class="button">Add Friend</button>
+   <button class="button" >Add Friend</button>
 </div>

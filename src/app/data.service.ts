@@ -36,12 +36,13 @@ export class DataService {
   }
 
 
-  // get_groups_data(){
-  //   this.http.get(this._URL_groups)
-  //       .subscribe(data => {
-  //         this.profile = data;
-  //       })
-  // }
+  get_groups_data(){
+    return {"group":'Vicerant',"lent":'10 Outlabs',"borrowed":'1 Project'}
+    // this.http.get(this._URL_groups)
+    //     .subscribe(data => {
+    //       this.profile = data;
+    //     })
+  }
 
   post_data(entry:any){
     this.http.post(this._URL,entry,{
