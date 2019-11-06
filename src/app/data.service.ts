@@ -7,6 +7,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class DataService {
 
   _URL = 'http://localhost:8000/account/login/';
+  _URL_reg = 'http://127.0.0.1:8000/account/signup/';
   my_id:any;
   profile:any;
   friends:any;
@@ -53,6 +54,19 @@ export class DataService {
     .subscribe(data =>{
           console.log(data);
           this.my_id=data;
+    }
+    )
+  }
+
+  post_data_register_user(entry:any){
+    this.http.post(this._URL_reg,entry,{
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    })
+    .subscribe(data =>{
+          console.log(data);
+          // this.my_id=data;
     }
     )
   }

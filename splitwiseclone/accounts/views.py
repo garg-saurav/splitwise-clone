@@ -11,22 +11,23 @@ from .serializers import userserializer
 from splitapp.models import UserProfile
 from django.db import connection
 
-
-def signup_view(request):
-    if request.method=='POST':
-        data_received=json.loads(request.body.decode('utf-8'))
-        return HttpResponse(data_received)
-    else:
-        return HttpResponse('It was a get request')
-
 class login_view(APIView):
   def post(self,request, format=None):
     users = UserProfile.objects.all()
-    print(request.data)
+    # print(request.data)
     with connection.cursor() as c:
       c.execute("select password from UserProfile where name = %s",[request.data['userid']])
       res=c.fetchone()
-    print(res)
-    serializer = userserializer(users, many=True)
-    return JsonResponse(request.data, safe=False)
+    if(res[0]==request.data['password']):
+      return JsonResponse("Verified", safe=False)
+    else:
+      return JsonResponse("Failed", safe=False)
 
+class signup_view(APIView):
+  def post(self,request, format=None):
+    users = UserProfile.objects.all()
+    print("Asdas")
+    print(request.data)
+    with connection.cursor() as c:
+      c.execute("insert into UserProfile (user_name, name, password) values(%s,%s,%s)",(request.data['userid'],request.data['name'],request.data['password']))
+    return JsonResponse("Successfully added", safe=False)

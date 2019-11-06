@@ -11,7 +11,7 @@ import { DataService } from '../data.service';
 export class LoginformComponent {
 
   new_entry:any;
-
+  response:any;
   constructor(
     private http:HttpClient,
     private dataService:DataService
@@ -22,9 +22,12 @@ export class LoginformComponent {
   onSubmit() {
     console.log(this.data);
     this.new_entry=this.data;
-    this.dataService.post_data(this.new_entry);
+    this.response=this.dataService.post_data(this.new_entry);
+    if(this.response=="Failed"){
+      console.log("Acha!");
+    }
+   
   }
-
   // ngOninit(){
   //   this.dataService.post_data(this.new_entry);
   // }
