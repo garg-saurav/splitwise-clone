@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.contrib import admin
-from django.urls import include
+from django.conf.urls import include
 
 from . import views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -15,9 +15,6 @@ urlpatterns = [
     url(r'^friends/(?P<userid>[\w-]+)/$',views.getfriendlist),
     url(r'^groups/(?P<userid>[\w-]+)/$',views.getallgroups),
 ]
-
-#
-#
 
 urlpatterns += staticfiles_urlpatterns()
 

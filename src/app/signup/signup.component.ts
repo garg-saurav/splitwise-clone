@@ -14,7 +14,7 @@ export class SignupComponent {
 
   submitted = false;
 
-  onSubmit() { console.log(this.model);this.submitted = true; }
+  onSubmit() { console.log(this.model); }
 
   newSignup() {
     this.model = new Signup('','', '');

@@ -18,6 +18,8 @@ class UserProfile(models.Model):
     class Meta:
         db_table = 'UserProfile'
 
+
+
 class Group(models.Model):
     group_id = models.AutoField(primary_key=True)
     group_name = models.CharField(max_length=30)

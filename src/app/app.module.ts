@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {FormsModule} from '@angular/forms';
+// import {FormsModule} from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -8,6 +8,9 @@ import { FriendTabComponent } from './friend-tab/friend-tab.component';
 import { GroupTabComponent } from './group-tab/group-tab.component';
 import { ActivityTabComponent } from './activity-tab/activity-tab.component';
 import { SignupComponent } from './signup/signup.component';
+import { LoginformComponent } from './loginform/loginform.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -16,12 +19,15 @@ import { SignupComponent } from './signup/signup.component';
     FriendTabComponent,
     GroupTabComponent,
     ActivityTabComponent,
-    SignupComponent
+    SignupComponent,
+    LoginformComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
