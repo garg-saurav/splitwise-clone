@@ -8,7 +8,11 @@ import { SignupComponent } from './signup/signup.component';
 const routes: Routes = [
   {
   path:'',
-  component: SignupComponent
+  // path:'signup',
+  // path:'dashboard/friends'
+  //   path:'dashboard'
+
+  component: DashboardComponent
   }
 ];
 

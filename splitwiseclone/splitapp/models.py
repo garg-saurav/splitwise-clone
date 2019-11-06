@@ -15,7 +15,8 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.name
-
+    class Meta:
+        db_table = 'UserProfile'
 
 class Group(models.Model):
     group_id = models.AutoField(primary_key=True)
@@ -23,8 +24,9 @@ class Group(models.Model):
     users = models.CharField(validators=[int_list_validator],max_length=1000, blank=True)
 
     def __str__(self):
-        return self.name
-
+        return self.group_name
+    class Meta:
+        db_table = 'Groups'
 
 class Transaction(models.Model):
     transaction_id = models.AutoField(primary_key=True)
@@ -35,5 +37,8 @@ class Transaction(models.Model):
     date_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.date_time
+        return str(self.date_time)
+
+    class Meta:
+        db_table = 'trans'
 

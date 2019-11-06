@@ -11,7 +11,9 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$',views.home),
     url(r'^user/(?P<userid>[\w-]+)/$',views.user_detail),
-    url(r'^account/',include('accounts.urls'))
+    url(r'^account/',include('accounts.urls')),
+    url(r'^friends/(?P<userid>[\w-]+)/$',views.getfriendlist),
+    url(r'^groups/(?P<userid>[\w-]+)/$',views.getallgroups),
 ]
 
 #
