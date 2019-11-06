@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.contrib import admin
-from django.urls import include
+from django.conf.urls import include
 
 from . import views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -13,9 +13,6 @@ urlpatterns = [
     url(r'^user/(?P<userid>[\w-]+)/$',views.user_detail),
     url(r'^account/',include('accounts.urls'))
 ]
-
-#
-#
 
 urlpatterns += staticfiles_urlpatterns()
 

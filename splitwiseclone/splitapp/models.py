@@ -17,6 +17,8 @@ class UserProfile(models.Model):
         return self.name
 
 
+
+
 class Group(models.Model):
     group_id = models.AutoField(primary_key=True)
     group_name = models.CharField(max_length=30)
