@@ -15,9 +15,9 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.name
+
     class Meta:
         db_table = 'UserProfile'
-
 
 
 class Group(models.Model):
@@ -27,8 +27,10 @@ class Group(models.Model):
 
     def __str__(self):
         return self.group_name
+
     class Meta:
         db_table = 'Groups'
+
 
 class Transaction(models.Model):
     transaction_id = models.AutoField(primary_key=True)

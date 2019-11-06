@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^account/',include('accounts.urls')),
     url(r'^friends/(?P<userid>[\w-]+)/$',views.getfriendlist),
     url(r'^groups/(?P<userid>[\w-]+)/$',views.getallgroups),
+    url(r'^creategroup/(?P<userid>[\w-]+)/(?P<groupname>[\w-]+)/$',views.new_group)
 ]
 
 urlpatterns += staticfiles_urlpatterns()

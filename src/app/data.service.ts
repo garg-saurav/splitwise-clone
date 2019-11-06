@@ -16,12 +16,13 @@ export class DataService {
     private http:HttpClient
   ) { }
 
-  // get_profile_data(){
-  //   this.http.get(this._URL_profile)
-  //       .subscribe(data => {
-  //         this.profile = data;
-  //       })
-  // }
+  get_profile_data(){
+    return {'Name':'Rajat Jain','User_Name':'Rajjo'}
+    // this.http.get(this._URL_profile)
+    //     .subscribe(data => {
+    //       this.profile = data;
+    //     })
+  }
 
 
   // get_friends_data(){
