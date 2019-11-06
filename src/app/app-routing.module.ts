@@ -8,7 +8,7 @@ import { SignupComponent } from './signup/signup.component';
 import { LoginformComponent } from './loginform/loginform.component';
 const routes: Routes = [
   {
-  path:'', component:DashboardComponent
+  path:'', component:FriendTabComponent
   }
 ];
 

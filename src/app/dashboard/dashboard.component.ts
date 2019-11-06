@@ -6,16 +6,16 @@ import { DataService } from '../data.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  ngOnInit(): void {
-    throw new Error("Method not implemented.");
-  }
+  
+  
   user:any;
   constructor(private dataService:DataService) { 
     
   }
 
-  ngOninit(){
-    this.dataService.get_profile_data();
+  ngOnInit(){
+    this.user=this.dataService.get_profile_data();
+    console.log(this.user.name,this.user.uname);
   }
 
 }

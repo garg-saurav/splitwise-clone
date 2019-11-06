@@ -17,7 +17,7 @@ export class DataService {
   ) { }
 
   get_profile_data(){
-    return {'Name':'Rajat Jain','User_Name':'Rajjo'}
+    return {"name":'Rajat Jain',"uname":'Rajjo',"imgurl":'../../assets/img1.jpg'};
     // this.http.get(this._URL_profile)
     //     .subscribe(data => {
     //       this.profile = data;
@@ -25,12 +25,15 @@ export class DataService {
   }
 
 
-  // get_friends_data(){
+  get_friends_data(){
+    return {"friend":'Saurav Garg',"lent":'$100',"borrowed":'$500'}
+      // ,{"friend":'Gaurav Garg',"lent":'$100',"borrowed":'$500'}
+    //]
   //   this.http.get(this._URL_friends)
   //       .subscribe(data => {
   //         this.profile = data;
   //       })
-  // }
+  }
 
 
   // get_groups_data(){
