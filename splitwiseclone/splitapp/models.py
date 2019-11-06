@@ -5,26 +5,35 @@ from django.db import models
 from django.core.validators import int_list_validator
 
 
-class UserProfiles(models.Model):
+class UserProfile(models.Model):
     user_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=30)
-    profile_pic = models.CharField(max_length=100)
+    profile_pic = models.ImageField(default='default.png', blank=True)
     password = models.CharField(max_length=30)
-    groups = models.CharField(validators=[int_list_validator], max_length=1000)
-    friends = models.CharField(validators=[int_list_validator], max_length=1000)
+    groups = models.CharField(validators=[int_list_validator], max_length=1000, blank=True)
+    friends = models.CharField(validators=[int_list_validator], max_length=1000, blank=True)
+
+    def __str__(self):
+        return self.name
 
 
-class Groups(models.Model):
+class Group(models.Model):
     group_id = models.AutoField(primary_key=True)
     group_name = models.CharField(max_length=30)
-    users = models.CharField(validators=[int_list_validator],max_length=1000)
+    users = models.CharField(validators=[int_list_validator],max_length=1000, blank=True)
+
+    def __str__(self):
+        return self.name
 
 
-class Transactions(models.Model):
+class Transaction(models.Model):
     transaction_id = models.AutoField(primary_key=True)
     lender = models.IntegerField()
     borrower = models.IntegerField()
     group_id = models.IntegerField()
     amount = models.IntegerField()
-    date_time =models.DateTimeField(auto_now_add=True)
+    date_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.date_time
 
