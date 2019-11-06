@@ -25,6 +25,10 @@ export class LoginformComponent {
     this.dataService.post_data(this.new_entry);
   }
 
+  // ngOninit(){
+  //   this.dataService.post_data(this.new_entry);
+  // }
+
   // newSignup() {
   //   this.data = new Login('','');
   // }
