@@ -14,9 +14,6 @@ const routes: Routes = [
   { path:'friend-tab',component:FriendTabComponent},
   { path:'group-tab',component:GroupTabComponent},
   { path:'activity-tab',component:ActivityTabComponent}
-  // path:'signup',
-  // path:'dashboard/friends'
-  //   path:'dashboard'
 
  
 ];
