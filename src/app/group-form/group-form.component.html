@@ -1,0 +1,16 @@
+<div class="container">
+    <div [hidden]="submitted">
+      <h1>Add a Group</h1>
+      <form (ngSubmit)="onSubmit()" #signupForm="ngForm">
+        <div class="form-group">
+          <label for="name">Name of the Group</label>
+          <input type="text" class="form-control" id="name"
+                 required
+                 [(ngModel)]="model.name" name="name"
+                 #name="ngModel">
+        </div>
+        
+              <button type="submit" class="btn btn-success" [disabled]="!signupForm.form.valid">Add Group</button>
+            </form>
+          </div>
+
