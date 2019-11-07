@@ -53,15 +53,12 @@ export class DataService {
   }
 
   post_data_register_user(entry:any){
-    this.http.post(this._URL_reg,entry,{
+    return this.http.post(this._URL_reg,entry,{
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
-    })
-    .subscribe(data =>{
-          console.log(data);
-    }
-    )
+    });
+
   }
 
 }

@@ -29,5 +29,9 @@ class signup_view(APIView):
     print("Asdas")
     print(request.data)
     with connection.cursor() as c:
-      c.execute("insert into UserProfile (user_name, name, password) values(%s,%s,%s)",(request.data['userid'],request.data['name'],request.data['password']))
-    return JsonResponse("Successfully added", safe=False)
+      c.execute("select * from UserProfile where user_name = %s",[request.data['userid']]);
+      if(len(c.fetchall())!=0):
+        return JsonResponse("Username Already Exists", safe=False)
+      else:
+        c.execute("insert into UserProfile (user_name, name, password) values(%s,%s,%s)",(request.data['userid'],request.data['name'],request.data['password']))
+        return JsonResponse("Successfully added", safe=False)
