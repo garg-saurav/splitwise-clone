@@ -8,7 +8,9 @@ export class DataService {
 
   _URL = 'http://localhost:8000/account/login/';
   _URL_reg = 'http://127.0.0.1:8000/account/signup/';
-  my_id:any;
+  _URL_user = 'http://127.0.0.1:8000/user/';
+  _URL_friends = 'http://127.0.0.1:8000/friends/';
+  my_username;
   profile:any;
   friends:any;
   groups:any;
@@ -18,22 +20,23 @@ export class DataService {
   ) { }
 
   get_profile_data(){
-    return {"name":'Rajat Jain',"uname":'Rajjo',"imgurl":'../../assets/img1.jpg'};
-    // this.http.get(this._URL_profile)
-    //     .subscribe(data => {
-    //       this.profile = data;
-    //     })
+    console.log("Hello",localStorage.getItem('username'));
+    // return {'Name':'Rajat Jain','User_Name':'Rajjo'}
+    return this.http.get(this._URL_user+localStorage.getItem('username'));
+        
+    
   }
 
 
   get_friends_data(){
-    return [{"friend":'Saurav Garg',"lent":'$100',"borrowed":'$500'}
-      ,{"friend":'Gaurav Garg',"lent":'$100',"borrowed":'$500'}
-    ]
-  //   this.http.get(this._URL_friends)
-  //       .subscribe(data => {
-  //         this.profile = data;
-  //       })
+    // return {"friend":'Saurav Garg',"lent":'$100',"borrowed":'$500'}
+      // ,{"friend":'Gaurav Garg',"lent":'$100',"borrowed":'$500'}
+    // ]
+    this.http.get(this._URL_friends+localStorage.getItem('username'))
+        .subscribe(data => {
+          // this.profile = data;
+          console.log("HIIIIIIIIIII",data)
+        })
   }
 
 
@@ -46,16 +49,11 @@ export class DataService {
   }
 
   post_data(entry:any){
-    this.http.post(this._URL,entry,{
+    return this.http.post(this._URL,entry,{
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
-    })
-    .subscribe(data =>{
-          console.log(data);
-          this.my_id=data;
-    }
-    )
+    });
   }
 
   post_data_register_user(entry:any){
@@ -66,7 +64,6 @@ export class DataService {
     })
     .subscribe(data =>{
           console.log(data);
-          // this.my_id=data;
     }
     )
   }

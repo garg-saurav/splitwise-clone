@@ -16,7 +16,7 @@ class login_view(APIView):
     users = UserProfile.objects.all()
     # print(request.data)
     with connection.cursor() as c:
-      c.execute("select password from UserProfile where name = %s",[request.data['userid']])
+      c.execute("select password from UserProfile where user_name = %s",[request.data['userid']])
       res=c.fetchone()
     if(res[0]==request.data['password']):
       return JsonResponse("Verified", safe=False)
