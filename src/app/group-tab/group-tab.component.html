@@ -19,15 +19,16 @@
                 <td>{{group.group}}</td>
                 <td>{{group.lent}}</td>
                 <td>{{group.borrowed}}</td>
-                <td>{{group.members}}</td>
+                <td>{{group.members}}<br>
+                    <a routerLink="/member" class="button">Add new memeber</a></td>
                 <td><button class="button">Settle accounts</button></td>
                 <td><button class="button">Leave Group</button></td>
             </tr>
         </table>
         <br>
         <form ng-app="myapp" name="myForm" ng-controller="myscope">
-        <button class="button" ng-click="addInput()">Add New Group</button>
-        <input type="text" name="input" ng-model="myval.text" required>
+        <a routerLink="/groupform" class="button">Add New Group</a> 
+
 
         </form>
      </div>
