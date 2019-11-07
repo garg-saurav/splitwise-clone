@@ -23,17 +23,18 @@ def home(request):
 
 def getfriends(frndid):
     with connection.cursor() as cursor:
-      row = cursor.execute("SELECT name FROM UserProfile WHERE user_name='"+frndid+"'")
+
+      row = cursor.execute("SELECT id FROM UserProfile WHERE user_name='"+frndid+"'")
+
       row = row.fetchone()
     return row
 
 
 def user_detail(request, userid):
+    print("sdfsdf")
     user = UserProfile.objects.get(user_name=userid)
-    frnd_list=[]
-    for frnd in user.friends:
-        frnd_list.append(getfriends(frnd))
-    user_serialized = {'User': user.name, 'Profile Picture': str(user.profile_pic), 'Friends': frnd_list, 'Groups': user.groups}
+    # print("User: "+user.name+ "profilePicture: "+str(user.profile_pic)+"Friends: "+frnd_list+"Groups: "+user.groups)
+    user_serialized = {'id': user.user_name, 'user': user.name, 'profilepicture': str(user.profile_pic), 'friends': user.friends, 'groups': user.groups}
     return JsonResponse(user_serialized, safe=False)
 
 
@@ -42,6 +43,7 @@ def getfriendlist(request, userid):
     frnd_list = []
     for frnd in user.friends:
       frnd_list.append(getfriends(frnd))
+      print(getfriends(frnd))
     return JsonResponse(frnd_list, safe=False)
 
 
@@ -58,22 +60,30 @@ def getallgroups(request, userid):
     return JsonResponse(groups, safe=False)
 
 
-def add_friend():
+def add_friend(request,userid,friendname):
+    friendlist=getfriendlist(userid)
     with connection.cursor() as cursor:
-        cursor.execute("INSERT INTO GROUPS (group_name,users) VALUES(%s, %s)", (groupname, userid))
-        groupid=cursor.execute("SELECT group_id from GROUPS where group_name='"+groupname+"'")
-        cursor.execute("UPDATE UserProfile SET groups= '{0}' where user_id='{1}'".format(groupid,userid))
-    return HttpResponse("Successfully created "+groupname)
+        friendid=cursor.execute("SELECT id from UserProfile where user_name='"+friendname+"'")
+        friendlist.append(friendid)
+        cursor.execute("UPDATE UserProfile SET friends= '{0}' where user_name='{1}'".format(friendlist,userid))
+    return HttpResponse("Successfully added "+friendname)
 
-def pay_friend():
+
+def pay_friend(request,username,friendname,amount):
+    with connection.cursor() as cursor:
+        friendid=cursor.execute("SELECT amount from UserProfile where user_name='"++"'")
     return
+
 def pay_in_group():
     return
 def new_group(request, userid, groupname):
+    grouplist=getallgroups(userid)
+
     with connection.cursor() as cursor:
         cursor.execute("INSERT INTO GROUPS (group_name,users) VALUES(%s, %s)", (groupname, userid))
         groupid=cursor.execute("SELECT group_id from GROUPS where group_name='"+groupname+"'")
-        cursor.execute("UPDATE UserProfile SET groups= '{0}' where user_id='{1}'".format(groupid,userid))
+        grouplist.append(groupid)
+        cursor.execute("UPDATE UserProfile SET groups= '{0}' where user_id='{1}'".format(grouplist,userid))
     return HttpResponse("Successfully created "+groupname)
 def add_friend_in_group():
     return

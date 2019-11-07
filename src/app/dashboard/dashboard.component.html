@@ -1,23 +1,24 @@
 <div class="sidebar">
-    <a class="active" href="#home">Home</a>
+    <a class="active" routerLink="/dashboard">Home</a>
     <a routerLink="/friend-tab">Friends</a>
     <a routerLink="/group-tab">Group</a>
     <a routerLink="/activity-tab">Activity</a>
+    <a (click)="logout()">Logout</a>
 </div>
 <div class="content">
     <div class="container">
     <div class="row">
     <div class="col-lg-6">
     <h1>About myself</h1>
-    <h3><b>NAME:</b>{{user.name}}<br></h3>
-    <h3><b>User ID:</b>{{user.uname}}<br></h3>
+    <h3><b>NAME: </b>{{user.user}}<br></h3>
+    <h3><b>User ID: </b>{{user.id}}<br></h3>
     <!-- <h3><b>Email ID:</b>pranshu.negi456@gmail.com<br></h3> -->
 </div>
-<div class="col-lg-6"><img src={{user.imgurl}} style="width: 50%;"></div>
+<div class="col-lg-6"><img src="http://127.0.0.1:8000/pics/{{user.profilepicture}}" style="width: 50%;"></div>
 </div>
 <div class="row">
 <div class="col-lg-6">
-    <a href=#>Other Personal Details</a>
+    <!-- <a href=#>Other Personal Details</a> -->
 </div>
 <div class="col-lg-6">
         <a href=#>Change Profile Picture</a>
