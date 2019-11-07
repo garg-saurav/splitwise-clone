@@ -52,10 +52,10 @@ def getallgroups(request, username):
   # user_groups = UserProfile.objects.get(user_name=username)
   # groups = []
 
-  with connection.cursor() as cursor:
+    with connection.cursor() as cursor:
       row = cursor.execute("SELECT group_name FROM UserGroup WHERE user_name='" + username + "'")
       row = row.fetchall()
-   return JsonResponse(row, safe=False)
+    return JsonResponse(row, safe=False)
 
 
 
