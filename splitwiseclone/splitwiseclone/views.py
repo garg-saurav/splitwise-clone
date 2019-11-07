@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.core import serializers
 from django.db import connection
-from splitapp.models import UserProfile,Transaction
+from splitapp.models import UserProfile, UserFriend, UserGroup
 from django.shortcuts import render
 from django.db import connection
 
@@ -21,14 +21,6 @@ def home(request):
     return HttpResponse('Home Page')
 
 
-# def getfriends(frndid):
-#     with connection.cursor() as cursor:
-#
-#         row = cursor.execute("SELECT user_name FROM UserProfile WHERE user_name='"+frndid+"'")
-#
-#         row = row.fetchone()
-#     return row
-
 
 def user_detail(request, userid):
     print("sdfsdf")
@@ -39,18 +31,16 @@ def user_detail(request, userid):
 
 
 def getfriendlist(request, username):
-  friendlist=[]
-  with connection.cursor() as c:
-      c.execute("SELECT friend_user_name from UF where user_name= %s",username)
-      lest=c.fetchall()
-  for friend in lest:
-    friendlist.append(friend)
-  return JsonResponse(friendlist, safe=False)
+    friendlist=[]
+    with connection.cursor() as c:
+        c.execute("SELECT friend_user_name from UF where user_name= %s",username)
+        lest=c.fetchall()
+    for friend in lest:
+      friendlist.append(friend)
+    return JsonResponse(friendlist, safe=False)
 
 
 def getallgroups(request, username):
-  # user_groups = UserProfile.objects.get(user_name=username)
-  # groups = []
 
     with connection.cursor() as cursor:
       row = cursor.execute("SELECT group_name FROM UserGroup WHERE user_name='" + username + "'")
@@ -69,7 +59,7 @@ def add_friend(request,username,friendname):
         friendid =cursor.fetchone()[0]
         print(friendid)
         friendlist.append(friendid)
-        cursor.execute("UPDATE UserProfile SET friends= '{0}' where user_name='{1}'".format(friendlist,userid))
+        cursor.execute("UPDATE UserProfile SET friends= '{0}' where user_name='{1}'".format(friendlist,username))
     return HttpResponse("Successfully added "+friendname)
 
 
@@ -81,7 +71,7 @@ def pay_friend(request,username,friendname,amount):
         userid=cursor.fetchone()
         cursor.execute("INSERT INTO trans (lender,borrower,groupid,amount) VALUES(?,?,?,?)",[friendid,userid,-1,amount])
         # tobepayed=cursor.execute("SELECT sum(amount) from Transaction where lender=%n and borrower=%n", [friendid, userid])
-    return HttpResponse(t)
+    return
 
 def pay_in_group():
     return

@@ -10,33 +10,41 @@ class UserProfile(models.Model):
     name = models.CharField(max_length=30)
     profile_pic = models.ImageField(default='default.png', null=True, blank=True)
     password = models.CharField(max_length=30)
-    groups = models.CharField(validators=[int_list_validator], max_length=1000, null=True, blank=True, default=[])
-    friends = models.CharField(validators=[int_list_validator], max_length=1000, null=True, blank=True, default=[])
 
     def __str__(self):
         return self.user_name
-
 
     class Meta:
         db_table = 'UserProfile'
 
 
-class Group(models.Model):
-    group_id = models.AutoField(primary_key=True)
-    group_name = models.CharField(max_length=30)
-    users = models.CharField(validators=[int_list_validator],max_length=1000, blank=True, default=[])
+class UserGroup(models.Model):
+  user_name = models.CharField(max_length=30)
+  group_id = models.IntegerField()
+  group_name = models.CharField(max_length=30)
 
-    def __str__(self):
-        return self.group_name
 
-    class Meta:
-        db_table = 'Groups'
+  def __str__(self):
+    return str(self.group_id)+":"+self.user_name+":"+self.group_name
+
+  class Meta:
+    db_table = 'UG'
+
+class UserFriend(models.Model):
+  user_name = models.CharField(max_length=30)
+  friend_user_name = models.CharField(max_length=30)
+
+  def __str__(self):
+    return self.user_name+":"+self.friend_user_name
+
+  class Meta:
+    db_table = 'UF'
 
 
 class Transaction(models.Model):
     transaction_id = models.AutoField(primary_key=True)
-    lender = models.IntegerField()
-    borrower = models.IntegerField()
+    lender = models.CharField(max_length=30)
+    borrower = models.CharField(max_length=30)
     group_id = models.IntegerField()
     amount = models.IntegerField()
     date_time = models.DateTimeField(auto_now_add=True)

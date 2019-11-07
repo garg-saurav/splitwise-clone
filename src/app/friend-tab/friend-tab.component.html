@@ -14,18 +14,18 @@
            <th></th>
            <th></th>
        </tr>
-       <div *ngFor="let fr of friend">
-       <tr>
+       <!-- <div> -->
+       <tr *ngFor="let fr of friend">
         <!-- {% for g in friend %}   -->
         
            <td>{{fr.friend}}</td>
-           <td>{{fr.borrowed}}</td>
-           <td>{{fr.lent}}</td>
+           <td>{{fr.toBeGiven}}</td>
+           <td>{{fr.toBeReceived}}</td>
            <td><button class="button">Change amounts</button></td>
            <td><button class="button">Settle accounts</button></td>
         <!-- {% endfor %} -->
         </tr>
-    </div>
+    <!-- </div> -->
        
    </table>
    <br>
