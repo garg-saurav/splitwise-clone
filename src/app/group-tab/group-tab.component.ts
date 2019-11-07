@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
-<<<<<<< HEAD
-import * as $ from 'jquery';
-=======
+// import * as $ from 'jquery';
 import { Router } from '@angular/router';
->>>>>>> 14115d59d1b9f9e6d460c4982817813133737c89
 @Component({
   selector: 'app-group-tab',
   templateUrl: './group-tab.component.html',

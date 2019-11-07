@@ -10,8 +10,13 @@ export class FriendTabComponent implements OnInit {
   friend:any;
   constructor(private dataService:DataService,private router:Router) { }
   ngOnInit(){
-    this.friend=this.dataService.get_friends_data();
-    //console.log(this.friend.friend,this.user.uname);
+    this.dataService.get_friends_data()
+                  .subscribe(data => {
+                    // this.profile = data;
+                    this.friend=data;
+                    console.log(this.friend);
+                  })
+    
   }
 
   logout(){

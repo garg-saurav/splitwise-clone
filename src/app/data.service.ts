@@ -32,11 +32,7 @@ export class DataService {
     // return {"friend":'Saurav Garg',"lent":'$100',"borrowed":'$500'}
       // ,{"friend":'Gaurav Garg',"lent":'$100',"borrowed":'$500'}
     // ]
-    this.http.get(this._URL_friends+localStorage.getItem('username'))
-        .subscribe(data => {
-          // this.profile = data;
-          console.log("HIIIIIIIIIII",data)
-        })
+    return this.http.get(this._URL_friends+localStorage.getItem('username'));
   }
 
 

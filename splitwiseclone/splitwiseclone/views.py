@@ -24,7 +24,7 @@ def home(request):
 def getfriends(frndid):
     with connection.cursor() as cursor:
 
-      row = cursor.execute("SELECT id FROM UserProfile WHERE user_name='"+frndid+"'")
+      row = cursor.execute("SELECT user_name FROM UserProfile WHERE id='"+frndid+"'")
 
       row = row.fetchone()
     return row
@@ -42,8 +42,23 @@ def getfriendlist(request, userid):
     user = UserProfile.objects.get(user_name=userid)
     frnd_list = []
     for frnd in user.friends:
-      frnd_list.append(getfriends(frnd))
-      print(getfriends(frnd))
+      # frnd_list.append(getfriends(frnd))
+      print("1adsfas")
+      with connection.cursor() as c:
+        # print("adsfas")
+        c.execute("SELECT id from UserProfile where user_name='" + userid + "'")
+        id1=c.fetchone()[0]
+        # print("Select sum(amount) from trans where lender='{0}' and borrower='{1}'".format(id1,frnd))
+        c.execute("Select sum(amount) from trans where lender='{0}' and borrower='{1}'".format(id1,frnd))
+        toBeReceived=c.fetchone()[0]
+        if(toBeReceived==None):
+          toBeReceived=0
+        # print(toBeReceived)
+        c.execute("Select sum(amount) from trans where lender=%s and borrower=%s ", [frnd,id1])
+        toBeGiven=c.fetchone()[0]
+        if(toBeGiven==None):
+          toBeGiven=0
+        frnd_list.append({'friend':getfriends(frnd),'toBeReceived':toBeReceived,'toBeGiven':toBeGiven})
     return JsonResponse(frnd_list, safe=False)
 
 
