@@ -24,5 +24,9 @@
             </tr>
         </table>
         <br>
-        <button class="button">Add New Group</button>
+        <form ng-app="myapp" name="myForm" ng-controller="myscope">
+        <button class="button" ng-click="addInput()">Add New Group</button>
+        <input type="text" name="input" ng-model="myval.text" required>
+
+        </form>
      </div>
