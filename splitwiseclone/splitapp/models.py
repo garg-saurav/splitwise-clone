@@ -33,6 +33,28 @@ class Group(models.Model):
         db_table = 'Groups'
 
 
+class UserGroup(models.Model):
+  user_name = models.CharField(max_length=30)
+  group_id = models.IntegerField()
+  group_name = models.CharField(max_length=30)
+
+  def __str__(self):
+    return str(self.group_id)+":"+self.user_name+":"+self.group_name
+
+  class Meta:
+    db_table = 'UG'
+
+class UserFriend(models.Model):
+  user_name = models.CharField(max_length=30)
+  friend_user_name = models.CharField(max_length=30)
+
+  def __str__(self):
+    return self.user_name+":"+self.friend_user_name
+
+  class Meta:
+    db_table = 'UF'
+
+
 class Transaction(models.Model):
     transaction_id = models.AutoField(primary_key=True)
     lender = models.IntegerField()
