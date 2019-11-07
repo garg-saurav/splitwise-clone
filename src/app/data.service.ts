@@ -10,6 +10,7 @@ export class DataService {
   _URL_reg = 'http://127.0.0.1:8000/account/signup/';
   _URL_user = 'http://127.0.0.1:8000/user/';
   _URL_friends = 'http://127.0.0.1:8000/friends/';
+  _URL_add_friend = 'http://127.0.0.1:8000/addfriend/'; 
   my_username;
   profile:any;
   friends:any;
@@ -59,6 +60,10 @@ export class DataService {
       })
     });
 
+  }
+
+  get_req_add_friend(fName){
+    return this.http.get(this._URL_add_friend+localStorage.getItem('username')+"/"+fName);
   }
 
 }

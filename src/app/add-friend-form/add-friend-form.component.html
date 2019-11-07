@@ -1,0 +1,15 @@
+<div class="container">
+    <div [hidden]="submitted">
+      <h1>Add Friend</h1>
+      <form (ngSubmit)="onSubmit()" #signupForm="ngForm">
+        <div class="form-group">
+          <label for="userid">UserName of Friend</label>
+          <input type="text" class="form-control" id="userid"
+                 required
+                 [(ngModel)]="model.userid" name="userid"
+                 #name="ngModel">
+        </div>
+        
+              <button type="submit" class="btn btn-success" [disabled]="!signupForm.form.valid">Add Friend</button>
+            </form>
+          </div>

@@ -14,7 +14,6 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user_name
 
-
     class Meta:
         db_table = 'UserProfile'
 
@@ -23,6 +22,7 @@ class UserGroup(models.Model):
   user_name = models.CharField(max_length=30)
   group_id = models.IntegerField()
   group_name = models.CharField(max_length=30)
+
 
   def __str__(self):
     return str(self.group_id)+":"+self.user_name+":"+self.group_name

@@ -6,6 +6,9 @@ import { GroupTabComponent } from './group-tab/group-tab.component';
 import { ActivityTabComponent } from './activity-tab/activity-tab.component';
 import { SignupComponent } from './signup/signup.component';
 import { LoginformComponent } from './loginform/loginform.component';
+import { AddFriendFormComponent } from './add-friend-form/add-friend-form.component';
+import { GroupFormComponent } from './group-form/group-form.component';
+import { MemberComponent } from './member/member.component';
 const routes: Routes = [
   { path:'',redirectTo: '/login', pathMatch:'full'},
   { path:'login',component:LoginformComponent},
@@ -13,9 +16,10 @@ const routes: Routes = [
   { path :'dashboard',component:DashboardComponent},
   { path:'friend-tab',component:FriendTabComponent},
   { path:'group-tab',component:GroupTabComponent},
-  { path:'activity-tab',component:ActivityTabComponent}
-
- 
+  { path:'activity-tab',component:ActivityTabComponent},
+  { path:'addfriend',component: AddFriendFormComponent},
+  { path:'groupform',component:GroupFormComponent},
+  { path:'member',component:MemberComponent}
 ];
 
 @NgModule({

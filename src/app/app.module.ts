@@ -11,6 +11,9 @@ import { SignupComponent } from './signup/signup.component';
 import { LoginformComponent } from './loginform/loginform.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
+import { AddFriendFormComponent } from './add-friend-form/add-friend-form.component';
+import { GroupFormComponent } from './group-form/group-form.component';
+import { MemberComponent } from './member/member.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,10 @@ import {HttpClientModule} from '@angular/common/http';
     GroupTabComponent,
     ActivityTabComponent,
     SignupComponent,
-    LoginformComponent
+    LoginformComponent,
+    AddFriendFormComponent,
+    GroupFormComponent,
+    MemberComponent
   ],
   imports: [
     BrowserModule,
