@@ -12,9 +12,11 @@ urlpatterns = [
     url(r'^$',views.home),
     url(r'^user/(?P<userid>[\w-]+)/$',views.user_detail),
     url(r'^account/',include('accounts.urls')),
-    url(r'^friends/(?P<userid>[\w-]+)/$',views.getfriendlist),
+    url(r'^friends/(?P<username>[\w-]+)/$',views.getfriendlist),
     url(r'^groups/(?P<userid>[\w-]+)/$',views.getallgroups),
-    url(r'^creategroup/(?P<userid>[\w-]+)/(?P<groupname>[\w-]+)/$',views.new_group)
+    url(r'^newgroup/(?P<username>[\w-]+)/(?P<groupname>[\w-]+)/$',views.new_group),
+    url(r'^addfriend/(?P<username>[\w-]+)/(?P<friendname>[\w-]+)/$',views.add_friend),
+    url(r'^payfriend/(?P<username>[\w-]+)/(?P<friendname>[\w-]+)/(?P<amount>[\w-]+)/$',views.pay_friend)
 ]
 
 urlpatterns += staticfiles_urlpatterns()

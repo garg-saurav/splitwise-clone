@@ -6,12 +6,12 @@ from django.core.validators import int_list_validator
 
 
 class UserProfile(models.Model):
-    user_name = models.CharField(primary_key=True,max_length=30)
+    user_name = models.CharField(unique=True,max_length=30)
     name = models.CharField(max_length=30)
     profile_pic = models.ImageField(default='default.png', null=True, blank=True)
     password = models.CharField(max_length=30)
-    groups = models.CharField(validators=[int_list_validator], max_length=1000, null=True, blank=True)
-    friends = models.CharField(validators=[int_list_validator], max_length=1000, null=True, blank=True)
+    groups = models.CharField(validators=[int_list_validator], max_length=1000, null=True, blank=True, default=[])
+    friends = models.CharField(validators=[int_list_validator], max_length=1000, null=True, blank=True, default=[])
 
     def __str__(self):
         return self.user_name
@@ -24,7 +24,7 @@ class UserProfile(models.Model):
 class Group(models.Model):
     group_id = models.AutoField(primary_key=True)
     group_name = models.CharField(max_length=30)
-    users = models.CharField(validators=[int_list_validator],max_length=1000, blank=True)
+    users = models.CharField(validators=[int_list_validator],max_length=1000, blank=True, default=[])
 
     def __str__(self):
         return self.group_name
