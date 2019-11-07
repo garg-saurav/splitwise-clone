@@ -21,20 +21,11 @@ def home(request):
     return HttpResponse('Home Page')
 
 
-def getfriends(frndid):
-    with connection.cursor() as cursor:
-
-      row = cursor.execute("SELECT user_name FROM UserProfile WHERE id='"+frndid+"'")
-
-      row = row.fetchone()
-    return row
-
-
 def user_detail(request, userid):
     print("sdfsdf")
     user = UserProfile.objects.get(user_name=userid)
     # print("User: "+user.name+ "profilePicture: "+str(user.profile_pic)+"Friends: "+frnd_list+"Groups: "+user.groups)
-    user_serialized = {'id': user.user_name, 'user': user.name, 'profilepicture': str(user.profile_pic), 'friends': user.friends, 'groups': user.groups}
+    user_serialized = {'id': user.user_name, 'user': user.name, 'profilepicture': str(user.profile_pic)}
     return JsonResponse(user_serialized, safe=False)
 
 
@@ -99,7 +90,7 @@ def getallgroups(request, userid):
     return JsonResponse(groups, safe=False)
 
 
-def add_friend(request,userid,friendname):
+def add_friend(request,user_name,friend_user_name):
     friendlist=getfriendlist(userid)
     with connection.cursor() as cursor:
         friendid=cursor.execute("SELECT id from UserProfile where user_name='"+friendname+"'")
