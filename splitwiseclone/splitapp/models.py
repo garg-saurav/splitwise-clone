@@ -14,7 +14,8 @@ class UserProfile(models.Model):
     friends = models.CharField(validators=[int_list_validator], max_length=1000, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.user_name
+
 
     class Meta:
         db_table = 'UserProfile'

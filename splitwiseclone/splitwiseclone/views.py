@@ -23,17 +23,16 @@ def home(request):
 
 def getfriends(frndid):
     with connection.cursor() as cursor:
-      row = cursor.execute("SELECT name FROM UserProfile WHERE user_name='"+frndid+"'")
+      row = cursor.execute("SELECT name FROM UserProfile WHERE id='"+frndid+"'")
       row = row.fetchone()
     return row
 
 
 def user_detail(request, userid):
+    print("sdfsdf")
     user = UserProfile.objects.get(user_name=userid)
-    frnd_list=[]
-    for frnd in user.friends:
-        frnd_list.append(getfriends(frnd))
-    user_serialized = {'User': user.name, 'Profile Picture': str(user.profile_pic), 'Friends': frnd_list, 'Groups': user.groups}
+    # print("User: "+user.name+ "profilePicture: "+str(user.profile_pic)+"Friends: "+frnd_list+"Groups: "+user.groups)
+    user_serialized = {'id': user.user_name, 'user': user.name, 'profilepicture': str(user.profile_pic), 'friends': user.friends, 'groups': user.groups}
     return JsonResponse(user_serialized, safe=False)
 
 
@@ -42,6 +41,7 @@ def getfriendlist(request, userid):
     frnd_list = []
     for frnd in user.friends:
       frnd_list.append(getfriends(frnd))
+      print(getfriends(frnd))
     return JsonResponse(frnd_list, safe=False)
 
 

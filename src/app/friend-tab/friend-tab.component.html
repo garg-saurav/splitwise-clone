@@ -3,24 +3,30 @@
     <a class="active" routerLink="/friend-tab">Friends</a>
     <a routerLink="/group-tab">Group</a>
     <a routerLink="/activity-tab">Activity</a>
+    <a (click)="logout()">Logout</a>
   </div>
   <div class="content">
    <table id="customers">
        <tr>
-           <th>Friend Name</th>
+           <th>Name</th>
            <th>Amount to be paid</th>
            <th>Amount to be received</th>
            <th></th>
            <th></th>
        </tr>
+       
        <tr>
-           <td>Missula Meghana</td>
-           <td>5000</td>
-           <td>3000</td>
+        <!-- {% for g in friend %}   -->
+        
+           <td>{{friend.friend}}</td>
+           <td>{{friend.borrowed}}</td>
+           <td>{{friend.lent}}</td>
            <td><button class="button">Change amounts</button></td>
            <td><button class="button">Settle accounts</button></td>
-       </tr>
+        <!-- {% endfor %} -->
+        </tr>
+       
    </table>
    <br>
-   <button class="button">Add Friend</button>
+   <button class="button" >Add Friend</button>
 </div>
