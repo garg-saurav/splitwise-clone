@@ -33,34 +33,45 @@ def user_detail(request, userid):
 def getfriendlist(request, username):
     friendlist=[]
     with connection.cursor() as c:
-        c.execute("SELECT friend_user_name from UF where user_name= %s",username)
-        lest=c.fetchall()
-    for friend in lest:
-      friendlist.append(friend)
+        c.execute("SELECT friend_user_name from UF where user_name='"+username+"'")
+        lest = c.fetchall()
+        for friend_username in lest:
+            print("Hereeeee")
+            print(str(friend_username[0]))
+            c.execute("SELECT sum(amount) from trans where lender=%s and borrower=%s",[username,friend_username[0]])
+            moneygiven=c.fetchone()
+            if moneygiven!= None:
+                moneygiven=moneygiven[0]
+            # print(moneygiven)
+            c.execute("SELECT sum(amount) from trans where lender=%s and borrower=%s", [ friend_username[0],username])
+            moneyowed = c.fetchone()
+            if moneyowed != None:
+                moneyowed = moneyowed[0]
+            friendlist.append("Friend Name: "+str(friend_username[0])+"\n"+" Money Borrowed: "+str(moneyowed)+"\n"+" Money Given: "+str(moneygiven))
     return JsonResponse(friendlist, safe=False)
 
 
 def getallgroups(request, username):
 
     with connection.cursor() as cursor:
-      row = cursor.execute("SELECT group_name FROM UserGroup WHERE user_name='" + username + "'")
+      row = cursor.execute("SELECT group_name FROM UG WHERE user_name='" + username + "'")
       row = row.fetchall()
     return JsonResponse(row, safe=False)
 
 
 
 
-def add_friend(request,username,friendname):
+def add_friend(request,username,friend_username):
     friendlist=getfriendlist(None,username)
     print(1233)
     with connection.cursor() as cursor:
-        cursor.execute("SELECT id from UserProfile where user_name='"+friendname+"'")
+        cursor.execute("SELECT id from UserProfile where user_name='"+friend_username+"'")
         print("huehuhhd")
         friendid =cursor.fetchone()[0]
         print(friendid)
         friendlist.append(friendid)
         cursor.execute("UPDATE UserProfile SET friends= '{0}' where user_name='{1}'".format(friendlist,username))
-    return HttpResponse("Successfully added "+friendname)
+    return HttpResponse("Successfully added "+friend_username)
 
 
 def pay_friend(request,username,friendname,amount):
