@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'^user/(?P<username>[\w-]+)/$',views.user_detail),
     url(r'^account/',include('accounts.urls')),
     url(r'^friends/(?P<username>[\w-]+)/$',views.getfriendlist),
-    url(r'^groups/(?P<userid>[\w-]+)/$',views.getallgroups),
+    url(r'^groups/(?P<username>[\w-]+)/$',views.getallgroups),
     url(r'^newgroup/(?P<username>[\w-]+)/(?P<groupname>[\w-]+)/$',views.new_group),
     url(r'^addfriend/(?P<username>[\w-]+)/(?P<friend_user_name>[\w-]+)/$',views.add_friend),
     url(r'^payfriend/(?P<username>[\w-]+)/(?P<friendname>[\w-]+)/(?P<amount>[\w-]+)/$',views.pay_friend)

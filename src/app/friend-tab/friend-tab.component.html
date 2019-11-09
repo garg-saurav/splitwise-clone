@@ -15,12 +15,12 @@
            <th></th>
        </tr>
        <!-- <div> -->
-       <tr *ngFor="let fr of friend">
+       <tr *ngFor="let fr of friend; let i = index">
         <!-- {% for g in friend %}   -->
         
-           <td>{{fr.friend}}</td>
-           <td>{{fr.toBeGiven}}</td>
-           <td>{{fr.toBeReceived}}</td>
+           <td>{{fr.FriendName}}</td>
+           <td>{{fr.MoneyBorrowed}}</td>
+           <td>{{fr.MoneyGiven}}</td>
            <td><button class="button">Change amounts</button></td>
            <td><button class="button">Settle accounts</button></td>
         <!-- {% endfor %} -->

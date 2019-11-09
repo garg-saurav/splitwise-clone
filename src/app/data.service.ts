@@ -10,7 +10,8 @@ export class DataService {
   _URL_reg = 'http://127.0.0.1:8000/account/signup/';
   _URL_user = 'http://127.0.0.1:8000/user/';
   _URL_friends = 'http://127.0.0.1:8000/friends/';
-  _URL_add_friend = 'http://127.0.0.1:8000/addfriend/'; 
+  _URL_add_friend = 'http://127.0.0.1:8000/addfriend/';
+  _URL_groups =  'http://127.0.0.1:8000/groups/';
   my_username;
   profile:any;
   friends:any;
@@ -38,11 +39,10 @@ export class DataService {
 
 
   get_groups_data(){
-    return {"group":'Vicerant',"lent":'10 Outlabs',"borrowed":'1 Project'}
-    // this.http.get(this._URL_groups)
-    //     .subscribe(data => {
-    //       this.profile = data;
-    //     })
+    // return {"group":'Vicerant',"lent":'10 Outlabs',"borrowed":'1 Project'}
+    console.log(this._URL_groups+localStorage.getItem('username'));
+    return this.http.get(this._URL_groups+localStorage.getItem('username'));
+        
   }
 
   post_data(entry:any){

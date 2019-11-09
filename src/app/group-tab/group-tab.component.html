@@ -15,11 +15,11 @@
                 <th></th>
                 <th></th>
             </tr>
-            <tr>
-                <td>{{group.group}}</td>
-                <td>{{group.lent}}</td>
-                <td>{{group.borrowed}}</td>
-                <td>{{group.members}}<br>
+            <tr *ngFor="let g of group; let i = index">
+                <td>{{g}}</td>
+                <td></td>
+                <td></td>
+                <td><br>
                     <a routerLink="/member" class="button">Add new memeber</a></td>
                 <td><button class="button">Settle accounts</button></td>
                 <td><button class="button">Leave Group</button></td>

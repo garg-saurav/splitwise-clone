@@ -12,7 +12,11 @@ export class GroupTabComponent implements OnInit {
   constructor(private dataService:DataService,private router:Router) { }
 
   ngOnInit() {
-    this.group=this.dataService.get_groups_data();
+    this.dataService.get_groups_data()
+                  .subscribe(data => {
+                    this.group = data;
+                    console.log("asdf",data);
+                  })
   }
   
 //   addInput(): void
