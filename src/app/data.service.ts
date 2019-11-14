@@ -21,6 +21,10 @@ export class DataService {
     private http:HttpClient
   ) { }
 
+  // authenticate(){
+  //   if(localStorage)
+  // }
+
   get_profile_data(){
     console.log("Hello",localStorage.getItem('username'));
     // return {'Name':'Rajat Jain','User_Name':'Rajjo'}
