@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from .serializers import userserializer
 from splitapp.models import UserProfile
 from django.db import connection
+import shutil
 
 class login_view(APIView):
   def post(self,request, format=None):
@@ -33,5 +34,9 @@ class signup_view(APIView):
       if(len(c.fetchall())!=0):
         return JsonResponse("Username Already Exists", safe=False)
       else:
-        c.execute("insert into UserProfile (user_name, name, password, profile_pic) values(%s,%s,%s, '../../media/default.png')",(request.data['userid'],request.data['name'],request.data['password']))
+        f=open("media/default.png",'rb')
+        with open('media/' + request.data['userid'] + '.png', 'wb') as destination:
+          # for chunk in f.chunks():
+          shutil.copyfileobj(f,destination)
+        c.execute("insert into UserProfile (user_name, name, password, profile_pic) values(%s,%s,%s,%s)",(request.data['userid'],request.data['name'],request.data['password'],request.data['userid']+'.png'))
         return JsonResponse("Successfully added", safe=False)

@@ -12,6 +12,7 @@ export class DataService {
   _URL_friends = 'http://127.0.0.1:8000/friends/';
   _URL_add_friend = 'http://127.0.0.1:8000/addfriend/';
   _URL_groups =  'http://127.0.0.1:8000/groups/';
+  _URL_img =  'http://127.0.0.1:8000/uploadimg/';
   my_username;
   profile:any;
   friends:any;
@@ -55,6 +56,14 @@ export class DataService {
         'Content-Type': 'application/json'
       })
     });
+  }
+
+  uploadProfilePic(image:File){
+    const fd=new FormData;
+    fd.append('image',image)
+    console.log("IHaveASelfishFriend",fd)
+    return this.http.post(this._URL_img+localStorage.getItem('username')+"/",fd);
+      
   }
 
   post_data_register_user(entry:any){

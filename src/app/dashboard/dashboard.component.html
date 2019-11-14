@@ -21,7 +21,10 @@
     <!-- <a href=#>Other Personal Details</a> -->
 </div>
 <div class="col-lg-6">
-        <a href=#>Change Profile Picture</a>
+        <input type="file" (change)="onFileSelected($event)">
+        <button type="button" (click)="onUpload()">Change Profile Picture</button>
+        
+
 </div>
 </div>
 </div>

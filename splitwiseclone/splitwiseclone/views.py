@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.core import serializers
 from django.db import connection
+from rest_framework.views import APIView
+
 from splitapp.models import UserProfile, UserFriend, UserGroup
 from django.shortcuts import render
 from django.db import connection
@@ -112,3 +114,36 @@ def new_group(request, username, groupname):
     return HttpResponse("Successfully created "+groupname)
 def add_friend_in_group():
     return
+
+# def upload_img(request, username):
+#   # f=request.FILES['file']
+#   if request.method=='POST':
+#     print("OneOfMyFriendIsSelfishAsFuck")
+#     return HttpResponse("Successfully updated")
+#   #   with open('../media/'+username+'.png', 'wb+') as destination:
+#   #     for chunk in f.chunks():
+#   #       destination.write(chunk)
+
+class upload_img(APIView):
+  def post(self,request, username, format=None):
+    # users = UserProfile.objects.all()
+    print("Asdas")
+    print(request.data['image'])
+    f=request.data['image']
+    with open('media/'+username+'.png', 'wb') as destination:
+      for chunk in f.chunks():
+        destination.write(chunk)
+        # with connection.cursor() as c:
+
+
+    # with connection.cursor() as c:
+    #   c.execute("select * from UserProfile where user_name = %s",[request.data['userid']]);
+    #   if(len(c.fetchall())!=0):
+    #     return JsonResponse("Username Already Exists", safe=False)
+    #   else:
+    #     c.execute("insert into UserProfile (user_name, name, password, profile_pic) values(%s,%s,%s,'default.png')",(request.data['userid'],request.data['name'],request.data['password']))
+    #     return JsonResponse("Successfully added", safe=False)
+    return JsonResponse("Successfully updated",safe=False)
+
+
+
