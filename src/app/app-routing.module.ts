@@ -9,6 +9,7 @@ import { LoginformComponent } from './loginform/loginform.component';
 import { AddFriendFormComponent } from './add-friend-form/add-friend-form.component';
 import { GroupFormComponent } from './group-form/group-form.component';
 import { MemberComponent } from './member/member.component';
+import { TransactionsComponent } from './transactions/transactions.component';
 const routes: Routes = [
   { path:'',redirectTo: '/login', pathMatch:'full'},
   { path:'login',component:LoginformComponent},
@@ -19,7 +20,8 @@ const routes: Routes = [
   { path:'activity-tab',component:ActivityTabComponent},
   { path:'addfriend',component: AddFriendFormComponent},
   { path:'groupform',component:GroupFormComponent},
-  { path:'member',component:MemberComponent}
+  { path:'member',component:MemberComponent},
+  { path:'transaction',component:TransactionsComponent}
 ];
 
 @NgModule({

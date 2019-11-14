@@ -1,0 +1,37 @@
+<div class="container">
+    <div [hidden]="submitted">
+      <h1>Add a neew Transaction</h1>
+      <form (ngSubmit)="onSubmit()" #signupForm="ngForm">
+        <div class="form-group">
+          <label for="group">Group Name</label>
+          <input type="text" class="form-control" id="group"
+                 required
+                 [(ngModel)]="model.group" name="group"
+                 #name="ngModel">
+        </div>
+        <div class="form-group">
+            <label for="desc">Brief Description</label>
+            <input type="text" class="form-control" id="desc"
+                   required
+                   [(ngModel)]="model.desc" name="desc"
+                   #desc="ngModel">
+          </div>
+          <div class="form-group">
+            <label for="amount">Amount</label>
+            <input type="number" class="form-control" id="amount"
+                   required
+                   [(ngModel)]="model.amount" name="amount"
+                   #namount="ngModel">
+          </div>
+          <div class="form-group">
+            <label for="tag">Tag for the transaction</label>
+            <select class="form-control" id="tag"
+                    required
+                    [(ngModel)]="model.tag" name="tag"
+                    #tag="ngModel">
+              <option *ngFor="let x of tags" [value]="x">{{x}}</option>
+            </select>
+          </div>
+              <button type="submit" class="btn btn-success" [disabled]="!transactions.form.valid">Add Transaction</button>
+            </form>
+          </div>
