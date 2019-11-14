@@ -33,5 +33,5 @@ class signup_view(APIView):
       if(len(c.fetchall())!=0):
         return JsonResponse("Username Already Exists", safe=False)
       else:
-        c.execute("insert into UserProfile (user_name, name, password) values(%s,%s,%s)",(request.data['userid'],request.data['name'],request.data['password']))
+        c.execute("insert into UserProfile (user_name, name, password, profile_pic) values(%s,%s,%s, '../../media/default.png')",(request.data['userid'],request.data['name'],request.data['password']))
         return JsonResponse("Successfully added", safe=False)

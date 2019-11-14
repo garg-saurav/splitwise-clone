@@ -71,6 +71,7 @@ def add_friend(request,username,friend_user_name):
       if(username!=friend_user_name):
         if(len(c.fetchall())==0):
           c.execute('select * from UserProfile where user_name = %s',[friend_user_name])
+          c.execute('select * from UserProfile where user_name = %s', [username])
           if(len(c.fetchall())==0):
             return  JsonResponse("Friend not registered",safe=False)
           else:
