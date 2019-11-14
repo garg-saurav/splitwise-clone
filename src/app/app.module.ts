@@ -14,6 +14,7 @@ import {HttpClientModule} from '@angular/common/http';
 import { AddFriendFormComponent } from './add-friend-form/add-friend-form.component';
 import { GroupFormComponent } from './group-form/group-form.component';
 import { MemberComponent } from './member/member.component';
+import { TransactionsComponent } from './transactions/transactions.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { MemberComponent } from './member/member.component';
     LoginformComponent,
     AddFriendFormComponent,
     GroupFormComponent,
-    MemberComponent
+    MemberComponent,
+    TransactionsComponent
   ],
   imports: [
     BrowserModule,
