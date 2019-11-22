@@ -10,6 +10,8 @@ import { AddFriendFormComponent } from './add-friend-form/add-friend-form.compon
 import { GroupFormComponent } from './group-form/group-form.component';
 import { MemberComponent } from './member/member.component';
 import { TransactionsComponent } from './transactions/transactions.component';
+import { MemGroupTransComponent } from './mem-group-trans/mem-group-trans.component';
+import { TransactiondetailsComponent } from './transactiondetails/transactiondetails.component';
 const routes: Routes = [
   { path:'',redirectTo: '/login', pathMatch:'full'},
   { path:'login',component:LoginformComponent},
@@ -21,7 +23,9 @@ const routes: Routes = [
   { path:'addfriend',component: AddFriendFormComponent},
   { path:'groupform',component:GroupFormComponent},
   { path:'member',component:MemberComponent},
-  { path:'transaction',component:TransactionsComponent}
+  { path:'transaction',component:TransactionsComponent},
+  { path:'memgroup',component:MemGroupTransComponent},
+  { path:'transdet',component:TransactiondetailsComponent}
 ];
 
 @NgModule({
