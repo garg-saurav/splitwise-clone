@@ -1,0 +1,15 @@
+
+<div class="container">
+    <div [hidden]="submitted">
+      <h1>Change the percentage contribution of the member in as transaction</h1>
+      <form (ngSubmit)="onSubmit()" #signupForm="ngForm">
+        <div class="form-group">
+            <label for="percentage">Percentage Contribution</label>
+            <input type="number" class="form-control" id="percentage"
+                   required
+                   [(ngModel)]="model.percentage" name="percentage"
+                   #desc="ngModel">
+          </div>
+              <button type="submit" class="btn btn-success" [disabled]="!transactions.form.valid">Add Transaction</button>
+            </form>
+          </div>
