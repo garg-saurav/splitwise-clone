@@ -16,6 +16,7 @@ import { GroupFormComponent } from './group-form/group-form.component';
 import { MemberComponent } from './member/member.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { MemGroupTransComponent } from './mem-group-trans/mem-group-trans.component';
+import { TransactiondetailsComponent } from './transactiondetails/transactiondetails.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { MemGroupTransComponent } from './mem-group-trans/mem-group-trans.compon
     GroupFormComponent,
     MemberComponent,
     TransactionsComponent,
-    MemGroupTransComponent
+    MemGroupTransComponent,
+    TransactiondetailsComponent
   ],
   imports: [
     BrowserModule,
