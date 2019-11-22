@@ -15,6 +15,7 @@
                 <th>Transactions in the group</th>
                 <th></th>
                 <th></th>
+                <th></th>
             </tr>
             <tr *ngFor="let g of group; let i = index">
                 <td>{{g}}</td>
@@ -22,6 +23,7 @@
                 <td></td>
                 <td><br>
                     <a routerLink="/member" class="button">Add new memeber</a></td>
+                <td><a routerLink="/transaction" class="button">Add Transaction</a></td>
                 <td></td>
                 <td><button class="button">Settle accounts</button></td>
                 <td><button class="button">Leave Group</button></td>
