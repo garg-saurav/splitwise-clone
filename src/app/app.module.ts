@@ -19,6 +19,7 @@ import { TransactiondetailsComponent } from './transactiondetails/transactiondet
 import { InsightsComponent } from './insights/insights.component';
 import { ChartComponent } from './chart/chart.component';
 import { BrowserModule } from '@angular/platform-browser';
+import { SettleupComponent } from './settleup/settleup.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,7 +36,8 @@ import { BrowserModule } from '@angular/platform-browser';
     MemGroupTransComponent,
     TransactiondetailsComponent,
     InsightsComponent,
-    ChartComponent
+    ChartComponent,
+    SettleupComponent
   ],
   imports: [
     BrowserModule,
