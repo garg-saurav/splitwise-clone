@@ -26,7 +26,7 @@ export class FriendTabComponent implements OnInit {
                     this.all_details=data;
                     console.log(data);
                   })
-    
+                  
   }
 
   onClick(f){
@@ -44,9 +44,7 @@ export class FriendTabComponent implements OnInit {
     console.log(f);
   }
 
-  minimizing(){
-
-  }
+ 
 
   logout(){
     localStorage.removeItem('username');
