@@ -185,5 +185,15 @@ class get_group_members(APIView):
         #     res=cursor.fetchall()
         #     return JsonResponse(res,safe=False)
 
-
-
+class getTransactions(APIView):
+    def post(self,request,username,format=None):
+        startdate=request.data['startdate']
+        enddate=request.data['enddate']
+        with connection.cursor() as cursor:
+            print(username)
+            ans=[]
+            row = cursor.execute("SELECT lender, borrower,amount FROM trans WHERE user_name='" + username + "' AND date_time>'"+startdate+"' AND date_time<'"+enddate+"' ")
+            row=row.fetchall()
+            for r in row:
+                ans.append(r)
+        return JsonResponse(ans,safe=False)
