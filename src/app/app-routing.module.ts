@@ -12,6 +12,9 @@ import { MemberComponent } from './member/member.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { MemGroupTransComponent } from './mem-group-trans/mem-group-trans.component';
 import { TransactiondetailsComponent } from './transactiondetails/transactiondetails.component';
+import { InsightsComponent } from './insights/insights.component';
+import { ChartComponent } from './chart/chart.component';
+import { SettleupComponent } from './settleup/settleup.component';
 const routes: Routes = [
   { path:'',redirectTo: '/login', pathMatch:'full'},
   { path:'login',component:LoginformComponent},
@@ -25,7 +28,10 @@ const routes: Routes = [
   { path:'member/:grp',component:MemberComponent},
   { path:'transaction',component:TransactionsComponent},
   { path:'memgroup',component:MemGroupTransComponent},
-  { path:'transdet',component:TransactiondetailsComponent}
+  { path:'transdet',component:TransactiondetailsComponent},
+  { path:'insight',component:InsightsComponent},
+  { path:'chart',component:ChartComponent},
+  { path:'settle',component:SettleupComponent}
 ];
 
 @NgModule({

@@ -24,10 +24,9 @@ export class MemberComponent  {
   onSubmit(){
     this.dataService.add_group_member(this.grp_id,this.model)
         .subscribe(data =>{
-          console.log(data);
+          window.alert(data);
           this.router.navigate(['/group-tab']);
         })
-    console.log(this.model);this.submitted=true;
   }
 
   newFriend(){

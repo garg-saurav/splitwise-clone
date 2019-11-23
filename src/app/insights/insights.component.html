@@ -1,0 +1,31 @@
+  <div class="sidebar">
+        <a routerLink="/dashboard">Home</a>
+        <a routerLink="/friend-tab">Friends</a>
+        <a routerLink="/group-tab">Group</a>
+        <a routerLink="/activity-tab">Activity</a>
+        <a class="active" routerLink="/insight">Insights</a>
+        <a (click)="logout()">Logout</a>
+      </div>
+      <div class="content">
+        <div class="container-fluid">
+         <div class="row">
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <form method="post" (ngSubmit)="onSubmit()" #insightsForm="ngForm">
+             <div class="form-group"> 
+               <label class="control-label" for="date">From</label>
+               <input class="form-control"  required [(ngModel)]="model.fromdate"
+                id="fromdate" name="date"  type="date" autocomplete="off"/>
+             </div>
+             <div class="form-group"> 
+                <label class="control-label" for="date">To</label>
+                <input class="form-control"  required [(ngModel)]="model.todate" 
+                id="todate" name="date" type="date" autocomplete="off"/>
+              </div>
+             <div class="form-group"> 
+               <button class="btn btn-primary"  type="submit" [disabled]="!insightsForm.form.valid">Submit</button>
+             </div>
+            </form>
+         </div>    
+        </div>
+       </div>
+       </div>

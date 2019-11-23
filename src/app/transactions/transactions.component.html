@@ -1,7 +1,17 @@
 <div class="container">
     <div [hidden]="submitted">
       <h1>Add a new Transaction</h1>
-      <form (ngSubmit)="onSubmit()" #signupForm="ngForm">
+      <form (ngSubmit)="onSubmit()" #transactionForm="ngForm">
+              
+   <div class="custom-control custom-radio">
+    <input id="lender" type="radio" class="custom-control-input" value="lender" name="involved" required [(ngModel)]="model.involved">
+    <label class="custom-control-label" for="lender">Lender</label>
+ </div>
+
+ <div class="custom-control custom-radio">
+    <input id="borrower" type="radio" class="custom-control-input" value="borrower" name="involved" required [(ngModel)]="model.involved">
+    <label class="custom-control-label" for="borrower">Borrower</label>
+ </div>           
         <div class="form-group">
             <label for="desc">Brief Description</label>
             <input type="text" class="form-control" id="desc"
@@ -25,13 +35,6 @@
               <option *ngFor="let x of tags" [value]="x">{{x}}</option>
             </select>
           </div>
-          <div class="form-group">
-            <label for="amount">Amount</label>
-            <input type="number" class="form-control" id="amount"
-                   required
-                   [(ngModel)]="model.amount" name="amount"
-                   #namount="ngModel">
-          </div>
-              <button type="submit" class="btn btn-success" [disabled]="!transactions.form.valid">Add Transaction</button>
+              <button type="submit" class="btn btn-success" [disabled]="!transactionForm.form.valid">Add Transaction</button>
             </form>
           </div>

@@ -1,4 +1,3 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 // import {FormsModule} from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -17,7 +16,10 @@ import { MemberComponent } from './member/member.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { MemGroupTransComponent } from './mem-group-trans/mem-group-trans.component';
 import { TransactiondetailsComponent } from './transactiondetails/transactiondetails.component';
-
+import { InsightsComponent } from './insights/insights.component';
+import { ChartComponent } from './chart/chart.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { SettleupComponent } from './settleup/settleup.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +34,10 @@ import { TransactiondetailsComponent } from './transactiondetails/transactiondet
     MemberComponent,
     TransactionsComponent,
     MemGroupTransComponent,
-    TransactiondetailsComponent
+    TransactiondetailsComponent,
+    InsightsComponent,
+    ChartComponent,
+    SettleupComponent
   ],
   imports: [
     BrowserModule,

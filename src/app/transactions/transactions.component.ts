@@ -7,11 +7,11 @@ import { Transaction } from '../transaction';
 })
 export class TransactionsComponent {
   tags=['movies','food','housing','travel','others'];
-  model=new Transaction('',0,'');
+  model=new Transaction('','',0,'');
   submitted=false;
   onSubmit(){console.log(this.model);this.submitted=true;}
   newTransaction(){
-    this.model=new Transaction('',0,'');
+    this.model=new Transaction('','',0,'');
   }
 
 }
