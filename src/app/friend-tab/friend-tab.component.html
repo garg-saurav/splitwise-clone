@@ -3,6 +3,7 @@
     <a class="active" routerLink="/friend-tab">Friends</a>
     <a routerLink="/group-tab">Group</a>
     <a routerLink="/activity-tab">Activity</a>
+    <a routerLink="#">Insights</a>
     <a (click)="logout()">Logout</a>
   </div>
   <div class="content">
@@ -12,22 +13,28 @@
            <th>Amount to be paid</th>
            <th>Amount to be received</th>
            <th></th>
-           <th></th>
        </tr>
        <!-- <div> -->
        <tr *ngFor="let fr of friend; let i = index">
         <!-- {% for g in friend %}   -->
         
-           <td>{{fr.FriendName}}</td>
+           <td><a href="#frienddetail" data-toggle="collapse">
+            {{fr.FriendName}}
+          </a>
+        </td>
            <td>{{fr.MoneyBorrowed}}</td>
            <td>{{fr.MoneyGiven}}</td>
            <td><button class="button">Add Transaction</button></td>
-           <td><button class="button">Settle accounts</button></td>
+           
         <!-- {% endfor %} -->
         </tr>
     <!-- </div> -->
        
    </table>
    <br>
-   <a routerLink="/addfriend" class="button">Add Friend</a> 
+   <a routerLink="/addfriend" class="button">Add Friend</a>  
+   <div id="frienddetail" class="collapse">
+        <button class="button">Settle accounts</button><br>
+        List of Transactions
+    </div>
 </div>

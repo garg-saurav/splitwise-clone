@@ -106,3 +106,8 @@ div.content {
     cursor: pointer;
     background-color: #45a049;
   }
+
+  #groupdetail{
+    font-size: 25px;
+    font-style: italic;
+  }
