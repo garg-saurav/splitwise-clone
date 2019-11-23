@@ -230,6 +230,7 @@ class get_friend_details(APIView):
                 temp['Borrowed']=row 
                 # temp=[i for g in temp for i in g]
                 ans[f_name]=temp
+                ans=minimizing(ans)
             return JsonResponse(ans, safe=False)
 
 class settle_up_all(APIView):
@@ -289,3 +290,24 @@ class tagsPieChart(APIView):
                 ans.append(amt)
             
         return JsonResponse(ans,safe=False)
+def minimizing(all_details):
+    myMap={}
+    for k in all_details:
+        obj=all_details[k]
+        arr=obj[Borrowed]
+        for i in range(len(arr)):
+            g=arr[i][0]
+            m=arr[i][1]
+            if g in myMap:
+                myMap[g]=myMap[g]+m
+            else:
+                myMap[g]=m
+        arr1=obj[Lent]
+        for i in range(len(arr1)):
+            g=arr1[i][0]
+            m=arr1[i][1]
+            if g in myMap:
+                myMap[g]=myMap[g]-m
+            else:
+                myMap[g]=-m
+    return myMap 
