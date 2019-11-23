@@ -32,7 +32,7 @@ def user_detail(request, username):
 
 
 def getfriendlist(request, username):
-    friendlist=[];
+    friendlist=[]
     with connection.cursor() as c:
         c.execute("SELECT friend_user_name from UF where user_name='"+username+"'")
         lest = c.fetchall()
@@ -44,7 +44,7 @@ def getfriendlist(request, username):
             if moneygiven[0]!= None:
                 moneygiven=moneygiven[0]
             else:
-                moneygiven=0;
+                moneygiven=0
             # print(moneygiven)
             c.execute("SELECT sum(amount) from trans where lender=%s and borrower=%s", [ friend_username[0],username])
             moneyowed = c.fetchone()
@@ -52,7 +52,7 @@ def getfriendlist(request, username):
                 moneyowed = moneyowed[0]
             else:
                 moneyowed=0
-            friendlist.append({"FriendName":friend_username[0],"MoneyBorrowed":str(moneyowed),"MoneyGiven":str(moneygiven)});
+            friendlist.append({"UserName":friend_username[0], "FriendName":friend_username[0],"MoneyBorrowed":str(moneyowed),"MoneyGiven":str(moneygiven)})
     return JsonResponse(friendlist, safe=False)
 
 
@@ -190,11 +190,102 @@ class getTransactions(APIView):
         # startdate=request.data['startdate']
         # enddate=request.data['enddate']
         with connection.cursor() as cursor:
-            print(username)
+            #print(username)
             ans=[]
-            row = cursor.execute("SELECT lender, borrower,amount FROM trans WHERE lender='" + username + "' OR borrower='"+username+"' ")
+            row = cursor.execute("SELECT friend_user_name FROM UF WHERE user_name='" + username + "'  ")
             row=row.fetchall()
-            for r in row:
-                print(r)
-                ans.append(r)
+            print(row)
+            for friend in row:
+                lent=cursor.execute("SELECT sum(amount) FROM trans WHERE lender='" + username + "' AND borrower='"+friend[0]+"' ")
+                lent=lent.fetchone()[0]
+                borrowed=cursor.execute("SELECT sum(amount) FROM trans WHERE borrower='" + username + "' AND lender='"+friend[0]+"' ")
+                borrowed=borrowed.fetchone()[0]
+                if lent== None:
+                    lent=0
+                if borrowed==None:
+                    res=(friend[0],lent,borrowed)
+                    print(res)
+                    ans.append(res)
+                
+        return JsonResponse(ans,safe=False)
+class get_friend_details(APIView):
+    def post(self,request,username,format=None):
+        # print("sfdfsdfsfsd")
+    #     print(request.data)
+        # f_name = request.data['friend_name']
+        with connection.cursor() as cursor:
+            print(username)
+            cursor.execute("SELECT friend_user_name from UF where user_name=%s",[username])
+            friends=cursor.fetchall()
+            ans = {}
+            for i in friends:
+                # print(i[0])
+                f_name=i[0]
+                cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[username, f_name])
+                row = cursor.fetchall()
+                temp={}
+                temp['Lent']=row
+                cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[f_name, username])
+                row = cursor.fetchall()
+                temp['Borrowed']=row 
+                # temp=[i for g in temp for i in g]
+                ans[f_name]=temp
+            return JsonResponse(ans, safe=False)
+
+class settle_up_all(APIView):
+    def post(self,request,username,format=None):
+        pass
+#         # print("sfdfsdfsfsd")
+#         # print(request.data)
+#         f_name = request.data['friend_name']
+#         with connection.cursor() as cursor:
+#             print(username)
+#             cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[username, f_name])
+#             row = cursor.fetchall()
+#             ans = {}
+#             ans['Lent']=row
+#             cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[f_name, username])
+#             row = cursor.fetchall()
+#             ans['Borrowed']=row 
+#             # ans=[i for g in ans for i in g]
+#             return JsonResponse(ans, safe=False)
+
+class add_transaction(APIView):
+    def post(self,request,username,format=None):
+        # print("sfdfsdfsfsd")
+    #     print(request.data)
+        grp_id = request.data['grp_id']
+        lender = request.data['lender']
+        borrower = request.data['borrower']
+        desc = request.data['desc']
+        amt = request.data['amt']
+        tag = request.data['tag']
+
+        with connection.cursor() as cursor:
+            # cursor.execute("select * from UserFriend where user_name = %s and friend_user_name = %s",[username, username])
+            cursor.execute("INSERT INTO trans (lender, borrower, group_id, desc, amount, tag) VALUES (%s, %s, %s, %s, %s, %s)", (lender, borrower, grp_id, desc, amt, tag))
+            # row = cursor.fetchall()
+            # ans = {}
+            # ans['Lent']=row
+            # cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[f_name, username])
+            # row = cursor.fetchall()
+            # ans['Borrowed']=row 
+            # ans=[i for g in ans for i in g]
+            return JsonResponse("Successfully added", safe=False)
+
+class tagsPieChart(APIView):
+    def post(self,request,username,format=None):
+        # startdate=request.data['startdate']
+        # enddate=request.data['enddate']
+        with connection.cursor() as cursor:
+            #print(username)
+            ans=[]
+            tags=["movies","food","housing","travel","others"]
+            for tag in tags:
+                amt=cursor.execute("SELECT sum(amount) FROM trans WHERE lender='" + username + "' AND tag='"+tag+"' ")
+                amt=amt.fetchone()[0]
+                if amt== None:
+                    amt=0
+                ans.append(amt)
+            
         return JsonResponse(ans,safe=False)

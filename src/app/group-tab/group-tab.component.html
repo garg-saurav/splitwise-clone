@@ -16,13 +16,14 @@
                 <th></th>
                 <th></th>
             </tr>
-            <tr *ngFor="let g of group; let i = index">
-                <td><a href="#groupdetail" data-toggle="collapse">
+            <ng-container *ngFor="let g of group; let i = index">
+                <tr>
+                <td><button class="none" (click)="onClick(g)">
                     {{g[0]}}
-                  </a></td>
+                </button></td>
                 <td>{{g[1]}}</td>
                 <td>{{g[1]}}</td>
-                <td><br>
+                <td>
                     <div *ngFor="let m of members">
                             <div *ngIf="m[0]==g[1]">
                                 {{m[1]}}
@@ -33,6 +34,20 @@
                 
                 <td><button class="button">Leave Group</button></td>
             </tr>
+            <tr>
+                    <td colspan=6>
+                    <div>
+                        <button class="button">Settle accounts</button><br>
+                        <div>
+                            t
+                        </div>
+                        <div>
+                            t
+                        </div>
+        
+                    </div></td>
+            </tr>
+            </ng-container>
         </table>
         <br>
         <form ng-app="myapp" name="myForm" ng-controller="myscope">
@@ -40,9 +55,5 @@
 
 
         </form>
-        <div id="groupdetail" class="collapse">
-            <button class="button">Settle up</button><br>
-            List of Transactions
-        </div>
 
      </div>

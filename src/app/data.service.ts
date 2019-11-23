@@ -10,6 +10,7 @@ export class DataService {
   _URL_reg = 'http://127.0.0.1:8000/account/signup/';
   _URL_user = 'http://127.0.0.1:8000/user/';
   _URL_friends = 'http://127.0.0.1:8000/friends/';
+  _URL_friends_details = 'http://127.0.0.1:8000/frienddetails/';
   _URL_add_friend = 'http://127.0.0.1:8000/addfriend/';
   _URL_groups =  'http://127.0.0.1:8000/groups/';
   _URL_img =  'http://127.0.0.1:8000/uploadimg/';
@@ -17,6 +18,7 @@ export class DataService {
   _URL_add_group_member = 'http://127.0.0.1:8000/addmember/';
   _URL_get_members = 'http://127.0.0.1:8000/members/';
   _URL_insights = 'http://127.0.0.1:8000/insight/';
+  _URL_pieChartTags = 'http://127.0.0.1:8000/pieChartTags/';
   my_username;
   profile:any;
   friends:any;
@@ -111,6 +113,16 @@ export class DataService {
   get_insights(){
     const fd = new FormData;
     return this.http.post(this._URL_insights+localStorage.getItem('username')+"/",fd);
+  }
+
+  get_friends_details(){
+    const fd = new FormData;
+    return this.http.post(this._URL_friends_details+localStorage.getItem('username')+"/",fd);
+  }
+
+  tagsPieChart(){
+    const fd = new FormData;
+    return this.http.post(this._URL_pieChartTags+localStorage.getItem('username')+"/",fd);
   }
 
 }

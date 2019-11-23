@@ -11,7 +11,10 @@ export class GroupTabComponent implements OnInit {
   group:any;
   members:any;
   constructor(private dataService:DataService,private router:Router) { }
-
+  show=true;
+  begin=1;
+  detailed_f_name:any;
+  all_details:any;
   ngOnInit() {
     this.dataService.get_groups_data()
                   .subscribe(data => {
@@ -30,7 +33,20 @@ export class GroupTabComponent implements OnInit {
 // document.getElementById('responce').innerHTML+='<br/><input type="text" id="boxName" value="Enter group name" "  /><br/>';
      
 // }
-
+onClick(f){
+  // this.show=!this.show;
+  if(f.UserName == this.detailed_f_name){
+    this.show=!this.show;
+    if(this.show==false){
+      this.detailed_f_name=null;
+      this.show=true;
+    }
+  }else{
+  this.detailed_f_name=f.UserName;
+  
+}
+  console.log(f);
+}
   logout(){
     localStorage.removeItem('username');
     this.router.navigate(['/login']);

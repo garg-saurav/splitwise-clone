@@ -13,42 +13,59 @@ export class InsightsComponent {
   insights_data:any;
   submitted = false;
   constructor(private dataService:DataService) { }
-  LineChart:any;
+  BarChart:any;
   onSubmit() {
     //console.log(this.model);
      this.submitted=true;
      this.dataService.get_insights()
      .subscribe(data => {
        this.insights_data = data;
-       console.log("asdf", this.insights_data[0] );
+       console.log("asdf", this.insights_data[0][0] );
+        var friend=[];var dat=[];var dat2=[];
+       for(var key in this.insights_data){
+         friend.push(this.insights_data[key][0]);
+         dat.push(this.insights_data[key][1]);
+         dat2.push(this.insights_data[key][2]);
+         //console.log("kkkk",key[1])
 
-       var labels = this.insights_data.jsonarray.map(function(e) {
-        return e[0];
-     });
-     var dat = this.insights_data.jsonarray.map(function(e) {
-        return e[1];
-     });;
-     
-
-       this.LineChart = new Chart('lineChart', {
-        type: 'line',
+       }
+      //  for(var i in label){
+      //  console.log("kkkk",label[i]);
+      //  console.log("kkkk",dat[i]);
+      //  }
+        
+       this.BarChart = new Chart('barChart', {
+        type: 'bar',
       data: {
-       labels: ["Jan", "Feb", "March", "April", "May", "June","July","Aug","Sep","Oct","Nov","Dec","Jan", "Feb", "March", "April", "May", "June","July","Aug","Sep","Oct","Nov","Dec"],
-       datasets: [{
-           label: 'Number of Items Sold in Months',
-           data: [9,7 , 3, 5, 2, 10,15,16,19,3,1,9,9,7 , 3, 5, 2, 10,15,16,19,3,1,9],
-           fill:false,
-           lineTension:0.2,
-           borderColor:"red",
+       labels: friend,
+       datasets: [
+         {
+           label: 'Money Borrowed',
+           data: dat2,
+           backgroundColor:'#b82e2e',
+           
            borderWidth: 1
-       }]
+       },
+       {
+        label: 'Money Lent',
+        data: dat,
+        backgroundColor: '#3366cc',
+       
+        borderWidth: 1
+    }]
       }, 
+      
+    
       options: {
        title:{
-           text:"Line Chart",
+           text:"Bar Chart",
            display:true
        },
        scales: {
+        xAxes: [{
+          stacked: true // this should be set to make the bars stacked
+       }],
+
            yAxes: [{
                ticks: {
                    beginAtZero:true
@@ -57,7 +74,9 @@ export class InsightsComponent {
        }
       }
       });
-      this.LineChart.render();
+
+       
+      this.BarChart.render();
     
      });
   }

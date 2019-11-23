@@ -12,29 +12,39 @@
            <th>Name</th>
            <th>Amount to be paid</th>
            <th>Amount to be received</th>
-           <th></th>
        </tr>
        <!-- <div> -->
-       <tr *ngFor="let fr of friend; let i = index">
+    <ng-container *ngFor="let fr of friend; let i = index">
+       <tr>
         <!-- {% for g in friend %}   -->
         
-           <td><a href="#frienddetail" data-toggle="collapse">
+           <td><button class="none" (click)="onClick(fr)">
             {{fr.FriendName}}
-          </a>
+        </button>
+          
         </td>
            <td>{{fr.MoneyBorrowed}}</td>
            <td>{{fr.MoneyGiven}}</td>
-           <td><button class="button">Add Transaction</button></td>
            
         <!-- {% endfor %} -->
         </tr>
+        <tr>
+            <td colspan=3>
+            <div *ngIf="show && fr.UserName==detailed_f_name">
+                <button class="button">Settle accounts</button><br>
+                <div *ngFor="let t of all_details[fr.UserName]['Lent']">
+                    {{t}}
+                </div>
+                <div *ngFor="let t of all_details[fr.UserName]['Borrowed']">
+                    {{t}}
+                </div>
+
+            </div></td>
+        </tr>
+    </ng-container>
     <!-- </div> -->
        
    </table>
    <br>
    <a routerLink="/addfriend" class="button">Add Friend</a>  
-   <div id="frienddetail" class="collapse">
-        <button class="button">Settle accounts</button><br>
-        List of Transactions
-    </div>
 </div>
