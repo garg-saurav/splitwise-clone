@@ -19,13 +19,10 @@
     "@angular/platform-browser": "~8.2.4",
     "@angular/platform-browser-dynamic": "~8.2.4",
     "@angular/router": "~8.2.4",
-<<<<<<< HEAD
     "@types/bootstrap-datepicker": "0.0.13",
     "@types/jquery": "^3.3.31",
     "bootstrap-datepicker": "^1.9.0",
-=======
     "chart.js": "^2.9.3",
->>>>>>> 24b2f847f3758eabb08ba7fee0f25f1affe3bd6b
     "jquery": "^3.4.1",
     "ngx-print": "^1.2.0-beta.3",
     "rxjs": "~6.4.0",
