@@ -184,3 +184,61 @@ class get_group_members(APIView):
         #     cursor.execute("select * from UG where group_id = %s and username != %s",[grp_id, username])
         #     res=cursor.fetchall()
         #     return JsonResponse(res,safe=False)
+
+class friend_detail(APIView):
+    def post(self,request,username,format=None):
+        # print("sfdfsdfsfsd")
+    #     print(request.data)
+        f_name = request.data['friend_name']
+        with connection.cursor() as cursor:
+            print(username)
+            cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[username, f_name])
+            row = cursor.fetchall()
+            ans = {}
+            ans['Lent']=row
+            cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[f_name, username])
+            row = cursor.fetchall()
+            ans['Borrowed']=row 
+            # ans=[i for g in ans for i in g]
+            return JsonResponse(ans, safe=False)
+
+class settle_up_all(APIView):
+    def post(self,request,username,format=None):
+        pass
+#         # print("sfdfsdfsfsd")
+#         # print(request.data)
+#         f_name = request.data['friend_name']
+#         with connection.cursor() as cursor:
+#             print(username)
+#             cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[username, f_name])
+#             row = cursor.fetchall()
+#             ans = {}
+#             ans['Lent']=row
+#             cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[f_name, username])
+#             row = cursor.fetchall()
+#             ans['Borrowed']=row 
+#             # ans=[i for g in ans for i in g]
+#             return JsonResponse(ans, safe=False)
+
+class add_transaction(APIView):
+    def post(self,request,username,format=None):
+        # print("sfdfsdfsfsd")
+    #     print(request.data)
+        grp_id = request.data['grp_id']
+        lender = request.data['lender']
+        borrower = request.data['borrower']
+        desc = request.data['desc']
+        amt = request.data['amt']
+        tag = request.data['tag']
+
+        with connection.cursor() as cursor:
+            # cursor.execute("select * from UserFriend where user_name = %s and friend_user_name = %s",[username, username])
+            cursor.execute("INSERT INTO trans (lender, borrower, group_id, desc, amount, tag) VALUES (%s, %s, %s, %s, %s, %s)", (lender, borrower, grp_id, desc, amt, tag))
+            # row = cursor.fetchall()
+            # ans = {}
+            # ans['Lent']=row
+            # cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[f_name, username])
+            # row = cursor.fetchall()
+            # ans['Borrowed']=row 
+            # ans=[i for g in ans for i in g]
+            return JsonResponse("Successfully added", safe=False)
