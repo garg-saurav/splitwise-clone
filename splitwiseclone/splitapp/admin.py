@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib import admin
-from .models import UserProfile, Transaction, UserGroup, UserFriend
+from .models import UserProfile, Transaction, UserGroup, UserFriend, GroupId
 
 admin.site.register(UserProfile)
 # admin.site.register(Group)
 admin.site.register(Transaction)
 admin.site.register(UserGroup)
 admin.site.register(UserFriend)
+admin.site.register(GroupId)
 
 
 #

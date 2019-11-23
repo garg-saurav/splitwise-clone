@@ -20,7 +20,7 @@ const routes: Routes = [
   { path:'activity-tab',component:ActivityTabComponent},
   { path:'addfriend',component: AddFriendFormComponent},
   { path:'groupform',component:GroupFormComponent},
-  { path:'member',component:MemberComponent},
+  { path:'member/:grp',component:MemberComponent},
   { path:'transaction',component:TransactionsComponent}
 ];
 

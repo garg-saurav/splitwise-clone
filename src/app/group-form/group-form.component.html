@@ -3,10 +3,10 @@
       <h1>Add a Group</h1>
       <form (ngSubmit)="onSubmit()" #signupForm="ngForm">
         <div class="form-group">
-          <label for="name">Name of the Group</label>
-          <input type="text" class="form-control" id="name"
+          <label for="grp_name">Name of the Group</label>
+          <input type="text" class="form-control" id="grp_name"
                  required
-                 [(ngModel)]="model.name" name="name"
+                 [(ngModel)]="model.grp_name" name="grp_name"
                  #name="ngModel">
         </div>
         

@@ -19,8 +19,8 @@ class UserProfile(models.Model):
 
 
 class UserGroup(models.Model):
-  user_name = models.CharField(max_length=30)
   group_id = models.IntegerField()
+  user_name = models.CharField(max_length=30)
   group_name = models.CharField(max_length=30)
 
 
@@ -29,6 +29,16 @@ class UserGroup(models.Model):
 
   class Meta:
     db_table = 'UG'
+
+class GroupId(models.Model):
+  group_id = models.AutoField(primary_key=True)
+  group_name = models.CharField(max_length=30)
+
+  def __str__(self):
+    return str(self.group_id)+":"+self.group_name
+
+  class Meta:
+    db_table = 'GId'
 
 class UserFriend(models.Model):
   user_name = models.CharField(max_length=30)

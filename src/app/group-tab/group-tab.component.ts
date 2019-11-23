@@ -8,7 +8,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./group-tab.component.css']
 })
 export class GroupTabComponent implements OnInit {
-  group:any
+  group:any;
+  members:any;
   constructor(private dataService:DataService,private router:Router) { }
 
   ngOnInit() {
@@ -16,7 +17,12 @@ export class GroupTabComponent implements OnInit {
                   .subscribe(data => {
                     this.group = data;
                     console.log("asdf",data);
-                  })
+                  });
+    this.dataService.get_group_members()
+        .subscribe(data =>{
+          this.members =data;
+          console.log(data);
+        })
   }
   
 //   addInput(): void
