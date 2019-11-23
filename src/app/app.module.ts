@@ -1,4 +1,3 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 // import {FormsModule} from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -19,6 +18,8 @@ import { MemGroupTransComponent } from './mem-group-trans/mem-group-trans.compon
 import { TransactiondetailsComponent } from './transactiondetails/transactiondetails.component';
 import { InsightsComponent } from './insights/insights.component';
 
+import { ChartComponent } from './chart/chart.component';
+import { BrowserModule } from '@angular/platform-browser';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +35,8 @@ import { InsightsComponent } from './insights/insights.component';
     TransactionsComponent,
     MemGroupTransComponent,
     TransactiondetailsComponent,
-    InsightsComponent
+    InsightsComponent,
+    ChartComponent
   ],
   imports: [
     BrowserModule,

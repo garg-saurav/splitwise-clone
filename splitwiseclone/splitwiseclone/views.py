@@ -184,3 +184,6 @@ class get_group_members(APIView):
         #     cursor.execute("select * from UG where group_id = %s and username != %s",[grp_id, username])
         #     res=cursor.fetchall()
         #     return JsonResponse(res,safe=False)
+
+
+
