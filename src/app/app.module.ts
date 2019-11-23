@@ -15,6 +15,8 @@ import { AddFriendFormComponent } from './add-friend-form/add-friend-form.compon
 import { GroupFormComponent } from './group-form/group-form.component';
 import { MemberComponent } from './member/member.component';
 import { TransactionsComponent } from './transactions/transactions.component';
+import { MemGroupTransComponent } from './mem-group-trans/mem-group-trans.component';
+import { TransactiondetailsComponent } from './transactiondetails/transactiondetails.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { TransactionsComponent } from './transactions/transactions.component';
     AddFriendFormComponent,
     GroupFormComponent,
     MemberComponent,
-    TransactionsComponent
+    TransactionsComponent,
+    MemGroupTransComponent,
+    TransactiondetailsComponent
   ],
   imports: [
     BrowserModule,
