@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^uploadimg/(?P<username>[\w-]+)/$',views.upload_img.as_view(),name='upload'),
     url(r'^addmember/(?P<username>[\w-]+)/$',views.add_friend_in_group.as_view()),
     url(r'^members/(?P<username>[\w-]+)/$',views.get_group_members.as_view()),
-    url(r'^insights/(?P<username>[\w-]+)/$',views.getTransactions.as_view()),
+    url(r'^insight/(?P<username>[\w-]+)/$',views.getTransactions.as_view()),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

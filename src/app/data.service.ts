@@ -16,7 +16,7 @@ export class DataService {
   _URL_add_group = 'http://127.0.0.1:8000/newgroup/';
   _URL_add_group_member = 'http://127.0.0.1:8000/addmember/';
   _URL_get_members = 'http://127.0.0.1:8000/members/';
-  _URL_insights = 'http://127.0.0.1:8000/insights/';
+  _URL_insights = 'http://127.0.0.1:8000/insight/';
   my_username;
   profile:any;
   friends:any;

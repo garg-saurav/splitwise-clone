@@ -187,13 +187,14 @@ class get_group_members(APIView):
 
 class getTransactions(APIView):
     def post(self,request,username,format=None):
-        startdate=request.data['startdate']
-        enddate=request.data['enddate']
+        # startdate=request.data['startdate']
+        # enddate=request.data['enddate']
         with connection.cursor() as cursor:
             print(username)
             ans=[]
-            row = cursor.execute("SELECT lender, borrower,amount FROM trans WHERE user_name='" + username + "' AND date_time>'"+startdate+"' AND date_time<'"+enddate+"' ")
+            row = cursor.execute("SELECT lender, borrower,amount FROM trans WHERE lender='" + username + "' OR borrower='"+username+"' ")
             row=row.fetchall()
             for r in row:
+                print(r)
                 ans.append(r)
         return JsonResponse(ans,safe=False)
