@@ -44,6 +44,10 @@ export class FriendTabComponent implements OnInit {
     console.log(f);
   }
 
+  minimizing(){
+
+  }
+
   logout(){
     localStorage.removeItem('username');
     this.router.navigate(['/login']);
