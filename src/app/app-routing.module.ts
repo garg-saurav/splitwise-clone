@@ -12,6 +12,7 @@ import { MemberComponent } from './member/member.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { MemGroupTransComponent } from './mem-group-trans/mem-group-trans.component';
 import { TransactiondetailsComponent } from './transactiondetails/transactiondetails.component';
+import { InsightsComponent } from './insights/insights.component';
 import { ChartComponent } from './chart/chart.component';
 const routes: Routes = [
   { path:'',redirectTo: '/login', pathMatch:'full'},
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path:'transaction',component:TransactionsComponent},
   { path:'memgroup',component:MemGroupTransComponent},
   { path:'transdet',component:TransactiondetailsComponent},
+  { path:'insight',component:InsightsComponent},
   { path:'chart',component:ChartComponent}
 ];
 
