@@ -17,6 +17,7 @@ import { MemberComponent } from './member/member.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { MemGroupTransComponent } from './mem-group-trans/mem-group-trans.component';
 import { TransactiondetailsComponent } from './transactiondetails/transactiondetails.component';
+import { InsightsComponent } from './insights/insights.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { TransactiondetailsComponent } from './transactiondetails/transactiondet
     MemberComponent,
     TransactionsComponent,
     MemGroupTransComponent,
-    TransactiondetailsComponent
+    TransactiondetailsComponent,
+    InsightsComponent
   ],
   imports: [
     BrowserModule,
