@@ -12,11 +12,8 @@ import { MemberComponent } from './member/member.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { MemGroupTransComponent } from './mem-group-trans/mem-group-trans.component';
 import { TransactiondetailsComponent } from './transactiondetails/transactiondetails.component';
-<<<<<<< HEAD
 import { InsightsComponent } from './insights/insights.component';
-=======
 import { ChartComponent } from './chart/chart.component';
->>>>>>> 24b2f847f3758eabb08ba7fee0f25f1affe3bd6b
 const routes: Routes = [
   { path:'',redirectTo: '/login', pathMatch:'full'},
   { path:'login',component:LoginformComponent},
@@ -31,11 +28,8 @@ const routes: Routes = [
   { path:'transaction',component:TransactionsComponent},
   { path:'memgroup',component:MemGroupTransComponent},
   { path:'transdet',component:TransactiondetailsComponent},
-<<<<<<< HEAD
-  { path:'insight',component:InsightsComponent}
-=======
+  { path:'insight',component:InsightsComponent},
   { path:'chart',component:ChartComponent}
->>>>>>> 24b2f847f3758eabb08ba7fee0f25f1affe3bd6b
 ];
 
 @NgModule({

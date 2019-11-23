@@ -17,7 +17,6 @@ import { TransactionsComponent } from './transactions/transactions.component';
 import { MemGroupTransComponent } from './mem-group-trans/mem-group-trans.component';
 import { TransactiondetailsComponent } from './transactiondetails/transactiondetails.component';
 import { InsightsComponent } from './insights/insights.component';
-
 import { ChartComponent } from './chart/chart.component';
 import { BrowserModule } from '@angular/platform-browser';
 @NgModule({
