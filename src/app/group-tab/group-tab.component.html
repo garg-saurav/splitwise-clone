@@ -3,6 +3,7 @@
     <a routerLink="/friend-tab">Friends</a>
     <a class="active" routerLink="/group-tab">Group</a>
     <a routerLink="/activity-tab">Activity</a>
+    <a routerLink="#">Insights</a>
     <a (click)="logout()">Logout</a>
   </div>
   <div class="content">
@@ -12,13 +13,13 @@
                 <th>Amount you owe to the group</th>
                 <th>Amount the group owes to you</th>
                 <th>Members</th>
-                <th>Transactions in the group</th>
-                <th></th>
                 <th></th>
                 <th></th>
             </tr>
             <tr *ngFor="let g of group; let i = index">
-                <td>{{g[0]}}</td>
+                <td><a href="#groupdetail" data-toggle="collapse">
+                    {{g[0]}}
+                  </a></td>
                 <td>{{g[1]}}</td>
                 <td>{{g[1]}}</td>
                 <td><br>
@@ -29,8 +30,7 @@
                     </div>
                     <a routerLink="/member/{{g[1]}}" class="button">Add new member</a></td>
                 <td><a routerLink="/transaction" class="button">Add Transaction</a></td>
-                <!-- <td></td> -->
-                <td><button class="button">Settle accounts</button></td>
+                
                 <td><button class="button">Leave Group</button></td>
             </tr>
         </table>
@@ -40,4 +40,9 @@
 
 
         </form>
+        <div id="groupdetail" class="collapse">
+            <button class="button">Settle up</button><br>
+            List of Transactions
+        </div>
+
      </div>

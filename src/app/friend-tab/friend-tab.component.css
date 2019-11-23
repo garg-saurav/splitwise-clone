@@ -107,3 +107,8 @@ a.button {
   cursor: pointer;
   background-color: #45a049;
 }
+
+#frienddetail{
+  font-size: 25px;
+  font-style: italic;
+}

@@ -10,6 +10,7 @@ export class DataService {
   _URL_reg = 'http://127.0.0.1:8000/account/signup/';
   _URL_user = 'http://127.0.0.1:8000/user/';
   _URL_friends = 'http://127.0.0.1:8000/friends/';
+  _URL_friends_details = 'http://127.0.0.1:8000/frienddetails/';
   _URL_add_friend = 'http://127.0.0.1:8000/addfriend/';
   _URL_groups =  'http://127.0.0.1:8000/groups/';
   _URL_img =  'http://127.0.0.1:8000/uploadimg/';
@@ -104,9 +105,13 @@ export class DataService {
   }
 
   get_group_members(){
-    console.log("Buffallo")
     const fd = new FormData;
     return this.http.post(this._URL_get_members+localStorage.getItem('username')+"/",fd);
+  }
+
+  get_friends_details(){
+    const fd = new FormData;
+    return this.http.post(this._URL_friends_details+localStorage.getItem('username')+"/",fd);
   }
 
 }

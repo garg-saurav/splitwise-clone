@@ -52,7 +52,7 @@ def getfriendlist(request, username):
                 moneyowed = moneyowed[0]
             else:
                 moneyowed=0
-            friendlist.append({"FriendName":friend_username[0],"MoneyBorrowed":str(moneyowed),"MoneyGiven":str(moneygiven)});
+            friendlist.append({"UserName":friend_username[0], "FriendName":friend_username[0],"MoneyBorrowed":str(moneyowed),"MoneyGiven":str(moneygiven)});
     return JsonResponse(friendlist, safe=False)
 
 
@@ -185,21 +185,28 @@ class get_group_members(APIView):
         #     res=cursor.fetchall()
         #     return JsonResponse(res,safe=False)
 
-class friend_detail(APIView):
+class get_friend_details(APIView):
     def post(self,request,username,format=None):
         # print("sfdfsdfsfsd")
     #     print(request.data)
-        f_name = request.data['friend_name']
+        # f_name = request.data['friend_name']
         with connection.cursor() as cursor:
             print(username)
-            cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[username, f_name])
-            row = cursor.fetchall()
+            cursor.execute("SELECT friend_user_name from UF where user_name=%s",[username])
+            friends=cursor.fetchall()
             ans = {}
-            ans['Lent']=row
-            cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[f_name, username])
-            row = cursor.fetchall()
-            ans['Borrowed']=row 
-            # ans=[i for g in ans for i in g]
+            for i in friends:
+                # print(i[0])
+                f_name=i[0]
+                cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[username, f_name])
+                row = cursor.fetchall()
+                temp={}
+                temp['Lent']=row
+                cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[f_name, username])
+                row = cursor.fetchall()
+                temp['Borrowed']=row 
+                # temp=[i for g in temp for i in g]
+                ans[f_name]=temp
             return JsonResponse(ans, safe=False)
 
 class settle_up_all(APIView):
