@@ -360,7 +360,7 @@ class settle_up_all(APIView):
             print("YoBro", k)
             kl=k[friend_id]
             for g_id in kl:
-                amount=int(kl[g_id][0])
+                amount=float(kl[g_id][0])
                 if amount > 0:
                     cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag, date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(username,friend_id,g_id,'settlling up',amount,'others',datetime.datetime.now()))
                 elif amount < 0:
@@ -516,7 +516,7 @@ def minimizing(all_details):
             g=arr[i][0]
             m=arr[i][1]
             nam=arr[i][2]
-            m=int(m)
+            m=float(m)
             if g in temp:
                 temp[g][0]=temp[g][0]+m
             else:
@@ -526,7 +526,7 @@ def minimizing(all_details):
             g=arr1[i][0]
             m=arr1[i][1]
             nam=arr1[i][2]
-            m=int(m)
+            m=float(m)
             if g in temp:
                 temp[g][0]=temp[g][0]-m
             else:
@@ -547,10 +547,10 @@ class settle_up(APIView):
             for f in friend_list:  
                 cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[f, username,grp_id])
                 am=cursor.fetchall()
-                amount=amount+int(am[0])
+                amount=amount+float(am[0])
                 cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[username,f,grp_id])
                 am=cursor.fetchall()
-                amount=amount-int(am[0])
+                amount=amount-float(am[0])
                 if amount>0:
                     cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(username,f,grp_id,'settlling up',amount,'others'))
                 elif amount<0:
@@ -582,20 +582,20 @@ class balances(APIView):
                 amount=0
                 cursor.execute("SELECT SUM(amount) from trans where lender=%s and borrower = %s and group_id=%s",[username,m[0],grp_id])
                 am=cursor.fetchall()
-                amount=amount-int(am[0])
+                amount=amount-float(am[0])
                 cursor.execute("SELECT SUM(amount) from trans where lender=%s borrower=%s and group_id=%s",[m[0],username,grp_id])
                 am=cursor.fetchall()
-                amount=amount+int(am[0])
+                amount=amount+float(am[0])
                 mymap[m[0]]=amount
             result=result+[mymap]
             for m in members:
                 amount=0
                 cursor.execute("SELECT SUM(amount) from trans where lender=%s and group_id=%s",[m[0],grp_id])
                 am=cursor.fetchall()
-                amount=amount-int(am[0])
+                amount=amount-float(am[0])
                 cursor.execute("SELECT SUM(amount) from trans where borrower=%s and group_id=%s",[m[0],grp_id])
                 am=cursor.fetchall()
-                amount=amount+int(am[0])
+                amount=amount+float(am[0])
                 result=result+[[m[0],amount]]
             return JsonResponse(result,safe=False)
 
@@ -611,25 +611,25 @@ class min_transaction(APIView):
             mymap={}
             visited={}
             dfsfinnum={}
-            mymap[lender]={borrower:amount}
-            mymap[borrower]={lender:(-1)*amount}
+            mymap[lender]={borrower:float(amount)}
+            mymap[borrower]={lender:(-1)*float(amount)}
             for r in res:
                 if r[1] in mymap:
                     if r[2] in mymap[r[1]]:
-                        mymap[r[1]][r[2]]+=r[4]
+                        mymap[r[1]][r[2]]+=float(r[4])
                     else:
-                        mymap[r[1]]=Merge(mymap,{r[2]:r[4]})
+                        mymap[r[1]]=Merge(mymap,{r[2]:float(r[4])})
                 else:
-                    mymap[r[1]]={r[2]:r[4]}
+                    mymap[r[1]]={r[2]:float(r[4])}
                     visited[r[1]]=0
                     dfsfinnum[r[1]]=-1
                 if r[2] in mymap:
                     if r[1] in mymap[r[2]]:
-                        mymap[r[2]][r[1]]-=r[4]
+                        mymap[r[2]][r[1]]-=float(r[4])
                     else:
-                        mymap[r[2]]=Merge(mymap,{r[1]:(-1)*r[4]})
+                        mymap[r[2]]=Merge(mymap,{r[1]:(-1)*float(r[4])})
                 else:
-                    mymap[r[2]]={r[1]:(-1)*r[4]}
+                    mymap[r[2]]={r[1]:(-1)*float(r[4])}
                     visited[r[2]]=0
                     dfsfinnum[r[2]]=-1
             for k in mymap:
