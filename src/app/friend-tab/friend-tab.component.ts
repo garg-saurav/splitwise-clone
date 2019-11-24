@@ -69,7 +69,6 @@ export class FriendTabComponent implements OnInit {
     else{
       return "You owe the person "+amount.toString()
     }
-    return "yeah"
   }
   onClick(f){
     // this.show=!this.show;

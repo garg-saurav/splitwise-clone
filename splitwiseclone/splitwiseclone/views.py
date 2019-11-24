@@ -622,7 +622,7 @@ class min_transaction(APIView):
                 else:
                     mymap[r[1]]={r[2]:r[4]}
                     visited[r[1]]=0
-                    dfsfinnum[r[1]]=0
+                    dfsfinnum[r[1]]=-1
                 if r[2] in mymap:
                     if r[1] in mymap[r[2]]:
                         mymap[r[2]][r[1]]-=r[4]
@@ -631,7 +631,7 @@ class min_transaction(APIView):
                 else:
                     mymap[r[2]]={r[1]:(-1)*r[4]}
                     visited[r[2]]=0
-                    dfsfinnum[r[2]]=0
+                    dfsfinnum[r[2]]=-1
             for k in mymap:
                 sum=0
                 for k1 in mymap[k]:
@@ -652,6 +652,7 @@ class min_transaction(APIView):
                         dfs(k)
                     elif dfsfinnum[k]==-1 and k!=parent[node]:
                         backedge=[{node:k}]
+                        parent[k]=node
                         return
                     else:
                         continue
@@ -661,7 +662,27 @@ class min_transaction(APIView):
                 return JsonResponse("Decreasing number of transactions not possible",safe=False)
             else:
                 n=[k for k in backedge]
-                mincost_edge(backedge[1])
+                edc=mymap[parent[n[0]]][n[0]]
+                mincost_edge(parent[n[0]])
+                def mincost_edge(node):
+                    if mymap[parent[node]][node]<ed:
+                        edc=mymap[parent[node]][node]
+                    if parent[node]==n[0]:
+                        return
+                    else:
+                        mincost_edge(parent[node])
+                    return
+                def add_new_transactions(node):
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(node,parent[node],grp_id,'reducing no of transactions',edc,'others'))
+                    if parent[node]==n[0]:
+                        return
+                    else:
+                        add_new_transactions(parent[node])
+                    return
+                return JsonResponse("Transactions minimized",safe=False)
+
+                    
+
                 
 
                     
