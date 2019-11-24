@@ -217,6 +217,7 @@ class get_group_members(APIView):
             print(username)
             row = cursor.execute("SELECT group_name, group_id FROM UG WHERE user_name='" + username + "'")
             row = row.fetchall()
+            res = {}
             for r in row:
                 cursor.execute("select group_id, UG.user_name, name from UG inner join UserProfile on UG.user_name = UserProfile.user_name where group_id = %s and UG.user_name != %s",[r[1], username])
     
@@ -225,7 +226,8 @@ class get_group_members(APIView):
                 ans.append(res)
                 
                 print(res)
-            for k in res:
+            ans=[i for g in ans for i in g]
+            for k in ans:
                 cursor.execute("select sum(amount) from trans where group_id = %s and lender = %s and borrower = %s",[r[1],username, k[1]])
                 lent=cursor.fetchone()
                 if lent[0]!=None:
@@ -244,7 +246,7 @@ class get_group_members(APIView):
                 ans2.append(o)
                 print("p",o)
             print("ans2",ans2)
-            ans=[i for g in ans for i in g]
+            
             print(ans)
             return JsonResponse(ans2, safe=False)
 
@@ -443,24 +445,36 @@ class leave_group(APIView):
     def post(self,request,username,format=None):
         grp_id = request.data['grp_id']
         with connection.cursor() as cursor:
-            cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and group_id = %s",[username,grp_id])
-            res=cursor.fetchone()
-            print(res[0])
-            if (res[0]!=None) and round(float(res [0]),2) != 0.00:
-                return JsonResponse("Cannot Leave Group as you're not settled up yet with everyone", safe=False)
-            else:
-                cursor.execute("SELECT SUM(amount) FROM trans WHERE borrower = %s and group_id = %s",[username,grp_id])
-                res=cursor.fetchone()
-                print(res[0])
-                if (res[0]!=None) and round(float(res[0]),2) != 0.00:
-                    return JsonResponse("Cannot Leave Group as you're not settled up yet with everyone", safe=False)
+            cursor.execute("SELECT user_name FROM UG WHERE group_id=%s and user_name!=%s",[grp_id,username])
+            res=cursor.fetchall()
+            valid=True
+            for r in res:
+                amount=0
+                print("r in res: ",r[0])
+                cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[username,r[0],grp_id])
+                am=cursor.fetchone()
+                print(am[0])
+                if am[0]!=None:
+                    amount=amount+float(am[0])
+                cursor.execute("SELECT SUM(amount) FROM trans WHERE borrower = %s and lender=%s and group_id = %s",[username,r[0],grp_id])
+                am=cursor.fetchone()
+                print(am[0])
+                if am[0]!=None:
+                    amount=amount-float(am[0])
+                if round(amount,2)==0.00:
+                    valid=True
                 else:
-                    cursor.execute("DELETE FROM UG where user_name = %s and group_id = %s",[username,grp_id])
-                    cursor.execute("SELECT * FROM UG where group_id = %s",[grp_id])
-                    res=cursor.fetchall()
-                    if len(res) == 0:
-                        cursor.execute("DELETE FROM GId where group_id = %s",[grp_id])
-                    return JsonResponse("Left Group", safe=False)
+                    valid=False
+                    break
+            if(valid):
+                cursor.execute("DELETE FROM UG where user_name = %s and group_id = %s",[username,grp_id])
+                cursor.execute("SELECT * FROM UG where group_id = %s",[grp_id])
+                res=cursor.fetchall()
+                if len(res) == 0:
+                    cursor.execute("DELETE FROM GId where group_id = %s",[grp_id])
+                return JsonResponse("Left Group", safe=False)
+            else:
+                return JsonResponse("You can't leave the group as you haven't settled up with all", safe=False)
 
 class add_transaction(APIView):
     def post(self,request,username,format=None):
@@ -728,7 +742,8 @@ class settle_up(APIView):
             amount=0
             cursor.execute("select group_name from GId where group_id=%s",(grp_id,))
             grp_name=cursor.fetchone()[0]
-            for f in friend_list:  
+            for f in friend_list: 
+                amount=0 
                 # print("f",f)
                 cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[f, username,grp_id])
                 am=cursor.fetchone()

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 // import * as $ from 'jquery';
-import { Router } from '@angular/router';
+import { Router,ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-group-tab',
   templateUrl: './group-tab.component.html',
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class GroupTabComponent implements OnInit {
   group:any;
   members:any;groupbalance:any;groupbalance2:any; transactions:any;
-  constructor(private dataService:DataService,private router:Router) { }
+  constructor(private dataService:DataService,private router:Router,private route:ActivatedRoute) { }
   show=true;
   showbalance=true;
   begin=1;
@@ -30,7 +30,17 @@ export class GroupTabComponent implements OnInit {
           console.log("MEMBERS");
           console.log(data);
         })
-    
+    this.route.paramMap.subscribe(params => {
+      // console.log();
+        if(params['params']['gid']){
+          console.log(params['params']['gid']);
+          this.onClick(params['params']['gid']);
+          // window.location.hash = "params['params']['gid']";
+  
+        };
+    });
+
+    // this.route.paramMap.subscribe
   }
   
 //   addInput(): void
@@ -132,6 +142,9 @@ func2(amount){
 
 
   }
+  value(r){
+    return parseFloat(r).toFixed(2);
+  }
 
   settle(gid){
     this.router.navigate(['/settle/'+gid]);
@@ -149,6 +162,10 @@ func2(amount){
         }
       })
   }
-  
+
+
+
+
+
 
 }

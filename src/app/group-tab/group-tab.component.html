@@ -12,8 +12,8 @@
                 <th>Group Name</th>
                 <th>Amount you owe or the group owes to you</th>
                 <th>Members</th>
-                <th></th>
-                <th></th>
+                <th>Add transaction</th>
+                <th>Leave group</th>
             </tr>
             <ng-container *ngFor="let g of group; let i = index">
                 <tr>
@@ -77,15 +77,16 @@
                                 <th>Tag</th>
                             </tr>
                             <ng-container *ngFor="let trans of transactions">
+                            <ng-container *ngIf="value(trans[7])!=0.00">
                                 
                                     <tr>
                                         <td>{{trans[1]}}</td>
                                         <td>{{trans[2]}}</td>
-                                        <td>{{trans[7].toFixed(2)}}</td>
+                                        <td>{{value(trans[7])}}</td>
                                         <td>{{trans[5]}}</td>
                                         <td>{{trans[6]}}</td>
                                     </tr>
-                                    
+                            </ng-container>       
                             </ng-container>
                         </table>
                     </div></td>

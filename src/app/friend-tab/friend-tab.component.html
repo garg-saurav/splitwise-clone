@@ -41,10 +41,12 @@
                                                 <!-- {{t}} -->
                                                 <div *ngIf="t.startsWith(fr.UserName+':')">
                                                         <div *ngFor="let item of all_details[t] | keyvalue">
-                                                                <a href=#>{{func(item.value[0].toFixed(2))}}
+                                                            <div *ngIf="(item.value[0].toFixed(2))!=0">
+                                                                <button class="none" (click)="open_group(item.key)" >{{func(item.value[0].toFixed(2))}}
                                                                 in the group
-                                                                {{item.value[1]}}</a>
+                                                                {{item.value[1]}}</button>
                                                                 </div>  
+                                                            </div>
                                                 </div>
                                             </div>
                                 </div>  

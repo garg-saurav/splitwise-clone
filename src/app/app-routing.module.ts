@@ -23,6 +23,7 @@ const routes: Routes = [
   { path :'dashboard',component:DashboardComponent},
   { path:'friend-tab',component:FriendTabComponent},
   { path:'group-tab',component:GroupTabComponent},
+  { path:'group-tab/:gid',component:GroupTabComponent},
   { path:'activity-tab',component:ActivityTabComponent},
   { path:'addfriend',component: AddFriendFormComponent},
   { path:'groupform',component:GroupFormComponent},

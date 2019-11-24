@@ -40,7 +40,7 @@ export class TransactionsComponent {
         this.dist[sh[1]]=(<HTMLInputElement>document.getElementById(sh[1])).value;
         this.name[sh[1]]=sh[2];
         console.log((<HTMLInputElement>document.getElementById(sh[1])).value);
-        this.router.navigate(['/group-tab'])
+        
 
       }
     }
@@ -86,17 +86,19 @@ export class TransactionsComponent {
               this.dataService.add_trans(fd)
                 .subscribe(data =>{
                   console.log(data);
+                  
               })
 
 
 
             }
+            this.router.navigate(['/group-tab'])
              
           //   for (var key of fd.entries()) {
           //     console.log(key[0] + ', ' + key[1]);
           // }
           
-          this.submitted=false; 
+          // this.submitted=false; 
         }
   
   }

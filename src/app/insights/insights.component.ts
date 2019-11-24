@@ -30,6 +30,10 @@ export class InsightsComponent {
 
   }
 
+  value(r){
+    return parseFloat(r).toFixed(2);
+  }
+
   public print(id,canvasid): void {
     let printContents, popupWin;
     printContents = document.getElementById(id).innerHTML;

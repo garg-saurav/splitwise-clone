@@ -34,6 +34,11 @@ export class FriendTabComponent implements OnInit {
                   
   }
 
+  open_group(g){
+    this.router.navigate(['/group-tab/',g]);
+    console.log(g);
+  }
+
   set_friend(data){
     var ans=[]
     for(let i in data){
@@ -60,15 +65,12 @@ export class FriendTabComponent implements OnInit {
 
 
   func(amount){
-    if(amount==0){
-      return "You are settled up"
-    }
-    else if(amount<0){
+    if(amount<0){
       return "The person owes you "+((-1)*amount).toString()
     }
-    else{
+    else if(amount>0){
       return "You owe the person "+amount.toString()
-    }
+    }else{}
   }
   onClick(f){
     // this.show=!this.show;
