@@ -21,8 +21,8 @@
                 <td><button class="none" (click)="onClick(g)">
                     {{g[1]}}
                 </button></td>
-                <td>{{g[2]}}</td>
-                <td>{{g[3]}}</td>
+                <td>{{g[2].toFixed(2)}}</td>
+                <td>{{g[3].toFixed(2)}}</td>
                 <td>
                     <div *ngFor="let m of members">
                             <div *ngIf="m[0]==g[0]">
