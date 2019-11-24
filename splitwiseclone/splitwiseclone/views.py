@@ -103,6 +103,15 @@ def add_friend(request,username,friend_user_name):
           else:
               c.execute("insert into UF (user_name, friend_user_name) values (%s,%s)",(username,friend_user_name))
               c.execute("insert into UF (friend_user_name, user_name) values (%s,%s)", (username, friend_user_name))
+              c.execute('Select name from UserProfile where user_name=%s',username)
+              res=cursor.fetchone()
+              uname=res[0]
+              c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(friend_user_name,"You and "+uname+" became friends"))
+              c.execute('Select name from UserProfile where user_name=%s',friend_user_name)
+              res=cursor.fetchone()
+              fname=res[0]
+              c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You and "+fname+" became friends"))
+              
               return JsonResponse("Successfully added",safe=False)
         else:
           return JsonResponse("Already added", safe=False)
@@ -116,6 +125,7 @@ def pay_friend(request,username,friendname,amount):
         cursor.execute("SELECT id from UserProfile where user_name=%s", username)
         userid=cursor.fetchone()
         cursor.execute("INSERT INTO trans (lender,borrower,groupid,amount) VALUES(?,?,?,?)",[friendid,userid,-1,amount])
+       # c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(userid,"You and "+friend_user_name+" became friends"))
         # tobepayed=cursor.execute("SELECT sum(amount) from Transaction where lender=%n and borrower=%n", [friendid, userid])
     return
 
@@ -155,6 +165,7 @@ class new_group(APIView):
             if(len(cursor.fetchall())==0):
                 print(groupname,username)
                 cursor.execute("INSERT INTO GId (group_name) VALUES (%s)", (groupname,))
+                cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You created a new group "+groupname))
                 cursor.execute("select group_id from GId order by group_id desc")
                 latest_id = cursor.fetchone()[0]
                 cursor.execute("INSERT INTO UG (group_id, group_name,user_name) VALUES (%s, %s, %s)", (latest_id, groupname, username))
@@ -179,6 +190,10 @@ class add_friend_in_group(APIView):
                         groupname = c.execute("Select * from GId where group_id = %s",[g_id]).fetchone()[1]
                         print(groupname)
                         c.execute("INSERT INTO UG (group_id, group_name, user_name) VALUES (%s, %s, %s)", (g_id, groupname, f_name))
+                        c.execute('Select name from UserProfile where user_name=%s',f_name)
+                        res=cursor.fetchone()
+                        fname=res[0]
+                        c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You added "+fname+" in groupname"+groupname))
                         return JsonResponse("Successfully added",safe=False)
                 else:
                     return JsonResponse("Only friends can be added to a group", safe=False)
@@ -362,11 +377,19 @@ class settle_up_all(APIView):
             for g_id in kl:
                 amount=float(kl[g_id][0])
                 if amount > 0:
-                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag, date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(username,friend_id,g_id,'settlling up',amount,'others',datetime.datetime.now()))
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag, date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(username,friend_id,g_id,'settling up',amount,'others',datetime.datetime.now()))
                 elif amount < 0:
-                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(friend_id,username,g_id,'settlling up',(-1)*amount,'others',datetime.datetime.now()))
-                else:
-                    pass
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(friend_id,username,g_id,'settling up',(-1)*amount,'others',datetime.datetime.now()))
+                
+                if amount!=0:
+                    cursor.execute('Select name from UserProfile where user_name=%s',friend_id)
+                    res=cursor.fetchone()
+                    friend_name=res[0]
+                    cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You settled up with '"+friend_name+"'"))
+                    cursor.execute('Select name from UserProfile where user_name=%s',username)
+                    res=cursor.fetchone()
+                    uname=res[0]
+                    cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(friend_id,"You settled up with '"+uname+"'"))
             return JsonResponse("Successfully settled up", safe=False)
 #         # print("sfdfsdfsfsd")
 #         # print(request.data)
@@ -420,6 +443,14 @@ class add_transaction(APIView):
         with connection.cursor() as cursor:
             # cursor.execute("select * from UserFriend where user_name = %s and friend_user_name = %s",[username, username])
             cursor.execute("INSERT INTO trans (lender, borrower, group_id, desc, amount, tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)", (lender, borrower, grp_id, desc, amt, tag, datetime.datetime.now()))
+            cursor.execute('Select name from UserProfile where user_name=%s',lender)
+            res=cursor.fetchone()
+            lender_name=res[0]
+            cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(borrower,"You borrowed '"+amt+"' from '"+lender_name+"'"))
+            cursor.execute('Select name from UserProfile where user_name=%s',borrower)
+            res=cursor.fetchone()
+            borrower_name=res[0]
+            cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(lender,"You lent '"+amt+"' to '"+borrower_name+"'"))
             # row = cursor.fetchall()
             # ans = {}
             # ans['Lent']=row
@@ -595,8 +626,15 @@ class settle_up(APIView):
                     cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(username,f,grp_id,'settlling up',amount,'others',datetime.datetime.now()))
                 elif amount<0:
                     cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(f,username,grp_id,'settlling up',(-1)*amount,'others',datetime.datetime.now()))
-                else:
-                    pass
+                if amount!=0:
+                    cursor.execute('Select name from UserProfile where user_name=%s',f)
+                    res=cursor.fetchone()
+                    friend_name=res[0]
+                    cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You settled up with '"+friend_name+"'"))
+                    cursor.execute('Select name from UserProfile where user_name=%s',username)
+                    res=cursor.fetchone()
+                    uname=res[0]
+                    cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(f,"You settled up with '"+uname+"'"))
             # row = cursor.fetchall()
             # ans['Borrowed']=row 
             # ans=[i for g in ans for i in g]

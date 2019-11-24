@@ -75,3 +75,12 @@ class Transaction(models.Model):
   class Meta:
       db_table = 'trans'
 
+class activity(models.Model):
+  user_name=models.CharField(max_length=30)
+  activity_desc=models.TextField(blank=True, null=True, default="")
+
+  def __str__(self):
+      return str(self.user_name)
+
+  class Meta:
+      db_table = 'activity'
