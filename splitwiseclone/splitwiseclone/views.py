@@ -32,7 +32,7 @@ def user_detail(request, username):
 
 
 def getfriendlist(request, username):
-    friendlist=[];
+    friendlist=[]
     with connection.cursor() as c:
         c.execute("SELECT friend_user_name from UF where user_name='"+username+"'")
         lest = c.fetchall()
@@ -198,16 +198,20 @@ class get_friend_details(APIView):
             for i in friends:
                 # print(i[0])
                 f_name=i[0]
-                cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[username, f_name])
+                cursor.execute('Select name from UserProfile where user_name=%s',[i[0]])
+                res=cursor.fetchone()
+                friend_name=res[0]
+                cursor.execute("SELECT trans.group_id, amount, group_name FROM trans inner join GId on trans.group_id = GId.group_id WHERE lender = %s and borrower = %s",[username, f_name])
                 row = cursor.fetchall()
                 temp={}
                 temp['Lent']=row
-                cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[f_name, username])
+                cursor.execute("SELECT trans.group_id, amount, group_name FROM trans inner join GId on trans.group_id = GId.group_id WHERE lender = %s and borrower = %s",[f_name, username])
                 row = cursor.fetchall()
                 temp['Borrowed']=row 
                 # temp=[i for g in temp for i in g]
-                ans[f_name]=temp
-                ans=minimizing(ans)
+                ans[f_name+":"+friend_name]=temp
+            ans=minimizing(ans)
+            print(ans)
             return JsonResponse(ans, safe=False)
 
 class settle_up_all(APIView):
@@ -254,21 +258,27 @@ class add_transaction(APIView):
 def minimizing(all_details):
     myMap={}
     for k in all_details:
+        temp={}
         obj=all_details[k]
-        arr=obj[Borrowed]
+        arr=obj['Borrowed']
         for i in range(len(arr)):
             g=arr[i][0]
             m=arr[i][1]
-            if g in myMap:
-                myMap[g]=myMap[g]+m
+            nam=arr[i][2]
+            m=int(m)
+            if g in temp:
+                temp[g][0]=temp[g][0]+m
             else:
-                myMap[g]=m
-        arr1=obj[Lent]
+                temp[g]=[m,nam]
+        arr1=obj['Lent']
         for i in range(len(arr1)):
             g=arr1[i][0]
             m=arr1[i][1]
-            if g in myMap:
-                myMap[g]=myMap[g]-m
+            nam=arr1[i][2]
+            m=int(m)
+            if g in temp:
+                temp[g][0]=temp[g][0]-m
             else:
-                myMap[g]=-m
+                temp[g]=[-1*(m),nam]
+        myMap[k]=temp
     return myMap 

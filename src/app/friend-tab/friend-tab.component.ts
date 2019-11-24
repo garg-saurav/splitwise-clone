@@ -12,6 +12,7 @@ export class FriendTabComponent implements OnInit {
   begin=1;
   detailed_f_name:any;
   all_details:any;
+  all_details_keys;
 
   constructor(private dataService:DataService,private router:Router) { }
   ngOnInit(){
@@ -24,6 +25,8 @@ export class FriendTabComponent implements OnInit {
     this.dataService.get_friends_details()
                   .subscribe(data => {
                     this.all_details=data;
+                    this.all_details_keys=Object.keys(this.all_details);
+                    console.log("SDfsdf")
                     console.log(data);
                   })
                   
