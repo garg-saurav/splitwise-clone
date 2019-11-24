@@ -3,6 +3,9 @@ div.content {
     padding: 1px 16px;
     height: 1000px;
   }
+  button{
+    align-content: center;
+  }
   #customers {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;

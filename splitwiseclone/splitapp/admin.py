@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib import admin
-from .models import UserProfile, Transaction, UserGroup, UserFriend, GroupId
+from .models import UserProfile, Transaction, UserGroup, UserFriend, GroupId,activity
 
 admin.site.register(UserProfile)
 # admin.site.register(Group)
@@ -9,6 +9,7 @@ admin.site.register(Transaction)
 admin.site.register(UserGroup)
 admin.site.register(UserFriend)
 admin.site.register(GroupId)
+admin.site.register(activity)
 
 
 #

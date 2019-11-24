@@ -8,8 +8,16 @@
 </div>
   <div class="content">
     <h1>List of all the activities</h1>
-    <ul>
-        <li>You owe Missula Meghana 5000</li>
-        <li>Missula Meghana owes you 3000</li>
-    </ul>
+    <table>
+        <ng-container *ngFor="let g of activity ;let i = index">
+          
+            <tr>
+            <td>
+                {{g}}
+            </td>
+            
+            
+            </tr>
+            </ng-container>
+    </table>
 </div>

@@ -46,9 +46,9 @@
                                         <th>Status</th>
                                         
                                     </tr>
-                                    <div *ngFor="let key of keys">
+                                    <ng-container *ngFor="let key of keys">
                                         <tr > {{func(groupbalance['0'][key],key)}}</tr>
-                                    </div>
+                                    </ng-container>
 
                             </table>
                             <h3>Other Balances in Group</h3>
@@ -57,14 +57,14 @@
                                 <th>Group Member</th>
                                 <th>Net Amount</th>
                             </tr>
-                            <div *ngFor="let balance of groupbalance2">
+                            <ng-container *ngFor="let balance of groupbalance2">
                                 
                                 <tr>
                                     <td>{{balance[0]}}</td>
                                     <td>{{balance[1]}}</td>
                                 </tr>
                                 
-                            </div>
+                            </ng-container>
                         </table>
                         </div>
                         <h2>TRANSACTIONS</h2>
@@ -76,6 +76,17 @@
                                 <th>Description</th>
                                 <th>Tag</th>
                             </tr>
+                            <ng-container *ngFor="let trans of transactions">
+                                
+                                    <tr>
+                                        <td>{{trans[1]}}</td>
+                                        <td>{{trans[2]}}</td>
+                                        <td>{{trans[7].toFixed(2)}}</td>
+                                        <td>{{trans[5]}}</td>
+                                        <td>{{trans[6]}}</td>
+                                    </tr>
+                                    
+                            </ng-container>
                         </table>
                     </div></td>
             </tr>

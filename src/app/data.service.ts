@@ -31,6 +31,7 @@ export class DataService {
   _URL_leave = 'http://127.0.0.1:8000/leave/';
   _URL_settleup = 'http://127.0.0.1:8000/settleup/';
 _URL_grouptransactions='http://127.0.0.1:8000/grouptrans/';
+_URL_activity='http://127.0.0.1:8000/activity/';
   my_username;
   profile:any;
   friends:any;
@@ -209,5 +210,9 @@ _URL_grouptransactions='http://127.0.0.1:8000/grouptrans/';
     const fd = new FormData;
     fd.append('grp_id',grp_id);
     return this.http.post(this._URL_grouptransactions+localStorage.getItem('username')+"/",fd);
+  }
+  getactivity(){
+    const fd = new FormData;
+    return this.http.post(this._URL_activity+localStorage.getItem('username')+"/",fd);
   }
 }
