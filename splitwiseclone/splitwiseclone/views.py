@@ -62,7 +62,7 @@ def getallgroups(request, username):
         row = c.execute("SELECT group_id FROM UG WHERE user_name='" + username + "'")
         row = row.fetchall()
         print("heyy")
-        print(row[0])
+        print(row)
         for id in row:
             print(id[0])
             c.execute("SELECT sum(amount) from trans where lender=%s and group_id=%s",[username,id[0]])
@@ -78,6 +78,7 @@ def getallgroups(request, username):
                 moneyowed = moneyowed[0]
             else:
                 moneyowed=0
+            print(id[0])
             name=c.execute("SELECT group_name from GId where group_id='"+str(id[0])+"'")
             name = name.fetchone()[0]
             print(name)
