@@ -103,11 +103,8 @@
        </div>
 <div style="display: hidden">
 <div id="graph1" *ngIf="cat=='timeplot'">
-    <div >
-        <canvas id="timeplot" style="width:3vw;height:2vh;" ></canvas>
-        <button (click)="print('graph1','timeplot')">Print BarGraph1</button>
-        </div>
-    Summary of all your expenditures uptil now:
+    
+    
     <table id="customers">
         <tr>
             <th>Date Time</th>
@@ -125,6 +122,10 @@
             </tr>
             </ng-container>
         </table>
+        <div >
+                <canvas id="timeplot" style="width:3vw;height:2vh;" ></canvas>
+                <button (click)="print('graph1','timeplot')">Print</button>
+        </div>
    
 </div>
 <div id="graph2" *ngIf="cat=='PieChart1'">
@@ -147,7 +148,7 @@
         </table>
         <div >
             <canvas id="PieChart1" style="width:3vw;height:2vh;" ></canvas>
-            <button (click)="print('graph2','PieChart1')">print</button>
+            <button (click)="print('graph2','PieChart1')">Print</button>
         </div>
     
 </div>
