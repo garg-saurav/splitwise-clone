@@ -12,8 +12,11 @@ import {Chart} from 'chart.js';
 export class InsightsComponent {
 
   model = new Dates(new Date(),new Date());
-  insights_data:any;dateRange:any;
-  submitted = false;timeplot=false;pi1=false;pi2=false;bar1=false;bar2=false;unique=false;
+  cat:any;
+  insights_data:any;timegraph_data:any;friendshipchart_data:any;
+  bargraph1_data:any;bargraph2_data:any;piechart1_data:any;piechart2_data:any;dateRange:any;
+  submitted = false;l=["movies","food","housing","travel","others"];labels_data=[];
+  //timeplot=false;pi1=false;pi2=false;bar1=false;bar2=false;friendshipchart=false;
   constructor(private dataService:DataService) { }
   BarChart:any;PieChart:any;TimePlot:any;
   onSubmit() {
@@ -22,44 +25,50 @@ export class InsightsComponent {
      this.dataService.get_insights(this.model['fromdate'],this.model['todate'])
      .subscribe(data => {
        this.dateRange = data;
+       
      }); 
+
   }
-  // public print(id): void {
-  //   let printContents, popupWin;
-  //   printContents = document.getElementById(id) as HTMLCanvasElement;
-  //   const jpegUrl = printContents.toDataURL('image/jpeg');
+
+  public print(id,canvasid): void {
+    let printContents, popupWin;
+    printContents = document.getElementById(id).innerHTML;
+    popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
+    popupWin.document.open();
+    var canvas = document.getElementById(canvasid) as HTMLCanvasElement;   
+    var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    popupWin.document.write('<img src="'+image+'"/>'); 
+    popupWin.document.write(`
+      <html>
+        <head>
+          <title>Print tab</title>
+          <style>
+          //........Customized style.......
+          </style>
+        </head>
+    <body onload="window.print();window.close()">${printContents}</body>
+      </html>`
+    );
+    popupWin.document.close();
+}
+
     
-  //   //console.log(printContents);
-  //   popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
-  //   popupWin.document.open();
-  //   var doc= new jsPDF();
-  //   doc.addImage(jpegUrl, 'JPEG', 20, 150, 50, 50);
-  //   doc.save('test.pdf');
-    //popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printContents + '</html>');
-    
-    // popupWin.document.write(`
-    //   <html>
-    //     <head>
-    //       <title>Print tab</title>
-    //       <style>
-    //       //........Customized style.......
-    //       </style>
-    //     </head>
-    // <body onload="window.print();window.close()">${printContents}</body>
-    //   </html>`
-    // );
-    // popupWin.document.close();
-// }
   BarGraph1(){
+    this.cat="barChart";
+    //timeplot=false;pi1=false;pi2=false;bar1=true;bar2=false;friendshipchart=false;
     this.dataService.get_bargraph1(this.model['fromdate'],this.model['todate'])
      .subscribe(data => {
-       this.insights_data = data;
-       console.log("asdf", this.insights_data[0][0] );
+       this.bargraph1_data = data;
+      // console.log("asdf", this.insights_data[0][0] );
         var friend=[];var dat=[];var dat2=[];
-       for(var key in this.insights_data){
-         friend.push(this.insights_data[key][0]);
-         dat.push(this.insights_data[key][1]);
-         dat2.push(this.insights_data[key][2]);
+        if(this.bargraph1_data.length==0){
+          window.alert("Couldn't retrive any transaction in specified period");
+        }
+        else{
+       for(var key in this.bargraph1_data){
+         friend.push(this.bargraph1_data[key][0]);
+         dat.push(this.bargraph1_data[key][1]);
+         dat2.push(this.bargraph1_data[key][2]);
          //console.log("kkkk",key[1])
 
        }
@@ -113,27 +122,28 @@ export class InsightsComponent {
        
       this.BarChart.render();
     
+     }
+    
      });
   }
  
   BarGraph2(){
+    this.cat="barChart2";
+    //timeplot=false;pi1=false;pi2=false;bar1=false;bar2=true;friendshipchart=false;
     this.dataService.get_bargraph2(this.model['fromdate'],this.model['todate'])
      .subscribe(data => {
        this.insights_data = data;
-       console.log("asdf", this.insights_data[0][0] );
         var friend=[];var dat=[];var dat2=[];
-       for(var key in this.insights_data){
-         friend.push(this.insights_data[key][0]);
-         dat.push(this.insights_data[key][1]);
-         dat2.push(this.insights_data[key][2]);
-         //console.log("kkkk",key[1])
-
+        if(this.bargraph2_data.length==0){
+          window.alert("Couldn't retrive any transaction in specified period");
+        }
+        else{
+       for(var key in this.bargraph2_data){
+         friend.push(this.bargraph2_data[key][0]);
+         dat.push(this.bargraph2_data[key][1]);
+         dat2.push(this.bargraph2_data[key][2]);
        }
-      //  for(var i in friend){
-      //  console.log("kkkk",friend[i]);
-      //  console.log("kkkk",dat[i]);
-      //  }
-        
+             
        this.BarChart = new Chart('barChart2', {
         type: 'bar',
       data: {
@@ -178,22 +188,35 @@ export class InsightsComponent {
        
       this.BarChart.render();
     
-     });
+     }
+    });
   }
  
   PieChart1(){
-
+    this.cat="PieChart1";
+    
     this.dataService.tagsPieChart(this.model['fromdate'],this.model['todate'])
     .subscribe(data => {
-      this.insights_data = data;
-      console.log("asdf", this.insights_data[0][0] );
+      this.piechart1_data = data;
+      //console.log("asdf", this.insights_data[0][0] );
        var amount=[];
-      for(var key in this.insights_data){
-        amount.push(this.insights_data[key])
-        //console.log("kkkk",this.insights_data[key])
 
+       if(this.piechart1_data.length==0){
+        window.alert("Couldn't retrive any transaction in specified period");
       }
-   
+      else{
+      for(var key in this.piechart1_data){
+        //this._label.push(l[key])
+        amount.push(this.piechart1_data[key])
+            }
+      for(var key in this.piechart1_data){
+        var res=[];
+        res.push(this.piechart1_data[key]);
+        res.push(this.l[key]);
+        this.labels_data.push(res);
+        
+            }
+            
 
     this.PieChart = new Chart('PieChart1', {
       type: 'pie',
@@ -237,22 +260,25 @@ export class InsightsComponent {
     
     });
     this.PieChart.render();
-
+  }
   });
 }
 
 PieChart2(){
-
+  this.cat="PieChart2";
+  //timeplot=false;pi1=false;pi2=true;bar1=false;bar2=false;friendshipchart=false;
   this.dataService.friendspiechart(this.model['fromdate'],this.model['todate'])
      .subscribe(data => {
-       this.insights_data = data;
-       console.log("asdf", this.insights_data[0][0] );
+       this.piechart2_data = data;
+       //console.log("asdf", this.insights_data[0][0] );
         var friends=[];var amount=[];
-       for(var key in this.insights_data){
-         friends.push(this.insights_data[key][0]);
-         amount.push(this.insights_data[key][1]);
-         //console.log("kkkk",key[1])
-
+        if(this.piechart2_data.length==0){
+          window.alert("Couldn't retrive any transaction in specified period");
+        }
+        else{
+       for(var key in this.piechart2_data){
+         friends.push(this.piechart2_data[key][0]);
+         amount.push(this.piechart2_data[key][1]);
        }
     
   this.PieChart = new Chart('PieChart2', {
@@ -297,42 +323,56 @@ PieChart2(){
   
   });
   this.PieChart.render();
-  
+}
   });
   }
 
-
-TimeSeriesPlot(){
-
-
-  this.dataService.timeseriesplot(this.model['fromdate'],this.model['todate'])
-  .subscribe(data => {
-    this.insights_data = data;
-    console.log("asdf",this.insights_data[0][0] );
-     var amount=[];var date=[];
-    for(var key in this.insights_data){
-      date.push(this.insights_data[key][0])
-      amount.push(this.insights_data[key][1])
-      
-
-    }
-  
-  this.TimePlot = new Chart('timeplot', {
-    type: 'line',
+friendshipchart(){
+  this.cat="friendshipchart";
+ // timeplot=false;pi1=false;pi2=false;bar1=false;bar2=false;friendshipchart=true;
+  this.dataService.friendshipchart(this.model['fromdate'],this.model['todate'])
+     .subscribe(data => {
+       this.friendshipchart_data = data;
+       //console.log("asdf", this.insights_data[0][0] );
+        var friends=[];var amount=[];
+        if(this.friendshipchart_data.length==0){
+          window.alert("Couldn't retrive any transaction in specified period");
+        }
+        else{
+       for(var key in this.friendshipchart_data){
+         friends.push(this.friendshipchart_data[key][0]);
+         amount.push(this.friendshipchart_data[key][1]);
+       }
+    
+  this.PieChart = new Chart('friendshipchart', {
+    type: 'pie',
   data: {
-   labels: date,
+   labels:friends,
    datasets: [{
-       label: 'Time Plot',
+       label: 'Exchange With Different Friends',
        data: amount,
-       fill:false,
-       lineTension:0.2,
-       borderColor:"red",
+       backgroundColor: [
+           'rgba(255, 99, 132, 0.2)',
+           'rgba(54, 162, 235, 0.2)',
+           'rgba(255, 206, 86, 0.2)',
+           'rgba(75, 192, 192, 0.2)',
+           'rgba(153, 102, 255, 0.2)',
+           'rgba(255, 159, 64, 0.2)'
+       ],
+       borderColor: [
+           'rgba(255,99,132,1)',
+           'rgba(54, 162, 235, 1)',
+           'rgba(255, 206, 86, 1)',
+           'rgba(75, 192, 192, 1)',
+           'rgba(153, 102, 255, 1)',
+           'rgba(255, 159, 64, 1)'
+       ],
        borderWidth: 1
    }]
   }, 
   options: {
    title:{
-       text:"Line Chart",
+       text:"Pie Chart",
        display:true
    },
    scales: {
@@ -340,24 +380,76 @@ TimeSeriesPlot(){
            ticks: {
                beginAtZero:true
            }
-       }],
-       xAxes:[ {
-        type: 'time',
-        scaleLabel: {
-          display: true,
-          labelString: 'Time',
-        },
-        ticks: {
-          
-          unitStepSize:1,
-          min:this.model['fromdate'] ,
-          max: this.model['todate']
-        }
-      }
-      ]}
+       }]
    }
+  }
+  
   });
-  this.TimePlot.render();
+  this.PieChart.render();
+}
+  });
+}
+
+TimeSeriesPlot(){
+  //timeplot=true;pi1=false;pi2=false;bar1=false;bar2=false;friendshipchart=false;
+  this.cat="timeplot";
+  this.dataService.timeseriesplot(this.model['fromdate'],this.model['todate'])
+  .subscribe(data => {
+    this.timegraph_data = data;
+    if(this.timegraph_data.length==0){
+      window.alert("Couldn't retrive any transaction in specified period");
+    }else{
+              console.log("asdf",data );
+              var amount=[];var date=[];
+              for(var key in this.timegraph_data){
+                date.push(this.timegraph_data[key][0])
+                amount.push(this.timegraph_data[key][1])
+                
+
+              }
+            
+            this.TimePlot = new Chart('timeplot', {
+              type: 'line',
+            data: {
+            labels: date,
+            datasets: [{
+                label: 'Time Plot',
+                data: amount,
+                fill:false,
+                lineTension:0.2,
+                borderColor:"red",
+                borderWidth: 1
+            }]
+            }, 
+            options: {
+            title:{
+                text:"Line Chart",
+                display:true
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }],
+                xAxes:[ {
+                  type: 'time',
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Time',
+                  },
+                  ticks: {
+                    
+                    unitStepSize:1,
+                    min:this.model['fromdate'] ,
+                    max: this.model['todate']
+                  }
+                }
+                ]}
+            }
+            });
+            this.TimePlot.render();
+          }
   });
 }
   newDates() {

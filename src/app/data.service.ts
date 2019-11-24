@@ -23,8 +23,12 @@ export class DataService {
   _URL_timeseriesplot = 'http://127.0.0.1:8000/timeseriesplot/';
   _URL_PieChartTags = 'http://127.0.0.1:8000/pieChartTags/';
   _URL_friendspiechart = 'http://127.0.0.1:8000/friendspiechart/';
+  _URL_friendshipchart = 'http://127.0.0.1:8000/friendshipchart/';
   _URL_settleupall = 'http://127.0.0.1:8000/settleupall/';
   _URL_trans = 'http://127.0.0.1:8000/addtrans/';
+  _URL_leave = 'http://127.0.0.1:8000/leave/';
+  _URL_settleup = 'http://127.0.0.1:8000/settleup/';
+
   my_username;
   profile:any;
   friends:any;
@@ -167,9 +171,27 @@ export class DataService {
     return this.http.post(this._URL_timeseriesplot+localStorage.getItem('username')+"/",fd);
   }
 
+  friendshipchart(startdate,enddate:any){
+    const fd = new FormData;
+    fd.append('startdate',startdate);
+    fd.append('enddate',enddate);
+    return this.http.post(this._URL_friendshipchart+localStorage.getItem('username')+"/",fd);
+  }
+
   settleupall(f_name){
     const fd = new FormData;
     fd.append('friend_id',f_name);
     return this.http.post(this._URL_settleupall+localStorage.getItem('username')+"/",fd);
+  }
+
+
+  leave(gid){
+    const fd = new FormData;
+    fd.append('grp_id',gid);
+    return this.http.post(this._URL_leave+localStorage.getItem('username')+"/",fd);
+  }
+
+  settleup(fd){
+    return this.http.post(this._URL_settleup+localStorage.getItem('username')+"/",fd);
   }
 }

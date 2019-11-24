@@ -388,19 +388,22 @@ class leave_group(APIView):
         grp_id = request.data['grp_id']
         with connection.cursor() as cursor:
             cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and group_id = %s",[username,grp_id])
-            res=cursor.fetchall()
-            if res [0] != 0:
+            res=cursor.fetchone()
+            print(res[0])
+            if (res[0]!=None) and round(float(res [0]),2) != 0.00:
                 return JsonResponse("Cannot Leave Group as you're not settled up yet with everyone", safe=False)
             else:
                 cursor.execute("SELECT SUM(amount) FROM trans WHERE borrower = %s and group_id = %s",[username,grp_id])
-                if res[0] != 0:
+                res=cursor.fetchone()
+                print(res[0])
+                if (res[0]!=None) and round(float(res[0]),2) != 0.00:
                     return JsonResponse("Cannot Leave Group as you're not settled up yet with everyone", safe=False)
                 else:
-                    cursor.execute("DELETE * FROM UG where user_name = %s group_id = %s",[username,grp_id])
+                    cursor.execute("DELETE FROM UG where user_name = %s and group_id = %s",[username,grp_id])
                     cursor.execute("SELECT * FROM UG where group_id = %s",[grp_id])
-                    res.cursor.fetchall()
+                    res=cursor.fetchall()
                     if len(res) == 0:
-                        cursor.execute("DELETE * FROM GId where group_id = %s",[grp_id])
+                        cursor.execute("DELETE FROM GId where group_id = %s",[grp_id])
                     return JsonResponse("Left Group", safe=False)
 
 class add_transaction(APIView):
@@ -460,7 +463,7 @@ class friendsPieChart(APIView):
             
         
         with connection.cursor() as cursor:
-            #print(username)
+            
             ans=[]
             row = cursor.execute("SELECT friend_user_name FROM UF WHERE user_name='" + username + "'  ")
             row=row.fetchall()
@@ -484,6 +487,40 @@ class friendsPieChart(APIView):
         return JsonResponse(ans,safe=False)
 
 
+class friendshipChart(APIView):
+    def post(self,request,username,format=None):
+        try:
+            startdate=request.data['startdate']
+            enddate=request.data['enddate']
+        except MultiValueDictKeyError:
+            startdate = "does not Exist"
+            enddate=" "
+            
+        
+        with connection.cursor() as cursor:
+            #print(username)
+            ans=[]
+            row = cursor.execute("SELECT friend_user_name FROM UF WHERE user_name='" + username + "'  ")
+            row=row.fetchall()
+            
+            for friend in row:
+                amount=cursor.execute("SELECT COUNT(*) FROM trans WHERE lender='" + username + "' AND borrower='"+friend[0]+"' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
+
+                amount=amount.fetchone()[0]
+                amount1=cursor.execute("SELECT COUNT(*) FROM trans WHERE lender='" + friend[0] + "' AND borrower='"+username+"' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
+                amount1=amount1.fetchone()[0]
+                if amount==None:
+                    sum=amount1
+                elif amount1==None:
+                    sum=amount
+                else:
+                    sum=amount+amount1
+                res=(friend[0],sum)
+                print("You know what!")
+                print(res)
+                ans.append(res)
+                
+        return JsonResponse(ans,safe=False)
 class timeSeriesPlot(APIView):
     def post(self,request,username,format=None):
         startdate=request.data['startdate']
@@ -491,7 +528,7 @@ class timeSeriesPlot(APIView):
         with connection.cursor() as cursor:
             #print(username)
             ans=[]
-            amt=cursor.execute("SELECT date_time,amount FROM trans WHERE lender='" + username + "' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
+            amt=cursor.execute("SELECT date_time,amount,borrower FROM trans WHERE lender='" + username + "' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
             amt=amt.fetchall()
             print(amt)
             
@@ -540,21 +577,24 @@ class settle_up(APIView):
     #     print(request.data)
         grp_id = request.data['grp_id']
         friend_list = request.data['friends']
-
+        friend_list=friend_list.split(',')
         with connection.cursor() as cursor:
             # cursor.execute("select * from UserFriend where user_name = %s and friend_user_name = %s",[username, username])
             amount=0
             for f in friend_list:  
+                # print("f",f)
                 cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[f, username,grp_id])
-                am=cursor.fetchall()
-                amount=amount+float(am[0])
+                am=cursor.fetchone()
+                if(am[0]!=None):
+                    amount=amount+float(am[0])
                 cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[username,f,grp_id])
-                am=cursor.fetchall()
-                amount=amount-float(am[0])
+                am=cursor.fetchone()
+                if(am[0]!=None):
+                    amount=amount-float(am[0])
                 if amount>0:
-                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(username,f,grp_id,'settlling up',amount,'others'))
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(username,f,grp_id,'settlling up',amount,'others',datetime.datetime.now()))
                 elif amount<0:
-                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(f,username,grp_id,'settlling up',(-1)*amount,'others'))
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(f,username,grp_id,'settlling up',(-1)*amount,'others',datetime.datetime.now()))
                 else:
                     pass
             # row = cursor.fetchall()
@@ -665,7 +705,7 @@ class min_transaction(APIView):
                 edc=mymap[parent[n[0]]][n[0]]
                 mincost_edge(parent[n[0]])
                 def mincost_edge(node):
-                    if mymap[parent[node]][node]<ed:
+                    if mymap[parent[node]][node]<edc:
                         edc=mymap[parent[node]][node]
                     if parent[node]==n[0]:
                         return

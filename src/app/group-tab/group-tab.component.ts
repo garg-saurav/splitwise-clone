@@ -73,4 +73,22 @@ onClickbalance(f){
 
   }
 
+  settle(gid){
+    this.router.navigate(['/settle/'+gid]);
+  }
+
+  leave(gid){
+    console.log("GID",gid);
+    this.dataService.leave(gid)
+      .subscribe(data => {
+        console.log(data);
+        if(data=="Left Group"){
+          window.location.reload();
+        }else{
+          window.alert(data);
+        }
+      })
+  }
+  
+
 }

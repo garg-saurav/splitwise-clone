@@ -21,8 +21,8 @@
                 <td><button class="none" (click)="onClick(g)">
                     {{g[1]}}
                 </button></td>
-                <td>{{g[2]}}</td>
-                <td>{{g[3]}}</td>
+                <td>{{g[2].toFixed(2)}}</td>
+                <td>{{g[3].toFixed(2)}}</td>
                 <td>
                     <div *ngFor="let m of members">
                             <div *ngIf="m[0]==g[0]">
@@ -32,12 +32,12 @@
                     <a routerLink="/member/{{g[0]}}" class="button">Add new member</a></td>
                 <td><a routerLink="/transaction/{{g[0]}}" class="button">Add Transaction</a></td>
                 
-                <td><button class="button">Leave Group</button></td>
+                <td><button class="button" (click)="leave(g[0])">Leave Group</button></td>
             </tr>
             <tr>
                     <td colspan=6>
                         <div *ngIf="show && g[0]==detailed_f_name">
-                        <button class="button">Settle accounts</button> &nbsp;&nbsp;
+                        <button class="button" (click)="settle(g[0])">Settle Up</button> &nbsp;&nbsp;
                         <button class="button" (click)="onClickbalance(g)">Balances</button>
                         <div *ngIf="showbalance && g[0]==f_name">
                             Timepass
