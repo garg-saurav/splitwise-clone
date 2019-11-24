@@ -121,7 +121,7 @@
                 {{g[0]}}
             </td>
             <td>{{g[2]}}</td>
-            <td>{{g[1]}}</td>
+            <td>{{g[1].toFixed(2)}}</td>
             </tr>
             </ng-container>
         </table>
@@ -133,8 +133,6 @@
         <tr>
             <th>Label</th>
             <th>Money Spent</th>
-            
-            
         </tr>
         <ng-container *ngFor="let g of labels_data ;let i = index">
           
@@ -142,7 +140,7 @@
             <td>
                 {{g[1]}}
             </td>
-            <td>{{g[0]}}</td>
+            <td>{{g[0].toFixed(2)}}</td>
             
             </tr>
             </ng-container>
@@ -166,7 +164,7 @@
             <td>
                 {{g[0]}}
             </td>
-            <td>{{g[1]}}</td>
+            <td>{{g[1].toFixed(2)}}</td>
             </tr>
             </ng-container>
         </table>
@@ -190,8 +188,8 @@
             <td>
                 {{g[0]}}
             </td>
-            <td>{{g[1]}}</td>
-            <td>{{g[2]}}</td>
+            <td>{{g[1].toFixed(2)}}</td>
+            <td>{{g[2].toFixed(2)}}</td>
             </tr>
             </ng-container>
         </table>
@@ -214,8 +212,8 @@
             <td>
                 {{g[0]}}
             </td>
-            <td>{{g[1]}}</td>
-            <td>{{g[2]}}</td>
+            <td>{{g[1].toFixed(2)}}</td>
+            <td>{{g[2].toFixed(2)}}</td>
             </tr>
             </ng-container>
         </table>

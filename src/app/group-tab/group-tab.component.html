@@ -10,8 +10,7 @@
         <table id="customers">
             <tr>
                 <th>Group Name</th>
-                <th>Amount you owe to the group</th>
-                <th>Amount the group owes to you</th>
+                <th>Amount you owe or the group owes to you</th>
                 <th>Members</th>
                 <th></th>
                 <th></th>
@@ -21,8 +20,7 @@
                 <td><button class="none" (click)="onClick(g)">
                     {{g[1]}}
                 </button></td>
-                <td>{{g[2].toFixed(2)}}</td>
-                <td>{{g[3].toFixed(2)}}</td>
+                <td>{{func(g[2].toFixed(2))}}</td>
                 <td>
                     <div *ngFor="let m of members">
                             <div *ngIf="m[0]==g[0]">
@@ -37,7 +35,7 @@
             <tr>
                     <td colspan=6>
                         <div *ngIf="show && g[0]==detailed_f_name">
-                        <button class="button">Settle accounts</button> &nbsp;&nbsp;
+                        <a routerLink="/settle" class="button" style="margin-left: 25px;">Settle Accounts</a> &nbsp;&nbsp;
                         <button class="button" (click)="onClickbalance(g)">Balances</button>
                         <div *ngIf="showbalance && g[0]==f_name">
                             Timepass

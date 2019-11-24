@@ -66,6 +66,17 @@ onClickbalance(f){
 }
   console.log(f);
 }
+func(amount){
+  if(amount==0){
+    return "You are settled up in the group"
+  }
+  else if(amount<0){
+    return "The group owes you "+((-1)*amount).toString()
+  }
+  else{
+    return "You owe the group "+amount.toString()
+  }
+}
   logout(){
     localStorage.removeItem('username');
     this.router.navigate(['/login']);

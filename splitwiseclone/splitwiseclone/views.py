@@ -67,24 +67,21 @@ def getallgroups(request, username):
         print(row)
         for id in row:
             print(id[0])
+            amount=0
             c.execute("SELECT sum(amount) from trans where lender=%s and group_id=%s",[username,id[0]])
             moneygiven=c.fetchone()
             if moneygiven[0]!= None:
-                moneygiven=moneygiven[0]
-            else:
-                moneygiven=0
+                amount=amount-moneygiven[0]
             # print(moneygiven)
             c.execute("SELECT sum(amount) from trans where group_id=%s and borrower=%s", [ id[0],username])
             moneyowed = c.fetchone()
             if moneyowed[0]!= None:
-                moneyowed = moneyowed[0]
-            else:
-                moneyowed=0
+                amount = amount+moneyowed[0]
             print(id[0])
             name=c.execute("SELECT group_name from GId where group_id='"+str(id[0])+"'")
             name = name.fetchone()[0]
             print(name)
-            res=(id[0],name,moneygiven,moneyowed)
+            res=(id[0],name,amount)
             ans.append(res)
     return JsonResponse(ans, safe=False)
 
@@ -580,11 +577,13 @@ class settle_up(APIView):
             amount=0
             for f in friend_list:  
                 cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[f, username,grp_id])
-                am=cursor.fetchall()
-                amount=amount+float(am[0])
+                am=cursor.fetchone()
+                if am[0]!=None:
+                    amount=amount+float(am[0])
                 cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[username,f,grp_id])
-                am=cursor.fetchall()
-                amount=amount-float(am[0])
+                am=cursor.fetchone()
+                if am[0]!=None:
+                    amount=amount-float(am[0])
                 if amount>0:
                     cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(username,f,grp_id,'settlling up',amount,'others'))
                 elif amount<0:
