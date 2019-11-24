@@ -23,6 +23,16 @@
 </div>
 <div class="col-lg-6">
         <button class="button" (click)="onClick()">Change Profile Picture</button>
+        <button class="button" (click)="namefield()">Change Name</button>
+        <button class="button" (click)="passwad()">Change Password</button>
+        <div *ngIf="password">
+                <input type="password" id="newpasswd">
+                <button type="button" (click)="ChangePassword()">Change Password</button>
+        </div>
+        <div *ngIf="name_field">
+                <input type="text" id="txtfield">
+                <button type="button" (click)="ChangeName()">Change User Name</button>
+        </div>
             <div *ngIf="show">
         <input type="file" (change)="onFileSelected($event)">
         <button type="button" (click)="onUpload()">Change Profile Picture</button>

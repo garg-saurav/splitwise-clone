@@ -36,6 +36,8 @@ urlpatterns = [
     url(r'^settleup/(?P<username>[\w-]+)/$',views.settle_up.as_view()),
     url(r'^grouptrans/(?P<username>[\w-]+)/$',views.get_group_transactions.as_view()),
     url(r'^activity/(?P<username>[\w-]+)/$',views.getactivity.as_view()),
+    url(r'^name/(?P<username>[\w-]+)/$',views.updatename.as_view()),
+    url(r'^passwd/(?P<username>[\w-]+)/$',views.updatepasswd.as_view()),
 
 
 ]
