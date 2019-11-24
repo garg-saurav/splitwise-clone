@@ -23,6 +23,7 @@ export class DataService {
   _URL_timeseriesplot = 'http://127.0.0.1:8000/timeseriesplot/';
   _URL_PieChartTags = 'http://127.0.0.1:8000/pieChartTags/';
   _URL_friendspiechart = 'http://127.0.0.1:8000/friendspiechart/';
+  _URL_friendshipchart = 'http://127.0.0.1:8000/friendshipchart/';
   _URL_settleupall = 'http://127.0.0.1:8000/settleupall/';
   my_username;
   profile:any;
@@ -159,6 +160,13 @@ export class DataService {
     fd.append('startdate',startdate);
     fd.append('enddate',enddate);
     return this.http.post(this._URL_timeseriesplot+localStorage.getItem('username')+"/",fd);
+  }
+
+  friendshipchart(startdate,enddate:any){
+    const fd = new FormData;
+    fd.append('startdate',startdate);
+    fd.append('enddate',enddate);
+    return this.http.post(this._URL_friendshipchart+localStorage.getItem('username')+"/",fd);
   }
 
   settleupall(f_name){

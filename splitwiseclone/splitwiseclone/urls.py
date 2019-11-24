@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^timeseriesplot/(?P<username>[\w-]+)/$',views.timeSeriesPlot.as_view()),
     url(r'^pieChartTags/(?P<username>[\w-]+)/$',views.tagsPieChart.as_view()),
     url(r'^friendspiechart/(?P<username>[\w-]+)/$',views.friendsPieChart.as_view()),
+    url(r'^friendshipchart/(?P<username>[\w-]+)/$',views.friendshipChart.as_view()),
     url(r'^frienddetails/(?P<username>[\w-]+)/$',views.get_friend_details.as_view()),
     url(r'^settleupall/(?P<username>[\w-]+)/$',views.settle_up_all.as_view()),
     url(r'^trans/(?P<username>[\w-]+)/$',views.add_transaction.as_view()),

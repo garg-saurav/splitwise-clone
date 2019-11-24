@@ -460,7 +460,7 @@ class friendsPieChart(APIView):
             
         
         with connection.cursor() as cursor:
-            #print(username)
+            
             ans=[]
             row = cursor.execute("SELECT friend_user_name FROM UF WHERE user_name='" + username + "'  ")
             row=row.fetchall()
@@ -484,6 +484,40 @@ class friendsPieChart(APIView):
         return JsonResponse(ans,safe=False)
 
 
+class friendshipChart(APIView):
+    def post(self,request,username,format=None):
+        try:
+            startdate=request.data['startdate']
+            enddate=request.data['enddate']
+        except MultiValueDictKeyError:
+            startdate = "does not Exist"
+            enddate=" "
+            
+        
+        with connection.cursor() as cursor:
+            #print(username)
+            ans=[]
+            row = cursor.execute("SELECT friend_user_name FROM UF WHERE user_name='" + username + "'  ")
+            row=row.fetchall()
+            
+            for friend in row:
+                amount=cursor.execute("SELECT COUNT(*) FROM trans WHERE lender='" + username + "' AND borrower='"+friend[0]+"' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
+
+                amount=amount.fetchone()[0]
+                amount1=cursor.execute("SELECT COUNT(*) FROM trans WHERE lender='" + friend[0] + "' AND borrower='"+username+"' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
+                amount1=amount1.fetchone()[0]
+                if amount==None:
+                    sum=amount1
+                elif amount1==None:
+                    sum=amount
+                else:
+                    sum=amount+amount1
+                res=(friend[0],sum)
+                print("You know what!")
+                print(res)
+                ans.append(res)
+                
+        return JsonResponse(ans,safe=False)
 class timeSeriesPlot(APIView):
     def post(self,request,username,format=None):
         startdate=request.data['startdate']
@@ -491,7 +525,7 @@ class timeSeriesPlot(APIView):
         with connection.cursor() as cursor:
             #print(username)
             ans=[]
-            amt=cursor.execute("SELECT date_time,amount FROM trans WHERE lender='" + username + "' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
+            amt=cursor.execute("SELECT date_time,amount,borrower FROM trans WHERE lender='" + username + "' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
             amt=amt.fetchall()
             print(amt)
             

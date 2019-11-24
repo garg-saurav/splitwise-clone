@@ -1,3 +1,29 @@
+<script>
+  
+    function download(){
+    // only jpeg is supported by jsPDF
+    console.log("yehhhhh",'barchart');
+    var canvas = document.getElementById('barChart');
+    var imgData = canvas.toDataURL("image/jpeg", 1.0);
+    var pdf = new jsPDF();
+  
+    pdf.addImage(imgData, 'JPEG', 0, 0);
+    pdf.save("download.pdf");
+  }
+      // function genPDF(){
+      //     html2canvas(document.getElementById("barChart"),{
+      //         onrendered: function (canvas){
+      //             var img= canvas.toDataURL("img/png");
+      //             console.log("img",img)
+      //             var doc= new jsPDF();
+      //             doc.addImage(img,'JPEG',20,20);
+      //             doc.save('test.pdf');
+      //         }
+      //     })
+      // }
+  </script>  
+  
+  
   <div class="sidebar">
         <a routerLink="/dashboard">Home</a>
         <a routerLink="/friend-tab">Friends</a>
@@ -12,12 +38,12 @@
           <div class="col-md-6 col-sm-6 col-xs-12">
             <form method="post" (ngSubmit)="onSubmit()" #insightsForm="ngForm">
              <div class="form-group"> 
-               <label class="control-label" for="date">From</label>
+               <label class="control-label" for="date">From<i> (Inclusive)</i></label>
                <input class="form-control"  required [(ngModel)]="model.fromdate"
                 id="fromdate" name="date"  type="date" autocomplete="off"/>
              </div>
              <div class="form-group"> 
-                <label class="control-label" for="date">To</label>
+                <label class="control-label" for="date">To<i> (Exclusive)</i></label>
                 <input class="form-control"  required [(ngModel)]="model.todate" 
                 id="todate" name="date" type="date" autocomplete="off"/>
               </div>
@@ -67,51 +93,162 @@
             </form>
          </div>
          <div class="col-md-2 col-sm-3 col-xs-6">
-            <form method="post" (ngSubmit)="Graph1()" >
+            <form method="post" (ngSubmit)="friendshipchart()" >
                 <div class="form-group"> 
-                    <button class="btn btn-primary"  type="submit" >Graph1</button>
+                    <button class="btn btn-primary"  type="submit" >Friendship Chart</button>
                   </div>
             </form>
          </div>
          </div>
        </div>
 <div style="display: block">
-
-      
-        <canvas id="barChart" style="width:3vw;height:2vh;" ></canvas>
-        <!-- <button (click)="print('barChart')">print</button> -->
-        <button id="download">print</button>
-        <canvas id="barChart2" style="width:3vw;height:2vh;" ></canvas>
-        <canvas id="PieChart1" style="width:3vw;height:2vh;" ></canvas>
-        <canvas id="timeplot" style="width:3vw;height:2vh;" ></canvas>
-        <canvas id="PieChart2" style="width:3vw;height:2vh;" ></canvas>
-    
+<div id="graph1">
+    Summary of all your expenditures uptil now:
+    <table id="customers">
+        <tr>
+            <th>Date Time</th>
+            <th>Paid To</th>
+            <th>Transaction Amount</th>
+            
+        </tr>
+        <ng-container *ngFor="let g of timegraph_data; let i = index">
+            <tr>
+            <td>
+                {{g[0]}}
+            </td>
+            <td>{{g[2]}}</td>
+            <td>{{g[1]}}</td>
+            </tr>
+            </ng-container>
+        </table>
+   
+</div>
+<div id="graph2">
+    <table id="customers">
+        <tr>
+            <th>Label</th>
+            <th>Money Spent</th>
+            
+            
+        </tr>
+        <ng-container *ngFor="let g of piechart1_data; let i = index">
+            <tr>
+            <td>
+                {{_label[i]}}
+            </td>
+            <td>{{g[0]}}</td>
+            
+            </tr>
+            </ng-container>
+        </table>
+   
     
 </div>
+<div id="graph3">
+    <table id="customers">
+        <tr>
+            <th>Friend</th>
+            <th>Transaction Amount</th>
+            
+        </tr>
+        <ng-container *ngFor="let g of piechart2_data; let i = index">
+            <tr>
+            <td>
+                {{g[0]}}
+            </td>
+            <td>{{g[1]}}</td>
+            </tr>
+            </ng-container>
+        </table>
+   
+</div>
 
+<div id="graph4">
+  
+    <table id="customers">
+        <tr>
+            <th>Friend</th>
+            <th>Lent</th>
+            <th>Borrowed</th>
+            
+        </tr>
+        <ng-container *ngFor="let g of bargraph1_data; let i = index">
+            <tr>
+            <td>
+                {{g[0]}}
+            </td>
+            <td>{{g[1]}}</td>
+            <td>{{g[2]}}</td>
+            </tr>
+            </ng-container>
+        </table>
+   
+</div>
+<div id="graph5">
+    <table id="customers">
+        <tr>
+            <th>Group Name</th>
+            <th>Lent</th>
+            <th>Owed</th>
+            
+        </tr>
+        <ng-container *ngFor="let g of bargraph2_data; let i = index">
+            <tr>
+            <td>
+                {{g[0]}}
+            </td>
+            <td>{{g[1]}}</td>
+            <td>{{g[2]}}</td>
+            </tr>
+            </ng-container>
+        </table>
+   
+</div>
+  
+<div id="graph6">
+    <table id="customers">
+        <tr>
+            <th>Friend Name</th>
+            <th>Number Of Transactions</th>
+            
+            
+        </tr>
+        <ng-container *ngFor="let g of friendshipchart_data; let i = index">
+            <tr>
+            <td>
+                {{g[0]}}
+            </td>
+            <td>{{g[1]}}</td>
+            </tr>
+            </ng-container>
+        </table>
+   
+</div>   
+</div>
+<div *ngIf="cat=='barChart'">
+<canvas id="barChart" style="width:3vw;height:2vh;" ></canvas>
+<button (click)="print(graph4,PieChart1)">print</button>
+</div>
+<div *ngIf="cat=='barChart2'">
+<canvas id="barChart2" style="width:3vw;height:2vh;" ></canvas>
+<button (click)="print(graph5,PieChart2)">print</button>
+</div>
+<div *ngIf="cat=='PieChart1'">
+<canvas id="PieChart1" style="width:3vw;height:2vh;" ></canvas>
+<button (click)="print('graph2','barChart1')">print</button>
+</div>
+<div *ngIf="cat=='timeplot'">
+<canvas id="timeplot" style="width:3vw;height:2vh;" ></canvas>
+<button (click)="print('graph1','timeplot')">Print BarGraph1</button>
+</div>
+<div *ngIf="cat=='PieChart2'">
+<canvas id="PieChart2" style="width:3vw;height:2vh;" ></canvas>
+<button (click)="print(graph3,barChart2)">print</button>
+</div>
+<div *ngIf="cat=='friendshipchart'">
+<canvas id="friendshipchart" style="width:3vw;height:2vh;" ></canvas>
+<button (click)="print(graph6,friendshipchart)">print</button>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
 <script type="text/javascript" src="html2canvas.js"></script>
 <!-- <script tye="text/javascript" src="jspdf.min.js"></script> -->
-<script>
-  
-  download.addEventListener("click", function() {
-  // only jpeg is supported by jsPDF
-  var canvas = document.getElementById('barChart');
-  var imgData = canvas.toDataURL("image/jpeg", 1.0);
-  var pdf = new jsPDF();
-
-  pdf.addImage(imgData, 'JPEG', 0, 0);
-  pdf.save("download.pdf");
-}, false);
-    // function genPDF(){
-    //     html2canvas(document.getElementById("barChart"),{
-    //         onrendered: function (canvas){
-    //             var img= canvas.toDataURL("img/png");
-    //             console.log("img",img)
-    //             var doc= new jsPDF();
-    //             doc.addImage(img,'JPEG',20,20);
-    //             doc.save('test.pdf');
-    //         }
-    //     })
-    // }
-</script>
