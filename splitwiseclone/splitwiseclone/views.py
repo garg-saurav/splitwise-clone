@@ -561,3 +561,109 @@ class settle_up(APIView):
             # ans['Borrowed']=row 
             # ans=[i for g in ans for i in g]
             return JsonResponse("Successfully settled up", safe=False)
+
+class get_group_transactions(APIView):
+    def post(self,request,username,format=None):
+        grp_id = request.data['grp_id']
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM trans where group_id=%s",[grp_id])
+            result=cursor.fetchall()
+            return JsonResponse(result,safe=False)
+
+class balances(APIView):
+    def post(self,request,username,format=None):
+        grp_id = request.data['grp_id']
+        result=[]
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT user_name FROM UG WHERE group_id=%s and user_name!=%s",[grp_id,username])
+            members=cursor.fetchall()
+            mymap={}
+            for m in members:
+                amount=0
+                cursor.execute("SELECT SUM(amount) from trans where lender=%s and borrower = %s and group_id=%s",[username,m[0],grp_id])
+                am=cursor.fetchall()
+                amount=amount-int(am[0])
+                cursor.execute("SELECT SUM(amount) from trans where lender=%s borrower=%s and group_id=%s",[m[0],username,grp_id])
+                am=cursor.fetchall()
+                amount=amount+int(am[0])
+                mymap[m[0]]=amount
+            result=result+[mymap]
+            for m in members:
+                amount=0
+                cursor.execute("SELECT SUM(amount) from trans where lender=%s and group_id=%s",[m[0],grp_id])
+                am=cursor.fetchall()
+                amount=amount-int(am[0])
+                cursor.execute("SELECT SUM(amount) from trans where borrower=%s and group_id=%s",[m[0],grp_id])
+                am=cursor.fetchall()
+                amount=amount+int(am[0])
+                result=result+[[m[0],amount]]
+            return JsonResponse(result,safe=False)
+
+class min_transaction(APIView):
+    def post(self,request,username,format=None):
+        grp_id=request.data['grp_id']
+        lender=request.data['lender']
+        borrower=request.data['borrower']
+        amount=request.data['amount']
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM trans where group_id=%s",[grp_id])
+            transactions=cursor.fetchall()
+            mymap={}
+            visited={}
+            dfsfinnum={}
+            mymap[lender]={borrower:amount}
+            mymap[borrower]={lender:(-1)*amount}
+            for r in res:
+                if r[1] in mymap:
+                    if r[2] in mymap[r[1]]:
+                        mymap[r[1]][r[2]]+=r[4]
+                    else:
+                        mymap[r[1]]=Merge(mymap,{r[2]:r[4]})
+                else:
+                    mymap[r[1]]={r[2]:r[4]}
+                    visited[r[1]]=0
+                    dfsfinnum[r[1]]=0
+                if r[2] in mymap:
+                    if r[1] in mymap[r[2]]:
+                        mymap[r[2]][r[1]]-=r[4]
+                    else:
+                        mymap[r[2]]=Merge(mymap,{r[1]:(-1)*r[4]})
+                else:
+                    mymap[r[2]]={r[1]:(-1)*r[4]}
+                    visited[r[2]]=0
+                    dfsfinnum[r[2]]=0
+            for k in mymap:
+                sum=0
+                for k1 in mymap[k]:
+                    if mymap[k][k1]==0:
+                        del mymap[k][k1]
+                    else:
+                        sum=sum+1
+                if sum==0:
+                    del mymap[k]
+            backedge=[]
+            parent=[]
+            def dfs(node):
+                for k in mymap[node]:
+                    if(len(backedge)!=0):
+                        return
+                    if visited[k]==0:
+                        parent[k]=node
+                        dfs(k)
+                    elif dfsfinnum[k]==-1 and k!=parent[node]:
+                        backedge=[{node:k}]
+                        return
+                    else:
+                        continue
+                return
+            dfs(lender)
+            if len(backedge)==0:
+                return JsonResponse("Decreasing number of transactions not possible",safe=False)
+            else:
+                n=[k for k in backedge]
+                mincost_edge(backedge[1])
+                
+
+                    
+
+                            
