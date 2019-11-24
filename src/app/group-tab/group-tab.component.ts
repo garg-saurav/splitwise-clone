@@ -93,15 +93,15 @@ onClickbalance(f){
 }
   console.log(f);
 }
-func(amount,friend){
+func(amount){
   if(amount==0){
-    return "You are settled up with "+friend
+    return "You are settled up in the group"
   }
   else if(amount<0){
-    return friend+" owes you "+((-1)*amount).toString()
+    return "The group owes you "+((-1)*amount).toString()
   }
   else{
-    return "You owe "+friend+" "+amount.toString()
+    return "You owe the group "+amount.toString()
   }
 }
   logout(){

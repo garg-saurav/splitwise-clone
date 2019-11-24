@@ -67,24 +67,21 @@ def getallgroups(request, username):
         # print(row)
         for id in row:
             print(id[0])
+            amount=0
             c.execute("SELECT sum(amount) from trans where lender=%s and group_id=%s",[username,id[0]])
             moneygiven=c.fetchone()
             if moneygiven[0]!= None:
-                moneygiven=moneygiven[0]
-            else:
-                moneygiven=0
+                amount=amount-float(moneygiven[0])
             # print(moneygiven)
             c.execute("SELECT sum(amount) from trans where group_id=%s and borrower=%s", [ id[0],username])
             moneyowed = c.fetchone()
             if moneyowed[0]!= None:
-                moneyowed = moneyowed[0]
-            else:
-                moneyowed=0
-            #print(id[0])
+                amount = amount+float(moneyowed[0])
+            print(id[0])
             name=c.execute("SELECT group_name from GId where group_id='"+str(id[0])+"'")
             name = name.fetchone()[0]
-            #print(name)
-            res=(id[0],name,moneygiven,moneyowed)
+            print(name)
+            res=(id[0],name,amount)
             ans.append(res)
     return JsonResponse(ans, safe=False)
 
@@ -710,7 +707,7 @@ class min_transaction(APIView):
             for r in res:
                 if r[1] in mymap:
                     if r[2] in mymap[r[1]]:
-                        mymap[r[1]][r[2]]+=float(r[4])
+                        mymap[r[1]][r[2]]=mymap[r[1]][r[2]]+float(r[4])
                     else:
                         mymap[r[1]]=Merge(mymap,{r[2]:float(r[4])})
                 else:
@@ -719,7 +716,7 @@ class min_transaction(APIView):
                     dfsfinnum[r[1]]=-1
                 if r[2] in mymap:
                     if r[1] in mymap[r[2]]:
-                        mymap[r[2]][r[1]]-=float(r[4])
+                        mymap[r[2]][r[1]]=mymap[r[2]][r[1]]-float(r[4])
                     else:
                         mymap[r[2]]=Merge(mymap,{r[1]:(-1)*float(r[4])})
                 else:
