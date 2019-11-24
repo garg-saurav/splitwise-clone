@@ -104,6 +104,28 @@ func(amount){
     return "You owe the group "+amount.toString()
   }
 }
+func1(amount,friend){
+  if(amount==0){
+    return "You are settled up with "+friend
+  }
+  else if(amount<0){
+    return friend+" owes you "+((-1)*amount).toString()
+  }
+  else{
+    return "You owe "+friend+amount.toString()
+  }
+}
+func2(amount){
+  if(amount==0){
+    return "Settled up with the group"
+  }
+  else if(amount<0){
+    return "Will get from the group "+((-1)*amount).toString()
+  }
+  else{
+    return "Owes to the group "+amount.toString()
+  }
+}
   logout(){
     localStorage.removeItem('username');
     this.router.navigate(['/login']);

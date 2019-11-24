@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
+//import {NgPipesModule} from 'ngx-pipes';
 @Component({
   selector: 'app-activity-tab',
   templateUrl: './activity-tab.component.html',

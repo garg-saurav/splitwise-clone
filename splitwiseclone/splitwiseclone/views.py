@@ -661,11 +661,11 @@ class balances(APIView):
                 amount=0
                 cursor.execute("SELECT SUM(amount) from trans where lender=%s and borrower = %s and group_id=%s",[username,m[0],grp_id])
                 am=cursor.fetchone()
-                if not am :
+                if am[0]!=None :
                     amount=amount-float(am[0])
                 cursor.execute("SELECT SUM(amount) from trans where lender=%s and borrower=%s and group_id=%s",[m[0],username,grp_id])
                 am=cursor.fetchone()
-                if not am:
+                if am[0]!=None:
                     amount=amount+float(am[0])
                 mymap[m[0]]=amount
             result=result+[mymap]
@@ -693,12 +693,12 @@ class balances2(APIView):
                 amount=0
                 cursor.execute("SELECT SUM(amount) from trans where lender=%s and group_id=%s",[m[0],grp_id])
                 am=cursor.fetchone()
-                if not am:
+                if am[0]!=None:
                     amount=amount-float(am[0])
                 cursor.execute("SELECT SUM(amount) from trans where borrower=%s and group_id=%s",[m[0],grp_id])
                 
                 am=cursor.fetchone()
-                if not am:
+                if am[0]!=None:
                     amount=amount+float(am[0])
                 result=result+[[m[0],amount]]
                 print([[m[0],amount]])
