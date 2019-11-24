@@ -31,7 +31,6 @@
         <tr>
             <td colspan=3>
             <div *ngIf="show && fr.UserName==detailed_f_name">
-                    
                     <div *ngFor="let t of all_details_keys">
                             <!-- {{t}} -->
                             <div *ngIf="t.startsWith(fr.UserName+':')">
@@ -41,11 +40,11 @@
                                         <div *ngFor="let t of all_details_keys">
                                                 <!-- {{t}} -->
                                                 <div *ngIf="t.startsWith(fr.UserName+':')">
-                                                    <div *ngFor="let item of all_details[t] | keyvalue">
-                                                            {{t.substring(t.indexOf(':')+1)}}
-                                                            {{item.key}}
-                                                            {{item.value}}
-                                                    </div>  
+                                                        <div *ngFor="let item of all_details[t] | keyvalue">
+                                                                <a href=#>{{func(item.value[0])}}
+                                                                in the group
+                                                                {{item.value[1]}}</a>
+                                                                </div>  
                                                 </div>
                                             </div>
                                 </div>  

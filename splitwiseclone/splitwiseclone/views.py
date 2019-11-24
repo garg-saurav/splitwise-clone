@@ -36,7 +36,7 @@ def getfriendlist(request, username):
     
     friendlist=[]
     with connection.cursor() as c:
-        c.execute("SELECT friend_user_name from UF where user_name='"+username+"'")
+        c.execute("SELECT friend_user_name, UserProfile.name from UF inner join UserProfile on UserProfile.user_name = UF.friend_user_name where UF.user_name='"+username+"'")
         lest = c.fetchall()
         for friend_username in lest:
             print("Hereeeee")
@@ -54,7 +54,7 @@ def getfriendlist(request, username):
                 moneyowed = moneyowed[0]
             else:
                 moneyowed=0
-            friendlist.append({"UserName":friend_username[0], "FriendName":friend_username[0],"MoneyBorrowed":str(moneyowed),"MoneyGiven":str(moneygiven)})
+            friendlist.append({"UserName":friend_username[0], "FriendName":friend_username[1],"MoneyBorrowed":str(moneyowed),"MoneyGiven":str(moneygiven)})
     return JsonResponse(friendlist, safe=False)
 
 
@@ -397,6 +397,10 @@ class leave_group(APIView):
                     return JsonResponse("Cannot Leave Group as you're not settled up yet with everyone", safe=False)
                 else:
                     cursor.execute("DELETE * FROM UG where user_name = %s group_id = %s",[username,grp_id])
+                    cursor.execute("SELECT * FROM UG where group_id = %s",[grp_id])
+                    res.cursor.fetchall()
+                    if len(res) == 0:
+                        cursor.execute("DELETE * FROM GId where group_id = %s",[grp_id])
                     return JsonResponse("Left Group", safe=False)
 
 class add_transaction(APIView):
@@ -529,3 +533,31 @@ def minimizing(all_details):
                 temp[g]=[-1*(m),nam]
         myMap[k]=temp
     return myMap 
+#id,lis
+class settle_up(APIView):
+    def post(self,request,username,format=None):
+        # print("sfdfsdfsfsd")
+    #     print(request.data)
+        grp_id = request.data['grp_id']
+        friend_list = request.data['friends']
+
+        with connection.cursor() as cursor:
+            # cursor.execute("select * from UserFriend where user_name = %s and friend_user_name = %s",[username, username])
+            amount=0
+            for f in friend_list:  
+                cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[f, username,grp_id])
+                am=cursor.fetchall()
+                amount=amount+int(am[0])
+                cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[username,f,grp_id])
+                am=cursor.fetchall()
+                amount=amount-int(am[0])
+                if amount>0:
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(username,f,grp_id,'settlling up',amount,'others'))
+                elif amount<0:
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(f,username,grp_id,'settlling up',(-1)*amount,'others'))
+                else:
+                    pass
+            # row = cursor.fetchall()
+            # ans['Borrowed']=row 
+            # ans=[i for g in ans for i in g]
+            return JsonResponse("Successfully settled up", safe=False)

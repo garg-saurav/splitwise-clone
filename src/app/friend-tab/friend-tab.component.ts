@@ -59,6 +59,18 @@ export class FriendTabComponent implements OnInit {
   }
 
 
+  func(amount){
+    if(amount==0){
+      return "You are settled up"
+    }
+    else if(amount<0){
+      return "The person owes you "+((-1)*amount).toString()
+    }
+    else{
+      return "You owe the person "+amount.toString()
+    }
+    return "yeah"
+  }
   onClick(f){
     // this.show=!this.show;
     if(f.UserName == this.detailed_f_name){

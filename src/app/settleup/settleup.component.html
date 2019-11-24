@@ -1,9 +1,11 @@
-<label class="container">{{x}}
-    <input type="checkbox">
-    <span class="checkmark"></span>
-</label>
-<label class="container">{{y}}
- <input type="checkbox">
-    <span class="checkmark"></span>
-  </label>
-  <button class="button">Settle up</button><br>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+    <label class="container" formArrayName="orders" *ngFor="let order of form.controls.orders.controls; let i = index">
+      <input type="checkbox" [formControlName]="i"><span class="checkmark"></span>
+      {{ordersData[i].name}}
+    </label>
+  
+    <div class="container" *ngIf="!form.valid">At least one person must be selected</div>
+    <button class="button" type="submit">Settle Up</button>
+  </form>
+  
