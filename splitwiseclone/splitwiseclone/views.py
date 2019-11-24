@@ -280,9 +280,10 @@ class getTransactions(APIView):
                     lent=0
                 if borrowed==None:
                     borrowed=0
-                res=(friend[0],lent,borrowed)
-                print(res)
-                ans.append(res)
+                if lent!=0 or borrowed!=0:
+                    res=(friend[0],lent,borrowed)
+                    print(res)
+                    ans.append(res)
                 
         return JsonResponse(ans,safe=False)
 
@@ -319,9 +320,11 @@ class bargraph2(APIView):
                 
                 name=c.execute("SELECT group_name from GId where group_id='"+str(id[0])+"'")
                 name = name.fetchone()[0]
-                print(name)
-                res=(name,moneygiven,moneyowed)
-                ans.append(res)
+                # print(name)
+                if moneygiven!=0 or moneyowed!=0:
+                    res=(name,moneygiven,moneyowed)
+                    print(res)
+                    ans.append(res)
         return JsonResponse(ans, safe=False)
         #     #print(username)
         #     ans=[]
@@ -621,9 +624,10 @@ class friendsPieChart(APIView):
                     sum=amount
                 else:
                     sum=amount+amount1
-                res=(friend[0],sum)
-                #print(res)
-                ans.append(res)
+                if sum!=None:
+                    res=(friend[0],sum)
+                    print(res)
+                    ans.append(res)
                 
         return JsonResponse(ans,safe=False)
 
@@ -656,10 +660,10 @@ class friendshipChart(APIView):
                     sum=amount
                 else:
                     sum=amount+amount1
-                res=(friend[0],sum)
-                print("You know what!")
-                print(res)
-                ans.append(res)
+                if sum!=0:
+                    res=(friend[0],sum)
+                
+                    ans.append(res)
                 
         return JsonResponse(ans,safe=False)
 class timeSeriesPlot(APIView):

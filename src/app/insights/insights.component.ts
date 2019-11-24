@@ -132,8 +132,9 @@ export class InsightsComponent {
     //timeplot=false;pi1=false;pi2=false;bar1=false;bar2=true;friendshipchart=false;
     this.dataService.get_bargraph2(this.model['fromdate'],this.model['todate'])
      .subscribe(data => {
-       this.insights_data = data;
+       this.bargraph2_data = data;
         var friend=[];var dat=[];var dat2=[];
+        console.log("sjhnjdn",this.bargraph2_data);
         if(this.bargraph2_data.length==0){
           window.alert("Couldn't retrive any transaction in specified period");
         }
