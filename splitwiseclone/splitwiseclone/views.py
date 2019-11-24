@@ -546,7 +546,3 @@ class settle_up(APIView):
             # ans['Borrowed']=row 
             # ans=[i for g in ans for i in g]
             return JsonResponse("Successfully settled up", safe=False)
-<<<<<<< HEAD
-=======
-
->>>>>>> 299bae9c2ed38932787f8c095ba866f4714be69e
