@@ -310,16 +310,20 @@ class get_friend_details(APIView):
             for i in friends:
                 # print(i[0])
                 f_name=i[0]
-                cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[username, f_name])
+                cursor.execute('Select name from UserProfile where user_name=%s',[i[0]])
+                res=cursor.fetchone()
+                friend_name=res[0]
+                cursor.execute("SELECT trans.group_id, amount, group_name FROM trans inner join GId on trans.group_id = GId.group_id WHERE lender = %s and borrower = %s",[username, f_name])
                 row = cursor.fetchall()
                 temp={}
                 temp['Lent']=row
-                cursor.execute("SELECT group_id, amount FROM trans WHERE lender = %s and borrower = %s",[f_name, username])
+                cursor.execute("SELECT trans.group_id, amount, group_name FROM trans inner join GId on trans.group_id = GId.group_id WHERE lender = %s and borrower = %s",[f_name, username])
                 row = cursor.fetchall()
                 temp['Borrowed']=row 
                 # temp=[i for g in temp for i in g]
-                ans[f_name]=temp
-                ans=minimizing(ans)
+                ans[f_name+":"+friend_name]=temp
+            ans=minimizing(ans)
+            print(ans)
             return JsonResponse(ans, safe=False)
 
 class settle_up_all(APIView):
@@ -328,28 +332,30 @@ class settle_up_all(APIView):
         with connection.cursor() as cursor:
             map={}
             # cursor.execute("select * from UserFriend where user_name = %s and friend_user_name = %s",[username, username])
-            cursor.execute("SELECT group_id,SUM(amount) FROM trans WHERE lender = %s and borrower = %s GROUP BY group_id",[username,friend_id])
+            cursor.execute("SELECT group_id,SUM(amount),GId.group_name FROM trans inner join GId on trans.group_id = GId.group_id WHERE lender = %s and borrower = %s GROUP BY group_id",[username,friend_id])
             l1=cursor.fetchall()
             temp={}
             l=[]
             for i in range(len(l1)):
                 g=l1[i][0]
                 am=l1[i][1]
-                l=l+[[g,am]]
+                nam=l1[i][2]
+                l=l+[[g,am,nam]]
             temp['Lent']=l
-            cursor.execute("SELECT group_id,SUM(amount) FROM trans WHERE lender = %s and borrower = %s GROUP BY group_id",[friend_id,username])
+            cursor.execute("SELECT group_id,SUM(amount),GId.group_name FROM trans inner join GId on trans.group_id = GId.group_id WHERE lender = %s and borrower = %s GROUP BY group_id",[friend_id,username])
             l1=cursor.fetchall()
             l=[]
             for i in range(len(l1)):
                 g=l1[i][0]
                 m=l1[i][1]
-                l=l+[[g,m]]
+                nam=l1[i][2]
+                l=l+[[g,m,nam]]
             temp['Borrowed']=l
             map[friend_id]=temp
             k=minimizing(map)
             kl=k[friend_id]
             for g_id in kl:
-                amount=int(kl[g_id])
+                amount=int(kl[g_id][0])
                 if amount > 0:
                     cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(username,friend_id,g_id,'settlling up',amount,'others'))
                 elif amount < 0:
@@ -504,18 +510,22 @@ def minimizing(all_details):
         for i in range(len(arr)):
             g=arr[i][0]
             m=arr[i][1]
+            nam=arr[i][2]
+            m=int(m)
             if g in temp:
-                temp[g]=temp[g]+m
+                temp[g][0]=temp[g][0]+m
             else:
-                temp[g]=m
+                temp[g]=[m,nam]
         arr1=obj['Lent']
         for i in range(len(arr1)):
             g=arr1[i][0]
             m=arr1[i][1]
+            nam=arr1[i][2]
+            m=int(m)
             if g in temp:
-                temp[g]=temp[g]-m
+                temp[g][0]=temp[g][0]-m
             else:
-                temp[g]=-1*(m)
+                temp[g]=[-1*(m),nam]
         myMap[k]=temp
     return myMap 
 #id,lis
