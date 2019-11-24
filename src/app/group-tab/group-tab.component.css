@@ -3,21 +3,21 @@ div.content {
     padding: 1px 16px;
     height: 1000px;
   }
-  #customers {
+  #customers,#customers1,#customers2 {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
   }
   
-  #customers td, #customers th {
+  #customers,#customers1,#customers2 td, #customers,#customers1,#customers2 th {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
   }
   
-  #customers tr:nth-child(even){background-color: #f2f2f2;}
+  #customers,#customers1,#customers2 tr:nth-child(even){background-color: #f2f2f2;}
   
-  #customers tr:hover {background-color: #ddd;}
+  #customers,#customers1,#customers2 tr:hover {background-color: #ddd;}
   
   #customers th {
     padding-top: 12px;

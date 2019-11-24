@@ -63,8 +63,8 @@ def getallgroups(request, username):
     with connection.cursor() as c:
         row = c.execute("SELECT group_id FROM UG WHERE user_name='" + username + "'")
         row = row.fetchall()
-        print("heyy")
-        print(row)
+        # print("heyy")
+        # print(row)
         for id in row:
             print(id[0])
             c.execute("SELECT sum(amount) from trans where lender=%s and group_id=%s",[username,id[0]])
@@ -80,10 +80,10 @@ def getallgroups(request, username):
                 moneyowed = moneyowed[0]
             else:
                 moneyowed=0
-            print(id[0])
+            #print(id[0])
             name=c.execute("SELECT group_name from GId where group_id='"+str(id[0])+"'")
             name = name.fetchone()[0]
-            print(name)
+            #print(name)
             res=(id[0],name,moneygiven,moneyowed)
             ans.append(res)
     return JsonResponse(ans, safe=False)
@@ -615,22 +615,38 @@ class balances(APIView):
             for m in members:
                 amount=0
                 cursor.execute("SELECT SUM(amount) from trans where lender=%s and borrower = %s and group_id=%s",[username,m[0],grp_id])
-                am=cursor.fetchall()
-                amount=amount-float(am[0])
-                cursor.execute("SELECT SUM(amount) from trans where lender=%s borrower=%s and group_id=%s",[m[0],username,grp_id])
-                am=cursor.fetchall()
-                amount=amount+float(am[0])
+                am=cursor.fetchone()
+                if not am :
+                    amount=amount-float(am[0])
+                cursor.execute("SELECT SUM(amount) from trans where lender=%s and borrower=%s and group_id=%s",[m[0],username,grp_id])
+                am=cursor.fetchone()
+                if not am:
+                    amount=amount+float(am[0])
                 mymap[m[0]]=amount
             result=result+[mymap]
+            # print(result)
+            return JsonResponse(result,safe=False)
+class balances2(APIView):
+    def post(self,request,username,format=None):
+        grp_id = request.data['grp_id']
+        result=[]
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT user_name FROM UG WHERE group_id=%s and user_name!=%s",[grp_id,username])
+            members=cursor.fetchall()
             for m in members:
                 amount=0
                 cursor.execute("SELECT SUM(amount) from trans where lender=%s and group_id=%s",[m[0],grp_id])
-                am=cursor.fetchall()
-                amount=amount-float(am[0])
+                am=cursor.fetchone()
+                if not am:
+                    amount=amount-float(am[0])
                 cursor.execute("SELECT SUM(amount) from trans where borrower=%s and group_id=%s",[m[0],grp_id])
-                am=cursor.fetchall()
-                amount=amount+float(am[0])
+                
+                am=cursor.fetchone()
+                if not am:
+                    amount=amount+float(am[0])
                 result=result+[[m[0],amount]]
+                print([[m[0],amount]])
+                print(result)
             return JsonResponse(result,safe=False)
 
 class min_transaction(APIView):

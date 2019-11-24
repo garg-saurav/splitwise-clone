@@ -52,20 +52,11 @@ class UserFriend(models.Model):
 
 
 class Transaction(models.Model):
-    TAGS = (
-      ('movies','movies'),
-      ('food','food'),
-      ('housing','housing'),
-      ('travel','travel'),
-      ('others','others')
-    )
     transaction_id = models.AutoField(primary_key=True)
     lender = models.CharField(max_length=30)
     borrower = models.CharField(max_length=30)
     group_id = models.IntegerField()
-    amount = models.DecimalField(max_digits=100,decimal_places=2)
-    desc = models.TextField(blank=True, null=True, default="")
-    tag = models.CharField(max_length = 30, default="others", choices=TAGS)
+    amount = models.IntegerField()
     date_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

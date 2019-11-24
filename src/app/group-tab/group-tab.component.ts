@@ -9,15 +9,16 @@ import { Router } from '@angular/router';
 })
 export class GroupTabComponent implements OnInit {
   group:any;
-  members:any;
+  members:any;groupbalance:any;groupbalance2:any;
   constructor(private dataService:DataService,private router:Router) { }
   show=true;
   showbalance=true;
   begin=1;
   detailed_f_name:any;
   f_name:any;
-  all_details:any;
+  all_details:any;keys:any;
   ngOnInit() {
+    
     this.dataService.get_groups_data()
                   .subscribe(data => {
                     this.group = data;
@@ -29,6 +30,7 @@ export class GroupTabComponent implements OnInit {
           console.log("MEMBERS");
           console.log(data);
         })
+    
   }
   
 //   addInput(): void
@@ -56,15 +58,43 @@ onClickbalance(f){
   // this.show=!this.show;
   if(f[0] == this.f_name){
     this.showbalance=!this.showbalance;
+    
     if(this.show==false){
       this.f_name=null;
       this.showbalance=true;
     }
   }else{
   this.f_name=f[0];
-  
+  this.dataService.getbalances(f[0])
+        .subscribe(data =>{
+          this.groupbalance =data;
+          console.log(data);
+          this.keys=Object.keys(this.groupbalance["0"]); 
+          console.log("hereeee",this.keys);
+          console.log("heyyy",this.groupbalance);
+        })
+        
+        
+        
+  this.dataService.getbalances2(f[0])
+  .subscribe(data =>{
+    this.groupbalance2 =data;
+    console.log(data);
+  })
+        
 }
   console.log(f);
+}
+func(amount,friend){
+  if(amount==0){
+    return "You are settled up with "+friend
+  }
+  else if(amount<0){
+    return friend+" owes you "+((-1)*amount).toString()
+  }
+  else{
+    return "You owe "+friend+" "+amount.toString()
+  }
 }
   logout(){
     localStorage.removeItem('username');

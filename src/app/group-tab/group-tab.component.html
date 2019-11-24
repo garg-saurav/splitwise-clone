@@ -40,7 +40,34 @@
                         <button class="button">Settle accounts</button> &nbsp;&nbsp;
                         <button class="button" (click)="onClickbalance(g)">Balances</button>
                         <div *ngIf="showbalance && g[0]==f_name">
-                            Timepass
+                            <h1>Your Balances with Group members</h1>
+                            <table id="customers1">
+                                    <!-- console.log({{balance}})
+                                    <tr>{{balance[0]}}</tr> -->
+                                    <tr>
+                                        <th>Status</th>
+                                        
+                                    </tr>
+                                    <div *ngFor="let key of keys">
+                                        <tr > {{func(groupbalance['0'][key],key)}}</tr>
+                                    </div>
+
+                            </table>
+                            <h1>Other Balances in Group</h1>
+                            <table id="customers2">
+                                <tr>
+                                <th>Group Member</th>
+                                <th>Net Amount</th>
+                            </tr>
+                            <div *ngFor="let balance of groupbalance2">
+                                
+                                <tr>
+                                    <td>{{balance[0]}}</td>
+                                    <td>{{balance[1]}}</td>
+                                </tr>
+                                
+                            </div>
+                        </table>
                         </div>
                         <h2>TRANSACTIONS</h2>
                         <table width="60%" align="center" id="none">
