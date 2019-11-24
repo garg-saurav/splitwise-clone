@@ -38,11 +38,11 @@
           <div class="form-group">
             <label for="distribution">Amount distribution details (percentage)</label><br>  
             <!-- <div *ngIf="sh[0]==grp_id"> -->
-                {{user.user}} <input type="number" step="0.01" class="form-control" id="{{user.id}}" required name="distribution">
+                {{user.user}} <input type="number" step="0.01" class="form-control" id="{{user.id}}" value="{{last}}" required name="distribution">
               <!-- </div> -->
             <div *ngFor="let sh of all_friends">
               <div *ngIf="sh[0]==grp_id">
-              {{sh[2]}} <input type="number" step="0.01" class="form-control" id="{{sh[1]}}" required name="distribution">
+              {{sh[2]}} <input type="number" step="0.01" class="form-control" id="{{sh[1]}}" value="{{(100/cnt).toFixed(2)}}" required name="distribution">
             </div>
             </div>
           </div>

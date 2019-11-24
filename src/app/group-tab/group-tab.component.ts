@@ -97,11 +97,11 @@ func(amount){
   if(amount==0){
     return "You are settled up in the group"
   }
-  else if(amount<0){
-    return "The group owes you "+((-1)*amount).toString()
+  else if(amount>0){
+    return "The group owes you "+(amount).toString()
   }
   else{
-    return "You owe the group "+amount.toString()
+    return "You owe the group "+((-1)*amount).toString()
   }
 }
 func1(amount,friend){

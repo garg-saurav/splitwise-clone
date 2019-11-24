@@ -71,12 +71,12 @@ def getallgroups(request, username):
             c.execute("SELECT sum(amount) from trans where lender=%s and group_id=%s",[username,id[0]])
             moneygiven=c.fetchone()
             if moneygiven[0]!= None:
-                amount=amount-float(moneygiven[0])
+                amount=amount+float(moneygiven[0])
             # print(moneygiven)
             c.execute("SELECT sum(amount) from trans where group_id=%s and borrower=%s", [ id[0],username])
             moneyowed = c.fetchone()
             if moneyowed[0]!= None:
-                amount = amount+float(moneyowed[0])
+                amount = amount-float(moneyowed[0])
             print(id[0])
             name=c.execute("SELECT group_name from GId where group_id='"+str(id[0])+"'")
             name = name.fetchone()[0]
@@ -98,20 +98,20 @@ def add_friend(request,username,friend_user_name):
           if(len(c.fetchall())==0):
             return  JsonResponse("Friend not registered",safe=False)
           else:
-              c.execute("insert into UF (user_name, friend_user_name) values (%s,%s)",(username,friend_user_name))
-              c.execute("insert into UF (friend_user_name, user_name) values (%s,%s)", (username, friend_user_name))
+              c.execute("insert into UF (user_name, friend_user_name) values (%s,%s)",(username,friend_user_name)) #corrected
+              c.execute("insert into UF (friend_user_name, user_name) values (%s,%s)", (username, friend_user_name)) #corrected
               c.execute('Select name from UserProfile where user_name=%s',(username,))
               res=c.fetchone()
               uname=res[0]
               print("hyegygd")
               print(uname)
-              c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(friend_user_name,"You and "+uname+" became friends"))
+              c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(friend_user_name,"You and "+uname+" became friends")) #corrected
               c.execute('Select name from UserProfile where user_name=%s',(friend_user_name,))
               res=c.fetchone()
               print("gdhgs")
               fname=res[0]
               print(fname)
-              c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You and "+fname+" became friends"))
+              c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You and "+fname+" became friends")) #corrected
               
               return JsonResponse("Successfully added",safe=False)
         else:
@@ -191,10 +191,14 @@ class add_friend_in_group(APIView):
                         groupname = c.execute("Select * from GId where group_id = %s",[g_id]).fetchone()[1]
                         print(groupname)
                         c.execute("INSERT INTO UG (group_id, group_name, user_name) VALUES (%s, %s, %s)", (g_id, groupname, f_name))
-                        c.execute('Select name from UserProfile where user_name=%s',f_name)
+                        c.execute('Select name from UserProfile where user_name=%s',(f_name,))
                         res=c.fetchone()
                         fname=res[0]
-                        c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You added "+fname+" in groupname"+groupname))
+                        c.execute('Select name from UserProfile where user_name=%s',(username,))
+                        res=c.fetchone()
+                        uname=res[0]
+                        c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You added "+fname+" in group "+groupname))
+                        c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(f_name,"You were added by "+uname+" in group "+groupname))
                         return JsonResponse("Successfully added",safe=False)
                 else:
                     return JsonResponse("Only friends can be added to a group", safe=False)
@@ -207,18 +211,42 @@ class get_group_members(APIView):
         # print("sfdfsdfsfsd")
     #     print(request.data)
         # grp_id = request.data['grp_id']
+        ans = []
+        ans2=[]
         with connection.cursor() as cursor:
             print(username)
             row = cursor.execute("SELECT group_name, group_id FROM UG WHERE user_name='" + username + "'")
             row = row.fetchall()
-            ans = []
             for r in row:
                 cursor.execute("select group_id, UG.user_name, name from UG inner join UserProfile on UG.user_name = UserProfile.user_name where group_id = %s and UG.user_name != %s",[r[1], username])
+    
                 res=cursor.fetchall()
+            
                 ans.append(res)
-                # print()
+                
+                print(res)
+            for k in res:
+                cursor.execute("select sum(amount) from trans where group_id = %s and lender = %s and borrower = %s",[r[1],username, k[1]])
+                lent=cursor.fetchone()
+                if lent[0]!=None:
+                    lent=lent[0]
+                else:
+                    lent=0
+                cursor.execute("select sum(amount) from trans where group_id = %s and lender = %s and borrower = %s",[r[1], k[1],username])
+                borrowed=cursor.fetchone()
+                if borrowed[0]!=None:
+                    borrowed=borrowed[0]
+                else:
+                    borrowed=0
+                print("lk",list(k))
+                o=list(k)
+                o.append(lent-borrowed)
+                ans2.append(o)
+                print("p",o)
+            print("ans2",ans2)
             ans=[i for g in ans for i in g]
-            return JsonResponse(ans, safe=False)
+            print(ans)
+            return JsonResponse(ans2, safe=False)
 
         # with connection.cursor() as cursor:
         #     cursor.execute("select * from GId where group_id = %s and username != %s",[grp_id, username])
@@ -383,14 +411,15 @@ class settle_up_all(APIView):
                     cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(friend_id,username,g_id,'settling up',(-1)*amount,'others',datetime.datetime.now()))
                 
                 if amount!=0:
-                    cursor.execute('Select name from UserProfile where user_name=%s',friend_id)
+                    
+                    cursor.execute('Select name from UserProfile where user_name=%s',(friend_id,))
                     res=cursor.fetchone()
                     friend_name=res[0]
-                    cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You settled up with '"+friend_name+"'"))
-                    cursor.execute('Select name from UserProfile where user_name=%s',username)
+                    cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You settled up with '"+friend_name+"' in all groups"))
+                    cursor.execute('Select name from UserProfile where user_name=%s',(username,))
                     res=cursor.fetchone()
                     uname=res[0]
-                    cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(friend_id,"You settled up with '"+uname+"'"))
+                    cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(friend_id,"You settled up with '"+uname+"' in all groups"))
             return JsonResponse("Successfully settled up", safe=False)
 #         # print("sfdfsdfsfsd")
 #         # print(request.data)
@@ -444,14 +473,16 @@ class add_transaction(APIView):
         with connection.cursor() as cursor:
             # cursor.execute("select * from UserFriend where user_name = %s and friend_user_name = %s",[username, username])
             cursor.execute("INSERT INTO trans (lender, borrower, group_id, desc, amount, tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)", (lender, borrower, grp_id, desc, amt, tag, datetime.datetime.now()))
-            cursor.execute('Select name from UserProfile where user_name=%s',lender)
+            cursor.execute('Select group_name from GId where group_id=%s',(grp_id,))
+            grpname=cursor.fetchone()[0]
+            cursor.execute('Select name from UserProfile where user_name=%s',(lender,))
             res=cursor.fetchone()
             lender_name=res[0]
-            cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(borrower,"You borrowed '"+amt+"' from '"+lender_name+"'"))
-            cursor.execute('Select name from UserProfile where user_name=%s',borrower)
+            cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(borrower,"You borrowed '"+amt+"' from '"+lender_name+"' in group '"+grpname+"' ") )
+            cursor.execute('Select name from UserProfile where user_name=%s',(borrower,))
             res=cursor.fetchone()
             borrower_name=res[0]
-            cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(lender,"You lent '"+amt+"' to '"+borrower_name+"'"))
+            cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(lender,"You lent '"+amt+"' to '"+borrower_name+"' in group '"+grpname+"' "))
             # row = cursor.fetchall()
             # ans = {}
             # ans['Lent']=row
@@ -613,6 +644,8 @@ class settle_up(APIView):
         with connection.cursor() as cursor:
             # cursor.execute("select * from UserFriend where user_name = %s and friend_user_name = %s",[username, username])
             amount=0
+            cursor.execute("select group_name from GId where group_id=%s",(grp_id,))
+            grp_name=cursor.fetchone()[0]
             for f in friend_list:  
                 # print("f",f)
                 cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[f, username,grp_id])
@@ -628,14 +661,14 @@ class settle_up(APIView):
                 elif amount<0:
                     cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(f,username,grp_id,'settlling up',(-1)*amount,'others',datetime.datetime.now()))
                 if amount!=0:
-                    cursor.execute('Select name from UserProfile where user_name=%s',f)
+                    cursor.execute('Select name from UserProfile where user_name=%s',(f,))
                     res=cursor.fetchone()
                     friend_name=res[0]
-                    cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You settled up with '"+friend_name+"'"))
-                    cursor.execute('Select name from UserProfile where user_name=%s',username)
+                    cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You settled up with '"+friend_name+"' in group '"+grp_name+"'"))
+                    cursor.execute('Select name from UserProfile where user_name=%s',(username,))
                     res=cursor.fetchone()
                     uname=res[0]
-                    cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(f,"You settled up with '"+uname+"'"))
+                    cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(f,"You are settled up with '"+uname+"' in group '"+grp_name+"'"))
             # row = cursor.fetchall()
             # ans['Borrowed']=row 
             # ans=[i for g in ans for i in g]
