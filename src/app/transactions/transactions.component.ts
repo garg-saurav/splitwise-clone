@@ -38,6 +38,7 @@ export class TransactionsComponent {
         this.dist[sh[1]]=(<HTMLInputElement>document.getElementById(sh[1])).value;
         this.name[sh[1]]=sh[2];
         console.log((<HTMLInputElement>document.getElementById(sh[1])).value);
+        this.router.navigate(['/group-tab'])
 
       }
     }
