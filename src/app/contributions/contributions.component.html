@@ -1,0 +1,12 @@
+<div class="container">
+      <h1>Change Contributions of different members</h1>
+
+<form [formGroup]="form" (ngSubmit)="submit()" #contriForm="ngForm">
+    <label class="custom-control-label" formArrayName="orders" *ngFor="let order of form.controls.orders.controls; let i = index">
+      {{ordersData[i].name}}
+      <input type="text" [formControlName]="i">
+    </label>
+    <button type="submit" class="btn btn-success" [disabled]="!contriForm.form.valid">Settle Up</button>
+  </form>
+  </div>
+

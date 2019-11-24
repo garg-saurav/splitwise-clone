@@ -20,6 +20,7 @@ import { InsightsComponent } from './insights/insights.component';
 import { ChartComponent } from './chart/chart.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { SettleupComponent } from './settleup/settleup.component';
+import { ContributionsComponent } from './contributions/contributions.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +38,8 @@ import { SettleupComponent } from './settleup/settleup.component';
     TransactiondetailsComponent,
     InsightsComponent,
     ChartComponent,
-    SettleupComponent
+    SettleupComponent,
+    ContributionsComponent
   ],
   imports: [
     BrowserModule,

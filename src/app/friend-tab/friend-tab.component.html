@@ -31,13 +31,33 @@
         <tr>
             <td colspan=3>
             <div *ngIf="show && fr.UserName==detailed_f_name">
-                <button class="button">Settle accounts</button><br>
-                <div *ngFor="let t of all_details[fr.UserName]['Lent']">
-                    {{t}}
-                </div>
-                <div *ngFor="let t of all_details[fr.UserName]['Borrowed']">
-                    {{t}}
-                </div>
+                    <div *ngFor="let t of all_details_keys">
+                            <!-- {{t}} -->
+                            <div *ngIf="t.startsWith(fr.UserName+':')">
+                                <div *ngIf="!allset(all_details[t])">
+
+                                        <button class="button" (click)="settleupall(fr.UserName)">Settle accounts</button><br>
+                                        <div *ngFor="let t of all_details_keys">
+                                                <!-- {{t}} -->
+                                                <div *ngIf="t.startsWith(fr.UserName+':')">
+                                                        <div *ngFor="let item of all_details[t] | keyvalue">
+                                                                <a href=#>{{func(item.value[0])}}
+                                                                in the group
+                                                                {{item.value[1]}}</a>
+                                                                </div>  
+                                                </div>
+                                            </div>
+                                </div>  
+                                <div *ngIf="allset(all_details[t])">
+
+                                        You have no pending transactions.
+                                </div>  
+                            </div>
+                        </div>
+                
+                <!-- <div *ngFor="let t of all_details[fr.UserName]"> -->
+                    <!-- {{t}} -->
+                <!-- </div> -->
 
             </div></td>
         </tr>
