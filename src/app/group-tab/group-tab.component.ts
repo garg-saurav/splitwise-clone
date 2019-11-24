@@ -24,6 +24,7 @@ export class GroupTabComponent implements OnInit {
     this.dataService.get_group_members()
         .subscribe(data =>{
           this.members =data;
+          console.log("MEMBERS");
           console.log(data);
         })
   }

@@ -197,7 +197,7 @@ class get_group_members(APIView):
             row = row.fetchall()
             ans = []
             for r in row:
-                cursor.execute("select group_id, user_name from UG where group_id = %s and user_name != %s",[r[1], username])
+                cursor.execute("select group_id, UG.user_name, name from UG inner join UserProfile on UG.user_name = UserProfile.user_name where group_id = %s and UG.user_name != %s",[r[1], username])
                 res=cursor.fetchall()
                 ans.append(res)
                 # print()
@@ -407,12 +407,12 @@ class add_transaction(APIView):
     def post(self,request,username,format=None):
         # print("sfdfsdfsfsd")
     #     print(request.data)
-        grp_id = request.data['grp_id']
-        lender = request.data['lender']
-        borrower = request.data['borrower']
-        desc = request.data['desc']
-        amt = request.data['amt']
-        tag = request.data['tag']
+        grp_id = request.data['_grp_id']
+        lender = request.data['_lender']
+        borrower = request.data['_borrower']
+        desc = request.data['_desc']
+        amt = request.data['_amt']
+        tag = request.data['_tag']
 
         with connection.cursor() as cursor:
             # cursor.execute("select * from UserFriend where user_name = %s and friend_user_name = %s",[username, username])

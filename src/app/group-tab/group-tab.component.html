@@ -25,12 +25,12 @@
                 <td>{{g[3]}}</td>
                 <td>
                     <div *ngFor="let m of members">
-                            <div *ngIf="m[0]==g[1]">
+                            <div *ngIf="m[0]==g[0]">
                                 {{m[1]}}
                             </div>
                     </div>
-                    <a routerLink="/member/{{g[1]}}" class="button">Add new member</a></td>
-                <td><a routerLink="/transaction" class="button">Add Transaction</a></td>
+                    <a routerLink="/member/{{g[0]}}" class="button">Add new member</a></td>
+                <td><a routerLink="/transaction/{{g[0]}}" class="button">Add Transaction</a></td>
                 
                 <td><button class="button">Leave Group</button></td>
             </tr>
