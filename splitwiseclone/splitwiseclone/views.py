@@ -616,7 +616,7 @@ class min_transaction(APIView):
             for r in res:
                 if r[1] in mymap:
                     if r[2] in mymap[r[1]]:
-                        mymap[r[1]][r[2]]+=float(r[4])
+                        mymap[r[1]][r[2]]=mymap[r[1]][r[2]]+float(r[4])
                     else:
                         mymap[r[1]]=Merge(mymap,{r[2]:float(r[4])})
                 else:
@@ -625,7 +625,7 @@ class min_transaction(APIView):
                     dfsfinnum[r[1]]=-1
                 if r[2] in mymap:
                     if r[1] in mymap[r[2]]:
-                        mymap[r[2]][r[1]]-=float(r[4])
+                        mymap[r[2]][r[1]]=mymap[r[2]][r[1]]-float(r[4])
                     else:
                         mymap[r[2]]=Merge(mymap,{r[1]:(-1)*float(r[4])})
                 else:
