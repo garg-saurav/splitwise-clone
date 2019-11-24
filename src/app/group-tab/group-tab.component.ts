@@ -12,8 +12,10 @@ export class GroupTabComponent implements OnInit {
   members:any;
   constructor(private dataService:DataService,private router:Router) { }
   show=true;
+  showbalance=true;
   begin=1;
   detailed_f_name:any;
+  f_name:any;
   all_details:any;
   ngOnInit() {
     this.dataService.get_groups_data()
@@ -36,14 +38,30 @@ export class GroupTabComponent implements OnInit {
 // }
 onClick(f){
   // this.show=!this.show;
-  if(f.UserName == this.detailed_f_name){
+  if(f[0] == this.detailed_f_name){
     this.show=!this.show;
     if(this.show==false){
       this.detailed_f_name=null;
       this.show=true;
     }
   }else{
-  this.detailed_f_name=f.UserName;
+  this.detailed_f_name=f[0];
+  this.f_name=null;
+  this.showbalance=true;
+  
+}
+  console.log(f);
+}
+onClickbalance(f){
+  // this.show=!this.show;
+  if(f[0] == this.f_name){
+    this.showbalance=!this.showbalance;
+    if(this.show==false){
+      this.f_name=null;
+      this.showbalance=true;
+    }
+  }else{
+  this.f_name=f[0];
   
 }
   console.log(f);

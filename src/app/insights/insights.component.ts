@@ -2,6 +2,8 @@ import { Component ,OnInit} from '@angular/core';
 import { Dates } from '../dates';
 import { DataService } from '../data.service';
 import {Chart} from 'chart.js';
+
+
 @Component({
   selector: 'app-insights',
   templateUrl: './insights.component.html',
@@ -22,7 +24,32 @@ export class InsightsComponent {
        this.dateRange = data;
      }); 
   }
-
+  // public print(id): void {
+  //   let printContents, popupWin;
+  //   printContents = document.getElementById(id) as HTMLCanvasElement;
+  //   const jpegUrl = printContents.toDataURL('image/jpeg');
+    
+  //   //console.log(printContents);
+  //   popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
+  //   popupWin.document.open();
+  //   var doc= new jsPDF();
+  //   doc.addImage(jpegUrl, 'JPEG', 20, 150, 50, 50);
+  //   doc.save('test.pdf');
+    //popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printContents + '</html>');
+    
+    // popupWin.document.write(`
+    //   <html>
+    //     <head>
+    //       <title>Print tab</title>
+    //       <style>
+    //       //........Customized style.......
+    //       </style>
+    //     </head>
+    // <body onload="window.print();window.close()">${printContents}</body>
+    //   </html>`
+    // );
+    // popupWin.document.close();
+// }
   BarGraph1(){
     this.dataService.get_bargraph1(this.model['fromdate'],this.model['todate'])
      .subscribe(data => {
@@ -74,6 +101,7 @@ export class InsightsComponent {
        }],
 
            yAxes: [{
+             stacked:true,
                ticks: {
                    beginAtZero:true
                }

@@ -36,13 +36,22 @@
             </tr>
             <tr>
                     <td colspan=6>
-                    <div>
+                        <div *ngIf="show && g[0]==detailed_f_name">
                         <button class="button">Settle accounts</button> &nbsp;&nbsp;
-                        <button class="button">Balances</button><br>
-                        <table>
-                            
+                        <button class="button" (click)="onClickbalance(g)">Balances</button>
+                        <div *ngIf="showbalance && g[0]==f_name">
+                            Timepass
+                        </div>
+                        <h2>TRANSACTIONS</h2>
+                        <table width="60%" align="center" id="none">
+                            <tr>
+                                <th>Lender</th>
+                                <th>Borrower</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                                <th>Tag</th>
+                            </tr>
                         </table>
-        
                     </div></td>
             </tr>
             </ng-container>

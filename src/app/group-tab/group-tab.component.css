@@ -120,3 +120,21 @@ div.content {
     font-size: 25px;
     font-style: italic;
   }
+
+  table #none {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 70%;
+  }
+  table #none th{
+    background-color: rgb(57, 33, 192);
+  }
+  table #none td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  table #none tr:nth-child(even) {
+    background-color: #dddddd;
+  }

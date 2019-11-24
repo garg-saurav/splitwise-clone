@@ -23,9 +23,9 @@ export class ChartComponent implements OnInit {
   PieChart:any;
   constructor() { }
  
-  public print(): void {
+  public print(id): void {
     let printContents, popupWin;
-    printContents = document.getElementById('pie').innerHTML;
+    printContents = document.getElementById(id).innerHTML;
     console.log(printContents);
     popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
     popupWin.document.open();
