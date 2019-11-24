@@ -26,7 +26,8 @@ export class GroupFormComponent  {
     })
 
   }
-  
+
+ 
   newGroup(){
     this.model=new Group('');}
   }

@@ -88,7 +88,7 @@ export class FriendTabComponent implements OnInit {
   allset(map){
     var ans=true;
     for (let k of Object.keys(map)){
-      if(map[k][0]==0){
+      if(map[k][0].toFixed(2)==0.00){
       }else{
         ans=false;
         return false;

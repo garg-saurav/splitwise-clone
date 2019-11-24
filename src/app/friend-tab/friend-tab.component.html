@@ -41,7 +41,7 @@
                                                 <!-- {{t}} -->
                                                 <div *ngIf="t.startsWith(fr.UserName+':')">
                                                         <div *ngFor="let item of all_details[t] | keyvalue">
-                                                                <a href=#>{{func(item.value[0])}}
+                                                                <a href=#>{{func(item.value[0].toFixed(2))}}
                                                                 in the group
                                                                 {{item.value[1]}}</a>
                                                                 </div>  
