@@ -260,7 +260,7 @@ class settle_up_all(APIView):
             k=minimizing(map)
             kl=k[friend_id]
             for g_id in kl:
-                amount=kl[g_id]
+                amount=int(kl[g_id])
                 if amount > 0:
                     cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(username,friend_id,g_id,'settlling up',amount,'others'))
                 elifwith connection.cursor() as cursor: amount < 0:
@@ -297,6 +297,10 @@ class leave_group(APIView):
                     return JsonResponse("Cannot Leave Group as you're not settled up yet with everyone", safe=False)
                 else:
                     cursor.execute("DELETE * FROM UG where user_name = %s group_id = %s",[username,grp_id])
+                    cursor.execute("SELECT * FROM UG where group_id = %s",[grp_id])
+                    res.cursor.fetchall()
+                    if len(res) == 0:
+                        cursor.execute("DELETE * FROM GId where group_id = %s",[grp_id])
                     return JsonResponse("Left Group", safe=False)
 
 class add_transaction(APIView):
@@ -358,7 +362,6 @@ def minimizing(all_details):
             if g in temp:
                 temp[g]=temp[g]-m
             else:
-<<<<<<< HEAD
                 temp[g]=-1*(m)
         myMap[k]=temp
     return myMap 
@@ -376,10 +379,10 @@ class settle_up(APIView):
             for f in friend_list:  
                 cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[f, username,grp_id])
                 am=cursor.fetchall()
-                amount=amount+am[0]
+                amount=amount+int(am[0])
                 cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[username,f,grp_id])
                 am=cursor.fetchall()
-                amount=amount-am[0]
+                amount=amount-int(am[0])
                 if amount>0:
                     cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(username,f,grp_id,'settlling up',amount,'others'))
                 elif amount<0:
@@ -390,7 +393,3 @@ class settle_up(APIView):
             # ans['Borrowed']=row 
             # ans=[i for g in ans for i in g]
             return JsonResponse("Successfully settled up", safe=False)
-=======
-                myMap[g]=-m
-    return myMap 
->>>>>>> a89e09a237a6b6a259d338cc07bbde95f1179346
