@@ -15,6 +15,7 @@ import { TransactiondetailsComponent } from './transactiondetails/transactiondet
 import { InsightsComponent } from './insights/insights.component';
 import { ChartComponent } from './chart/chart.component';
 import { SettleupComponent } from './settleup/settleup.component';
+import { ContributionsComponent } from './contributions/contributions.component';
 const routes: Routes = [
   { path:'',redirectTo: '/login', pathMatch:'full'},
   { path:'login',component:LoginformComponent},
@@ -31,7 +32,8 @@ const routes: Routes = [
   { path:'transdet',component:TransactiondetailsComponent},
   { path:'insight',component:InsightsComponent},
   { path:'chart',component:ChartComponent},
-  { path:'settle',component:SettleupComponent}
+  { path:'settle',component:SettleupComponent},
+  { path:'contri',component:ContributionsComponent}
 ];
 
 @NgModule({
