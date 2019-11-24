@@ -27,7 +27,7 @@ const routes: Routes = [
   { path:'addfriend',component: AddFriendFormComponent},
   { path:'groupform',component:GroupFormComponent},
   { path:'member/:grp',component:MemberComponent},
-  { path:'transaction',component:TransactionsComponent},
+  { path:'transaction/:grp',component:TransactionsComponent},
   { path:'memgroup',component:MemGroupTransComponent},
   { path:'transdet',component:TransactiondetailsComponent},
   { path:'insight',component:InsightsComponent},

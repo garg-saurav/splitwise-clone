@@ -25,6 +25,7 @@ export class DataService {
   _URL_friendspiechart = 'http://127.0.0.1:8000/friendspiechart/';
   _URL_friendshipchart = 'http://127.0.0.1:8000/friendshipchart/';
   _URL_settleupall = 'http://127.0.0.1:8000/settleupall/';
+  _URL_trans = 'http://127.0.0.1:8000/addtrans/';
   my_username;
   profile:any;
   friends:any;
@@ -37,6 +38,11 @@ export class DataService {
   // authenticate(){
   //   if(localStorage)
   // }
+
+  add_trans(fd: FormData){
+    fd.append('_lender',localStorage.getItem('username'));
+    return this.http.post(this._URL_trans+localStorage.getItem('username')+"/",fd);
+  }
 
   get_profile_data(){
     console.log("Hello",localStorage.getItem('username'));

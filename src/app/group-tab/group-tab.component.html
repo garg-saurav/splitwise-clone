@@ -21,28 +21,37 @@
                 <td><button class="none" (click)="onClick(g)">
                     {{g[1]}}
                 </button></td>
-                <td>{{g[2]}}</td>
-                <td>{{g[3]}}</td>
+                <td>{{g[2].toFixed(2)}}</td>
+                <td>{{g[3].toFixed(2)}}</td>
                 <td>
                     <div *ngFor="let m of members">
-                            <div *ngIf="m[0]==g[1]">
+                            <div *ngIf="m[0]==g[0]">
                                 {{m[1]}}
                             </div>
                     </div>
-                    <a routerLink="/member/{{g[1]}}" class="button">Add new member</a></td>
-                <td><a routerLink="/transaction" class="button">Add Transaction</a></td>
+                    <a routerLink="/member/{{g[0]}}" class="button">Add new member</a></td>
+                <td><a routerLink="/transaction/{{g[0]}}" class="button">Add Transaction</a></td>
                 
                 <td><button class="button">Leave Group</button></td>
             </tr>
             <tr>
                     <td colspan=6>
-                    <div>
+                        <div *ngIf="show && g[0]==detailed_f_name">
                         <button class="button">Settle accounts</button> &nbsp;&nbsp;
-                        <button class="button">Balances</button><br>
-                        <table>
-                            
+                        <button class="button" (click)="onClickbalance(g)">Balances</button>
+                        <div *ngIf="showbalance && g[0]==f_name">
+                            Timepass
+                        </div>
+                        <h2>TRANSACTIONS</h2>
+                        <table width="60%" align="center" id="none">
+                            <tr>
+                                <th>Lender</th>
+                                <th>Borrower</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                                <th>Tag</th>
+                            </tr>
                         </table>
-        
                     </div></td>
             </tr>
             </ng-container>

@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^friendshipchart/(?P<username>[\w-]+)/$',views.friendshipChart.as_view()),
     url(r'^frienddetails/(?P<username>[\w-]+)/$',views.get_friend_details.as_view()),
     url(r'^settleupall/(?P<username>[\w-]+)/$',views.settle_up_all.as_view()),
-    url(r'^trans/(?P<username>[\w-]+)/$',views.add_transaction.as_view()),
+    url(r'^addtrans/(?P<username>[\w-]+)/$',views.add_transaction.as_view()),
 
 ]
 

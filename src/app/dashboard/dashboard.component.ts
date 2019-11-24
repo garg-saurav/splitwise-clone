@@ -10,6 +10,7 @@ export class DashboardComponent {
   
   
   user:any;
+  show=false;
   constructor(private dataService:DataService,private router:Router) { 
     this.dataService.get_profile_data()
                 .subscribe(data => {
@@ -69,7 +70,16 @@ export class DashboardComponent {
           });
     
   }
-
+  onClick(){
+    // this.show=!this.show;
+      if(this.show==false){
+        this.show=true;
+      }
+    else{
+    this.show=false;
+    
+  }}
+  
 
   logout(){
     localStorage.removeItem('username');
