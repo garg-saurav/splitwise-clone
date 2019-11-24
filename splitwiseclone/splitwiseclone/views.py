@@ -510,7 +510,85 @@ class add_transaction(APIView):
             # row = cursor.fetchall()
             # ans['Borrowed']=row 
             # ans=[i for g in ans for i in g]
-            return JsonResponse("Successfully added", safe=False)
+        
+        # grp_id=request.data['grp_id']
+        # lender=request.data['lender']
+        # borrower=request.data['borrower']
+        # amount=request.data['amount']
+        amount=amt
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT group_id, lender, borrower, tag, amount FROM trans where group_id=%s",[grp_id])
+            res=cursor.fetchall()
+            mymap={}
+            global dfsfinnum
+            global visited
+            global n
+            mymap[lender]={borrower:float(amount)}
+            mymap[borrower]={lender:(-1)*float(amount)}
+            for r in res:
+                print("This is r ",r)
+                if r[1] in mymap:
+                    if r[2] in mymap[r[1]]:
+                        mymap[r[1]][r[2]]=mymap[r[1]][r[2]]+float(r[4])
+                    else:
+                        print(r[4])
+                        mymap[r[1]][r[2]]=float(r[4])
+                else:
+                    mymap[r[1]]={r[2]:float(r[4])}
+                visited[r[1]]=0
+                dfsfinnum[r[1]]=-1
+                if r[2] in mymap:
+                    if r[1] in mymap[r[2]]:
+                        mymap[r[2]][r[1]]=mymap[r[2]][r[1]]-float(r[4])
+                    else:
+                        mymap[r[2]][r[1]]=(-1)*float(r[4])
+                else:
+                    mymap[r[2]]={r[1]:(-1)*float(r[4])}
+                visited[r[2]]=0
+                dfsfinnum[r[2]]=-1
+            for k in mymap:
+                sum=0
+                for k1 in mymap[k]:
+                    if mymap[k][k1]==0:
+                        del mymap[k][k1]
+                    else:
+                        sum=sum+1
+                if sum==0:
+                    del mymap[k]
+            
+            dfs(lender, mymap)
+            if len(backedge)==0:
+                return JsonResponse("Successfully added without minimising", safe=False)
+                # return JsonResponse("Decreasing number of transactions not possible",safe=False)
+            else:
+                for i in backedge[0]:
+                    n = i
+                # n=[k for k in backedge]
+                edc=mymap[parent[n]][n]
+                def mincost_edge(node,edc):
+                    global n
+                    if mymap[parent[node]][node]<edc:
+                        edc=mymap[parent[node]][node]
+                    if parent[node]==n:
+                        return
+                    else:
+                        mincost_edge(parent[node],edc)
+                    return edc
+                edc=mincost_edge(parent[n],edc)
+                def add_new_transactions(node, edc):
+                    if(edc>0):
+                        cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(node,parent[node],grp_id,'reducing no of transactions',edc,'others',datetime.datetime.now()))
+                    else:
+                        cursor.execute("INSERT INTO trans (borrower,lender,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(node,parent[node],grp_id,'reducing no of transactions',-1*edc,'others',datetime.datetime.now()))
+                    if parent[node]==n:
+                        return
+                    else:
+                        add_new_transactions(parent[node],edc)
+                    return
+                add_new_transactions(n,edc)
+                return JsonResponse("Successfully added and transactions minimized",safe=False)
+
+        
 
 class tagsPieChart(APIView):
     def post(self,request,username,format=None):
@@ -759,87 +837,33 @@ class balances2(APIView):
                 print(result)
             return JsonResponse(result,safe=False)
 
-class min_transaction(APIView):
-    def post(self,request,username,format=None):
-        grp_id=request.data['grp_id']
-        lender=request.data['lender']
-        borrower=request.data['borrower']
-        amount=request.data['amount']
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM trans where group_id=%s",[grp_id])
-            transactions=cursor.fetchall()
-            mymap={}
-            visited={}
-            dfsfinnum={}
-            mymap[lender]={borrower:float(amount)}
-            mymap[borrower]={lender:(-1)*float(amount)}
-            for r in res:
-                if r[1] in mymap:
-                    if r[2] in mymap[r[1]]:
-                        mymap[r[1]][r[2]]=mymap[r[1]][r[2]]+float(r[4])
-                    else:
-                        mymap[r[1]]=Merge(mymap,{r[2]:float(r[4])})
-                else:
-                    mymap[r[1]]={r[2]:float(r[4])}
-                    visited[r[1]]=0
-                    dfsfinnum[r[1]]=-1
-                if r[2] in mymap:
-                    if r[1] in mymap[r[2]]:
-                        mymap[r[2]][r[1]]=mymap[r[2]][r[1]]-float(r[4])
-                    else:
-                        mymap[r[2]]=Merge(mymap,{r[1]:(-1)*float(r[4])})
-                else:
-                    mymap[r[2]]={r[1]:(-1)*float(r[4])}
-                    visited[r[2]]=0
-                    dfsfinnum[r[2]]=-1
-            for k in mymap:
-                sum=0
-                for k1 in mymap[k]:
-                    if mymap[k][k1]==0:
-                        del mymap[k][k1]
-                    else:
-                        sum=sum+1
-                if sum==0:
-                    del mymap[k]
-            backedge=[]
-            parent=[]
-            def dfs(node):
-                for k in mymap[node]:
-                    if(len(backedge)!=0):
-                        return
-                    if visited[k]==0:
-                        parent[k]=node
-                        dfs(k)
-                    elif dfsfinnum[k]==-1 and k!=parent[node]:
-                        backedge=[{node:k}]
-                        parent[k]=node
-                        return
-                    else:
-                        continue
-                return
-            dfs(lender)
-            if len(backedge)==0:
-                return JsonResponse("Decreasing number of transactions not possible",safe=False)
-            else:
-                n=[k for k in backedge]
-                edc=mymap[parent[n[0]]][n[0]]
-                mincost_edge(parent[n[0]])
-                def mincost_edge(node):
-                    if mymap[parent[node]][node]<edc:
-                        edc=mymap[parent[node]][node]
-                    if parent[node]==n[0]:
-                        return
-                    else:
-                        mincost_edge(parent[node])
-                    return
-                def add_new_transactions(node):
-                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(node,parent[node],grp_id,'reducing no of transactions',edc,'others'))
-                    if parent[node]==n[0]:
-                        return
-                    else:
-                        add_new_transactions(parent[node])
-                    return
-                return JsonResponse("Transactions minimized",safe=False)
+# class min_transaction(APIView):
+#     def post(self,request,username,format=None):
+        
+
+parent={}
+backedge=[]
+visited={}
+dfsfinnum={}
+n=0
+def dfs(node, mymap):
+    print("Doing dfs on node ", node)
+    global backedge
+    if(len(backedge)!=0):
+        return
+    for k in mymap[node]:
+        if visited[k]==0:
+            visited[k]=1
+            parent[k]=node
+            dfs(k,mymap)
+        elif dfsfinnum[k]==-1 and k!=parent[node]:
+            backedge=[{node:k}]
+            parent[k]=node
+            return
+        else:
+            continue
+    dfsfinnum[node]=0
+    return
 
                     
 
