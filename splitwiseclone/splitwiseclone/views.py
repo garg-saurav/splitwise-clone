@@ -34,7 +34,7 @@ def user_detail(request, username):
 def getfriendlist(request, username):
     friendlist=[]
     with connection.cursor() as c:
-        c.execute("SELECT friend_user_name from UF where user_name='"+username+"'")
+        c.execute("SELECT friend_user_name, UserProfile.name from UF inner join UserProfile on UserProfile.user_name = UF.friend_user_name where UF.user_name='"+username+"'")
         lest = c.fetchall()
         for friend_username in lest:
             print("Hereeeee")
@@ -52,7 +52,7 @@ def getfriendlist(request, username):
                 moneyowed = moneyowed[0]
             else:
                 moneyowed=0
-            friendlist.append({"UserName":friend_username[0], "FriendName":friend_username[0],"MoneyBorrowed":str(moneyowed),"MoneyGiven":str(moneygiven)})
+            friendlist.append({"UserName":friend_username[0], "FriendName":friend_username[1],"MoneyBorrowed":str(moneyowed),"MoneyGiven":str(moneygiven)})
     return JsonResponse(friendlist, safe=False)
 
 
