@@ -7,6 +7,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from splitapp.models import UserProfile, UserFriend, UserGroup, GroupId
 from django.shortcuts import render
 from django.db import connection
+import datetime
 
 # class login_view(APIView):
 #   def post(self,request, format=None):
@@ -32,6 +33,7 @@ def user_detail(request, username):
 
 
 def getfriendlist(request, username):
+    
     friendlist=[]
     with connection.cursor() as c:
         c.execute("SELECT friend_user_name from UF where user_name='"+username+"'")
@@ -330,35 +332,39 @@ class get_friend_details(APIView):
 class settle_up_all(APIView):
     def post(self,request,username,format=None):
         friend_id=request.data['friend_id']
+        print("[[]][[]][[]]")
         with connection.cursor() as cursor:
             map={}
             # cursor.execute("select * from UserFriend where user_name = %s and friend_user_name = %s",[username, username])
-            cursor.execute("SELECT group_id,SUM(amount) FROM trans WHERE lender = %s and borrower = %s GROUP BY group_id",[username,friend_id])
+            cursor.execute("SELECT GId.group_id, SUM(amount), group_name FROM trans inner join GId on trans.group_id = GId.group_id  WHERE lender = %s and borrower = %s GROUP BY GId.group_id",[username,friend_id])
             l1=cursor.fetchall()
             temp={}
             l=[]
             for i in range(len(l1)):
                 g=l1[i][0]
                 am=l1[i][1]
-                l=l+[[g,am]]
+                nam=l1[i][2]
+                l=l+[[g,am,nam]]
             temp['Lent']=l
-            cursor.execute("SELECT group_id,SUM(amount) FROM trans WHERE lender = %s and borrower = %s GROUP BY group_id",[friend_id,username])
+            cursor.execute("SELECT GId.group_id,SUM(amount), group_name FROM trans inner join GId on trans.group_id = GId.group_id WHERE lender = %s and borrower = %s GROUP BY GId.group_id",[friend_id,username])
             l1=cursor.fetchall()
             l=[]
             for i in range(len(l1)):
                 g=l1[i][0]
                 m=l1[i][1]
-                l=l+[[g,m]]
+                nam=l1[i][2]
+                l=l+[[g,m,nam]]
             temp['Borrowed']=l
             map[friend_id]=temp
             k=minimizing(map)
+            print("YoBro", k)
             kl=k[friend_id]
             for g_id in kl:
-                amount=kl[g_id]
+                amount=int(kl[g_id][0])
                 if amount > 0:
-                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(username,friend_id,g_id,'settlling up',amount,'others'))
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag, date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(username,friend_id,g_id,'settlling up',amount,'others',datetime.datetime.now()))
                 elif amount < 0:
-                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(friend_id,username,g_id,'settlling up',(-1)*amount,'others'))
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(friend_id,username,g_id,'settlling up',(-1)*amount,'others',datetime.datetime.now()))
                 else:
                     pass
             return JsonResponse("Successfully settled up", safe=False)
@@ -406,7 +412,7 @@ class add_transaction(APIView):
 
         with connection.cursor() as cursor:
             # cursor.execute("select * from UserFriend where user_name = %s and friend_user_name = %s",[username, username])
-            cursor.execute("INSERT INTO trans (lender, borrower, group_id, desc, amount, tag) VALUES (%s, %s, %s, %s, %s, %s)", (lender, borrower, grp_id, desc, amt, tag))
+            cursor.execute("INSERT INTO trans (lender, borrower, group_id, desc, amount, tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)", (lender, borrower, grp_id, desc, amt, tag, datetime.datetime.now()))
             # row = cursor.fetchall()
             # ans = {}
             # ans['Lent']=row
