@@ -3,8 +3,8 @@ from django.http import JsonResponse
 from django.core import serializers
 from django.db import connection
 from rest_framework.views import APIView
-
-from splitapp.models import UserProfile, UserFriend, UserGroup
+from django.utils.datastructures import MultiValueDictKeyError
+from splitapp.models import UserProfile, UserFriend, UserGroup, GroupId
 from django.shortcuts import render
 from django.db import connection
 
@@ -44,7 +44,7 @@ def getfriendlist(request, username):
             if moneygiven[0]!= None:
                 moneygiven=moneygiven[0]
             else:
-                moneygiven=0;
+                moneygiven=0
             # print(moneygiven)
             c.execute("SELECT sum(amount) from trans where lender=%s and borrower=%s", [ friend_username[0],username])
             moneyowed = c.fetchone()
@@ -52,16 +52,38 @@ def getfriendlist(request, username):
                 moneyowed = moneyowed[0]
             else:
                 moneyowed=0
-            friendlist.append({"UserName":friend_username[0], "FriendName":friend_username[0],"MoneyBorrowed":str(moneyowed),"MoneyGiven":str(moneygiven)});
+            friendlist.append({"UserName":friend_username[0], "FriendName":friend_username[0],"MoneyBorrowed":str(moneyowed),"MoneyGiven":str(moneygiven)})
     return JsonResponse(friendlist, safe=False)
 
 
 def getallgroups(request, username):
-
-    with connection.cursor() as cursor:
-      row = cursor.execute("SELECT group_name, group_id FROM UG WHERE user_name='" + username + "'")
-      row = row.fetchall()
-    return JsonResponse(row, safe=False)
+    ans=[]
+    with connection.cursor() as c:
+        row = c.execute("SELECT group_id FROM UG WHERE user_name='" + username + "'")
+        row = row.fetchall()
+        print("heyy")
+        print(row[0])
+        for id in row:
+            print(id[0])
+            c.execute("SELECT sum(amount) from trans where lender=%s and group_id=%s",[username,id[0]])
+            moneygiven=c.fetchone()
+            if moneygiven[0]!= None:
+                moneygiven=moneygiven[0]
+            else:
+                moneygiven=0
+            # print(moneygiven)
+            c.execute("SELECT sum(amount) from trans where group_id=%s and borrower=%s", [ id[0],username])
+            moneyowed = c.fetchone()
+            if moneyowed[0]!= None:
+                moneyowed = moneyowed[0]
+            else:
+                moneyowed=0
+            name=c.execute("SELECT group_name from GId where group_id='"+str(id[0])+"'")
+            name = name.fetchone()[0]
+            print(name)
+            res=(id[0],name,moneygiven,moneyowed)
+            ans.append(res)
+    return JsonResponse(ans, safe=False)
 
 
 
@@ -185,6 +207,96 @@ class get_group_members(APIView):
         #     res=cursor.fetchall()
         #     return JsonResponse(res,safe=False)
 
+class getTransactions(APIView):
+    def post(self,request,username,format=None):
+        try:
+            startdate=request.data['startdate']
+            enddate=request.data['enddate']
+        except MultiValueDictKeyError:
+            startdate = "does not Exist"
+            enddate=" "
+            
+        print(startdate)
+        
+        with connection.cursor() as cursor:
+            #print(username)
+            ans=[]
+            row = cursor.execute("SELECT friend_user_name FROM UF WHERE user_name='" + username + "'  ")
+            row=row.fetchall()
+            print(row)
+            for friend in row:
+                lent=cursor.execute("SELECT sum(amount) FROM trans WHERE lender='" + username + "' AND borrower='"+friend[0]+"' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
+                lent=lent.fetchone()[0]
+                borrowed=cursor.execute("SELECT sum(amount) FROM trans WHERE borrower='" + username + "' AND lender='"+friend[0]+"' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
+                borrowed=borrowed.fetchone()[0]
+                if lent== None:
+                    lent=0
+                if borrowed==None:
+                    borrowed=0
+                res=(friend[0],lent,borrowed)
+                print(res)
+                ans.append(res)
+                
+        return JsonResponse(ans,safe=False)
+
+class bargraph2(APIView):
+
+    def post(self,request,username,format=None):
+        ans=[]
+        try:
+            startdate=request.data['startdate']
+            enddate=request.data['enddate']
+        except MultiValueDictKeyError:
+            startdate = "does not Exist"
+            enddate="does not exist"
+                 
+        with connection.cursor() as c:
+            row = c.execute("SELECT group_id FROM UG WHERE user_name='" + username + "'")
+            row = row.fetchall()
+        
+            for id in row:
+                print(id[0])
+                c.execute("SELECT sum(amount) from trans where lender=%s and group_id=%s AND date_time>='"+startdate+"' AND date_time<='"+enddate+"'",[username,id[0]])
+                moneygiven=c.fetchone()
+                if moneygiven[0]!= None:
+                    moneygiven=moneygiven[0]
+                else:
+                    moneygiven=0
+                # print(moneygiven)
+                c.execute("SELECT sum(amount) from trans where group_id=%s and borrower=%s AND date_time>='"+startdate+"' AND date_time<='"+enddate+"'", [ id[0],username])
+                moneyowed = c.fetchone()
+                if moneyowed[0]!= None:
+                    moneyowed = moneyowed[0]
+                else:
+                    moneyowed=0
+                
+                name=c.execute("SELECT group_name from GId where group_id='"+str(id[0])+"'")
+                name = name.fetchone()[0]
+                print(name)
+                res=(name,moneygiven,moneyowed)
+                ans.append(res)
+        return JsonResponse(ans, safe=False)
+        #     #print(username)
+        #     ans=[]
+        #     row = cursor.execute("SELECT group_id FROM trans WHERE user_name='" + username + "'  ")
+        #     row=row.fetchall()
+        #     print(row)
+        #     for id in row:
+        #         getallgroups()
+        #         lent=cursor.execute("SELECT sum(amount) FROM trans WHERE lender='" + username + "' AND borrower='"+friend[0]+"' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
+        #         lent=lent.fetchone()[0]
+        #         borrowed=cursor.execute("SELECT sum(amount) FROM trans WHERE borrower='" + username + "' AND lender='"+friend[0]+"' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
+        #         borrowed=borrowed.fetchone()[0]
+        #         if lent== None:
+        #             lent=0
+        #         if borrowed==None:
+        #             borrowed=0
+        #         res=(friend[0],lent,borrowed)
+        #         print(res)
+        #         ans.append(res)
+                
+        # return JsonResponse(ans,safe=False)
+
 class get_friend_details(APIView):
     def post(self,request,username,format=None):
         # print("sfdfsdfsfsd")
@@ -216,7 +328,39 @@ class get_friend_details(APIView):
 
 class settle_up_all(APIView):
     def post(self,request,username,format=None):
-        pass
+        friend_id=request.data['friend_id']
+        with connection.cursor() as cursor:
+            map={}
+            # cursor.execute("select * from UserFriend where user_name = %s and friend_user_name = %s",[username, username])
+            cursor.execute("SELECT group_id,SUM(amount) FROM trans WHERE lender = %s and borrower = %s GROUP BY group_id",[username,friend_id])
+            l1=cursor.fetchall()
+            temp={}
+            l=[]
+            for i in range(len(l1)):
+                g=l1[i][0]
+                am=l1[i][1]
+                l=l+[[g,am]]
+            temp['Lent']=l
+            cursor.execute("SELECT group_id,SUM(amount) FROM trans WHERE lender = %s and borrower = %s GROUP BY group_id",[friend_id,username])
+            l1=cursor.fetchall()
+            l=[]
+            for i in range(len(l1)):
+                g=l1[i][0]
+                m=l1[i][1]
+                l=l+[[g,m]]
+            temp['Borrowed']=l
+            map[friend_id]=temp
+            k=minimizing(map)
+            kl=k[friend_id]
+            for g_id in kl:
+                amount=kl[g_id]
+                if amount > 0:
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(username,friend_id,g_id,'settlling up',amount,'others'))
+                elif amount < 0:
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(friend_id,username,g_id,'settlling up',(-1)*amount,'others'))
+                else:
+                    pass
+            return JsonResponse("Successfully settled up", safe=False)
 #         # print("sfdfsdfsfsd")
 #         # print(request.data)
 #         f_name = request.data['friend_name']
@@ -231,6 +375,22 @@ class settle_up_all(APIView):
 #             ans['Borrowed']=row 
 #             # ans=[i for g in ans for i in g]
 #             return JsonResponse(ans, safe=False)
+
+class leave_group(APIView):
+    def post(self,request,username,format=None):
+        grp_id = request.data['grp_id']
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and group_id = %s",[username,grp_id])
+            res=cursor.fetchall()
+            if res [0] != 0:
+                return JsonResponse("Cannot Leave Group as you're not settled up yet with everyone", safe=False)
+            else:
+                cursor.execute("SELECT SUM(amount) FROM trans WHERE borrower = %s and group_id = %s",[username,grp_id])
+                if res[0] != 0:
+                    return JsonResponse("Cannot Leave Group as you're not settled up yet with everyone", safe=False)
+                else:
+                    cursor.execute("DELETE * FROM UG where user_name = %s group_id = %s",[username,grp_id])
+                    return JsonResponse("Left Group", safe=False)
 
 class add_transaction(APIView):
     def post(self,request,username,format=None):
@@ -254,6 +414,86 @@ class add_transaction(APIView):
             # ans['Borrowed']=row 
             # ans=[i for g in ans for i in g]
             return JsonResponse("Successfully added", safe=False)
+
+class tagsPieChart(APIView):
+    def post(self,request,username,format=None):
+        try:
+            startdate=request.data['startdate']
+            enddate=request.data['enddate']
+        except MultiValueDictKeyError:
+            startdate = "does not Exist"
+            enddate=" "
+        with connection.cursor() as cursor:
+            #print(username)
+            ans=[]
+            tags=["movies","food","housing","travel","others"]
+            for tag in tags:
+                
+                amt=cursor.execute("SELECT sum(amount) FROM trans WHERE lender='" + username + "' AND tag='"+tag+"' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"'  ")
+                amt=amt.fetchone()[0]
+                if amt== None:
+                    amt=0
+                
+                ans.append(amt)
+            
+        return JsonResponse(ans,safe=False)
+
+class friendsPieChart(APIView):
+    def post(self,request,username,format=None):
+        try:
+            startdate=request.data['startdate']
+            enddate=request.data['enddate']
+        except MultiValueDictKeyError:
+            startdate = "does not Exist"
+            enddate=" "
+            
+        
+        with connection.cursor() as cursor:
+            #print(username)
+            ans=[]
+            row = cursor.execute("SELECT friend_user_name FROM UF WHERE user_name='" + username + "'  ")
+            row=row.fetchall()
+            print(row)
+            for friend in row:
+                amount=cursor.execute("SELECT sum(amount) FROM trans WHERE lender='" + username + "' AND borrower='"+friend[0]+"' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
+
+                amount=amount.fetchone()[0]
+                amount1=cursor.execute("SELECT sum(amount) FROM trans WHERE lender='" + friend[0] + "' AND borrower='"+username+"' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
+                amount1=amount1.fetchone()[0]
+                if amount==None:
+                    sum=amount1
+                elif amount1==None:
+                    sum=amount
+                else:
+                    sum=amount+amount1
+                res=(friend[0],sum)
+                #print(res)
+                ans.append(res)
+                
+        return JsonResponse(ans,safe=False)
+
+
+class timeSeriesPlot(APIView):
+    def post(self,request,username,format=None):
+        startdate=request.data['startdate']
+        enddate=request.data['enddate']
+        with connection.cursor() as cursor:
+            #print(username)
+            ans=[]
+            amt=cursor.execute("SELECT date_time,amount FROM trans WHERE lender='" + username + "' AND date_time>='"+startdate+"' AND date_time<='"+enddate+"' ")
+            amt=amt.fetchall()
+            print(amt)
+            
+            for i in amt:
+                res=[]
+                res.append(i)
+                #print(res)
+                ans.append(res)
+                #print(i)
+            
+            #print(ans)
+             
+        return JsonResponse(amt,safe=False)
 
 def minimizing(all_details):
     myMap={}
