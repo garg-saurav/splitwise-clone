@@ -31,14 +31,47 @@
        <div [hidden]="!submitted">
          <div class="container-fluid">
          <div class="row">
-            <div class="col-md-3 col-sm-3 col-xs-6">
-         <button class="button">Graph1</button></div>
-         <div class="col-md-3 col-sm-3 col-xs-6">
-         <button class="button">Graph2</button></div>
-         <div class="col-md-3 col-sm-3 col-xs-6">
-         <button class="button">Graph3</button></div>
-         <div class="col-md-3 col-sm-3 col-xs-6">
-         <button class="button">Graph4</button></div>
+            <div class="col-md-2 col-sm-3 col-xs-6">
+                <form method="post" (ngSubmit)="TimeSeriesPlot()">
+                    <div class="form-group"> 
+                        <button class="btn btn-primary"  type="submit" >TimeSeriesPlot</button>
+                      </div>
+                </form>
+         </div>
+         <div class="col-md-2 col-sm-3 col-xs-6">
+            <form method="post" (ngSubmit)="PieChart1()" >
+                <div class="form-group"> 
+                    <button class="btn btn-primary"  type="submit" >PieChart1 </button>
+                  </div>
+            </form> 
+         </div>
+         <div class="col-md-2 col-sm-3 col-xs-6">
+            <form method="post" (ngSubmit)="PieChart2()">
+                <div class="form-group"> 
+                    <button class="btn btn-primary"  type="submit" >PieChart2 </button>
+                  </div>
+            </form> 
+         </div>
+         <div class="col-md-2 col-sm-3 col-xs-6">
+            <form method="post" (ngSubmit)="BarGraph1()">
+                <div class="form-group"> 
+                    <button class="btn btn-primary"  type="submit" >BarGraph1</button>
+                  </div>
+            </form>
+         </div>
+         <div class="col-md-2 col-sm-3 col-xs-6">
+            <form method="post" (ngSubmit)="BarGraph2()" >
+                <div class="form-group"> 
+                    <button class="btn btn-primary"  type="submit" >BarGraph2</button>
+                  </div>
+            </form>
+         </div>
+         <div class="col-md-2 col-sm-3 col-xs-6">
+            <form method="post" (ngSubmit)="Graph1()" >
+                <div class="form-group"> 
+                    <button class="btn btn-primary"  type="submit" >Graph1</button>
+                  </div>
+            </form>
          </div>
          </div>
        </div>
@@ -46,6 +79,10 @@
 
       
         <canvas id="barChart" style="width:3vw;height:2vh;" ></canvas>
+        <canvas id="barChart2" style="width:3vw;height:2vh;" ></canvas>
+        <canvas id="PieChart1" style="width:3vw;height:2vh;" ></canvas>
+        <canvas id="timeplot" style="width:3vw;height:2vh;" ></canvas>
+        <canvas id="PieChart2" style="width:3vw;height:2vh;" ></canvas>
     
     
 </div>

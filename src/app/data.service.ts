@@ -18,7 +18,11 @@ export class DataService {
   _URL_add_group_member = 'http://127.0.0.1:8000/addmember/';
   _URL_get_members = 'http://127.0.0.1:8000/members/';
   _URL_insights = 'http://127.0.0.1:8000/insight/';
-  _URL_pieChartTags = 'http://127.0.0.1:8000/pieChartTags/';
+  _URL_BarGraph1 = 'http://127.0.0.1:8000/bargraph1/';
+  _URL_BarGraph2 = 'http://127.0.0.1:8000/bargraph2/';
+  _URL_timeseriesplot = 'http://127.0.0.1:8000/timeseriesplot/';
+  _URL_PieChartTags = 'http://127.0.0.1:8000/pieChartTags/';
+  _URL_friendspiechart = 'http://127.0.0.1:8000/friendspiechart/';
   my_username;
   profile:any;
   friends:any;
@@ -110,8 +114,10 @@ export class DataService {
     const fd = new FormData;
     return this.http.post(this._URL_get_members+localStorage.getItem('username')+"/",fd);
   }
-  get_insights(){
+  get_insights(startdate,enddate:any){
     const fd = new FormData;
+    fd.append('startdate',startdate);
+    fd.append('enddate',enddate);
     return this.http.post(this._URL_insights+localStorage.getItem('username')+"/",fd);
   }
 
@@ -120,9 +126,37 @@ export class DataService {
     return this.http.post(this._URL_friends_details+localStorage.getItem('username')+"/",fd);
   }
 
-  tagsPieChart(){
+  tagsPieChart(startdate,enddate:any){
     const fd = new FormData;
-    return this.http.post(this._URL_pieChartTags+localStorage.getItem('username')+"/",fd);
+    fd.append('startdate',startdate);
+    fd.append('enddate',enddate);
+    return this.http.post(this._URL_PieChartTags+localStorage.getItem('username')+"/",fd);
   }
 
+  friendspiechart(startdate,enddate:any){
+    const fd = new FormData;
+    fd.append('startdate',startdate);
+    fd.append('enddate',enddate);
+    return this.http.post(this._URL_friendspiechart+localStorage.getItem('username')+"/",fd);
+  }
+
+  get_bargraph1(startdate,enddate:any){
+    const fd = new FormData;
+    fd.append('startdate',startdate);
+    fd.append('enddate',enddate);
+    return this.http.post(this._URL_BarGraph1+localStorage.getItem('username')+"/",fd);
+  }
+  get_bargraph2(startdate,enddate:any){
+    const fd = new FormData;
+    fd.append('startdate',startdate);
+    fd.append('enddate',enddate);
+    return this.http.post(this._URL_BarGraph2+localStorage.getItem('username')+"/",fd);
+  }
+
+  timeseriesplot(startdate,enddate:any){
+    const fd = new FormData;
+    fd.append('startdate',startdate);
+    fd.append('enddate',enddate);
+    return this.http.post(this._URL_timeseriesplot+localStorage.getItem('username')+"/",fd);
+  }
 }
