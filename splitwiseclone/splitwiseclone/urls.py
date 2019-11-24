@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^balances2/(?P<username>[\w-]+)/$',views.balances2.as_view()),
     url(r'^leave/(?P<username>[\w-]+)/$',views.leave_group.as_view()),
     url(r'^settleup/(?P<username>[\w-]+)/$',views.settle_up.as_view()),
+    url(r'^grouptrans/(?P<username>[\w-]+)/$',views.get_group_transactions.as_view()),
 
 
 ]

@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class GroupTabComponent implements OnInit {
   group:any;
-  members:any;groupbalance:any;groupbalance2:any;
+  members:any;groupbalance:any;groupbalance2:any; transactions:any;
   constructor(private dataService:DataService,private router:Router) { }
   show=true;
   showbalance=true;
@@ -50,6 +50,14 @@ onClick(f){
   this.detailed_f_name=f[0];
   this.f_name=null;
   this.showbalance=true;
+  this.dataService.grouptransactions(f[0])
+        .subscribe(data =>{
+          this.transactions =data;
+          // console.log(data);
+          // this.keys=Object.keys(this.transactions["0"]); 
+          console.log("hereeee",this.transactions);
+          // console.log("heyyy",this.groupbalance);
+        })
   
 }
   console.log(f);

@@ -40,7 +40,7 @@
                         <button class="button" (click)="settle(g[0])">Settle Up</button> &nbsp;&nbsp;
                         <button class="button" (click)="onClickbalance(g)">Balances</button>
                         <div *ngIf="showbalance && g[0]==f_name">
-                            <h1>Your Balances with Group members</h1>
+                            <h3>Your Balances with Group members</h3>
                             <table id="customers1">
                                     <!-- console.log({{balance}})
                                     <tr>{{balance[0]}}</tr> -->
@@ -53,7 +53,7 @@
                                     </div>
 
                             </table>
-                            <h1>Other Balances in Group</h1>
+                            <h3>Other Balances in Group</h3>
                             <table id="customers2">
                                 <tr>
                                 <th>Group Member</th>

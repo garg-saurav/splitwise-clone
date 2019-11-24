@@ -30,7 +30,7 @@ export class DataService {
   _URL_getbalances2 = 'http://127.0.0.1:8000/balances2/';
   _URL_leave = 'http://127.0.0.1:8000/leave/';
   _URL_settleup = 'http://127.0.0.1:8000/settleup/';
-
+_URL_grouptransactions='http://127.0.0.1:8000/grouptrans/';
   my_username;
   profile:any;
   friends:any;
@@ -204,5 +204,10 @@ export class DataService {
 
   settleup(fd){
     return this.http.post(this._URL_settleup+localStorage.getItem('username')+"/",fd);
+  }
+  grouptransactions(grp_id){
+    const fd = new FormData;
+    fd.append('grp_id',grp_id);
+    return this.http.post(this._URL_grouptransactions+localStorage.getItem('username')+"/",fd);
   }
 }

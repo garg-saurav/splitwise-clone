@@ -9,17 +9,17 @@ div.content {
     width: 100%;
   }
   
-  #customers,#customers1,#customers2 td, #customers,#customers1,#customers2 th {
+  #customers td,#customers1 td,#customers2 td, #customers th,#customers1 th,#customers2 th {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
   }
   
-  #customers,#customers1,#customers2 tr:nth-child(even){background-color: #f2f2f2;}
+  #customers tr:nth-child(even),#customers1 tr:nth-child(even),#customers2 tr:nth-child(even){background-color: #f2f2f2;}
   
-  #customers,#customers1,#customers2 tr:hover {background-color: #ddd;}
+  #customers tr:hover,#customers1 tr:hover,#customers2 tr:hover {background-color: #ddd;}
   
-  #customers th {
+  #customers th,#customers2 th,#customers1 th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: center;
