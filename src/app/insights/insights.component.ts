@@ -15,7 +15,7 @@ export class InsightsComponent {
   cat:any;
   insights_data:any;timegraph_data:any;friendshipchart_data:any;
   bargraph1_data:any;bargraph2_data:any;piechart1_data:any;piechart2_data:any;dateRange:any;
-  submitted = false;_label:["movies","food","housing","travel","others"];
+  submitted = false;l=["movies","food","housing","travel","others"];labels_data=[];
   //timeplot=false;pi1=false;pi2=false;bar1=false;bar2=false;friendshipchart=false;
   constructor(private dataService:DataService) { }
   BarChart:any;PieChart:any;TimePlot:any;
@@ -200,14 +200,23 @@ export class InsightsComponent {
       this.piechart1_data = data;
       //console.log("asdf", this.insights_data[0][0] );
        var amount=[];
+
        if(this.piechart1_data.length==0){
         window.alert("Couldn't retrive any transaction in specified period");
       }
       else{
       for(var key in this.piechart1_data){
+        //this._label.push(l[key])
         amount.push(this.piechart1_data[key])
             }
-   
+      for(var key in this.piechart1_data){
+        var res=[];
+        res.push(this.piechart1_data[key]);
+        res.push(this.l[key]);
+        this.labels_data.push(res);
+        
+            }
+            
 
     this.PieChart = new Chart('PieChart1', {
       type: 'pie',

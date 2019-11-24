@@ -101,8 +101,12 @@
          </div>
          </div>
        </div>
-<div style="display: block">
-<div id="graph1">
+<div style="display: hidden">
+<div id="graph1" *ngIf="cat=='timeplot'">
+    <div >
+        <canvas id="timeplot" style="width:3vw;height:2vh;" ></canvas>
+        <button (click)="print('graph1','timeplot')">Print BarGraph1</button>
+        </div>
     Summary of all your expenditures uptil now:
     <table id="customers">
         <tr>
@@ -123,7 +127,8 @@
         </table>
    
 </div>
-<div id="graph2">
+<div id="graph2" *ngIf="cat=='PieChart1'">
+    
     <table id="customers">
         <tr>
             <th>Label</th>
@@ -131,20 +136,25 @@
             
             
         </tr>
-        <ng-container *ngFor="let g of piechart1_data; let i = index">
+        <ng-container *ngFor="let g of labels_data ;let i = index">
+          
             <tr>
             <td>
-                {{_label[i]}}
+                {{g[1]}}
             </td>
             <td>{{g[0]}}</td>
             
             </tr>
             </ng-container>
         </table>
-   
+        <div >
+            <canvas id="PieChart1" style="width:3vw;height:2vh;" ></canvas>
+            <button (click)="print('graph2','PieChart1')">print</button>
+        </div>
     
 </div>
-<div id="graph3">
+<div id="graph3" *ngIf="cat=='PieChart2'">
+    
     <table id="customers">
         <tr>
             <th>Friend</th>
@@ -160,11 +170,14 @@
             </tr>
             </ng-container>
         </table>
-   
+        <div >
+            <canvas id="PieChart2" style="width:3vw;height:2vh;" ></canvas>
+            <button (click)="print(graph3,PieChart2)">print</button>
+            </div>
 </div>
 
-<div id="graph4">
-  
+<div id="graph4" *ngIf="cat=='barChart'">
+    
     <table id="customers">
         <tr>
             <th>Friend</th>
@@ -182,9 +195,13 @@
             </tr>
             </ng-container>
         </table>
-   
+        <div >
+            <canvas id="barChart" style="width:3vw;height:2vh;" ></canvas>
+            <button (click)="print(graph4,barChart)">print</button>
+            </div>
 </div>
-<div id="graph5">
+<div id="graph5" *ngIf="cat=='barChart2'">
+    
     <table id="customers">
         <tr>
             <th>Group Name</th>
@@ -202,10 +219,14 @@
             </tr>
             </ng-container>
         </table>
-   
+        <div >
+            <canvas id="barChart2" style="width:3vw;height:2vh;" ></canvas>
+            <button (click)="print(graph5,barChart2)">print</button>
+            </div>
 </div>
   
-<div id="graph6">
+<div id="graph6" *ngIf="cat=='friendshipchart'">
+    
     <table id="customers">
         <tr>
             <th>Friend Name</th>
@@ -222,33 +243,19 @@
             </tr>
             </ng-container>
         </table>
+        <div >
+            <canvas id="friendshipchart" style="width:3vw;height:2vh;" ></canvas>
+            <button (click)="print(graph6,friendshipchart)">print</button>
+            </div>
    
 </div>   
 </div>
-<div *ngIf="cat=='barChart'">
-<canvas id="barChart" style="width:3vw;height:2vh;" ></canvas>
-<button (click)="print(graph4,PieChart1)">print</button>
-</div>
-<div *ngIf="cat=='barChart2'">
-<canvas id="barChart2" style="width:3vw;height:2vh;" ></canvas>
-<button (click)="print(graph5,PieChart2)">print</button>
-</div>
-<div *ngIf="cat=='PieChart1'">
-<canvas id="PieChart1" style="width:3vw;height:2vh;" ></canvas>
-<button (click)="print('graph2','barChart1')">print</button>
-</div>
-<div *ngIf="cat=='timeplot'">
-<canvas id="timeplot" style="width:3vw;height:2vh;" ></canvas>
-<button (click)="print('graph1','timeplot')">Print BarGraph1</button>
-</div>
-<div *ngIf="cat=='PieChart2'">
-<canvas id="PieChart2" style="width:3vw;height:2vh;" ></canvas>
-<button (click)="print(graph3,barChart2)">print</button>
-</div>
-<div *ngIf="cat=='friendshipchart'">
-<canvas id="friendshipchart" style="width:3vw;height:2vh;" ></canvas>
-<button (click)="print(graph6,friendshipchart)">print</button>
-</div>
+
+
+
+
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
 <script type="text/javascript" src="html2canvas.js"></script>
 <!-- <script tye="text/javascript" src="jspdf.min.js"></script> -->
