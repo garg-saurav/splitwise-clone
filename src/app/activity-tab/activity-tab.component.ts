@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { DataService } from '../data.service';
 @Component({
   selector: 'app-activity-tab',
   templateUrl: './activity-tab.component.html',
@@ -8,9 +8,14 @@ import { Router } from '@angular/router';
 })
 export class ActivityTabComponent implements OnInit {
 
-  constructor(private router:Router) { }
-
+  constructor(private dataService:DataService,private router:Router) { }
+  activity:any;
   ngOnInit() {
+    this.dataService.getactivity()
+                  .subscribe(data => {
+                    this.activity = data;
+                    console.log("asdf",this.activity);
+                  });
   }
 
   logout(){

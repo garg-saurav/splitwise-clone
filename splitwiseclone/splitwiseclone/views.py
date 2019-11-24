@@ -101,12 +101,16 @@ def add_friend(request,username,friend_user_name):
               c.execute("insert into UF (user_name, friend_user_name) values (%s,%s)",(username,friend_user_name))
               c.execute("insert into UF (friend_user_name, user_name) values (%s,%s)", (username, friend_user_name))
               c.execute('Select name from UserProfile where user_name=%s',username)
-              res=cursor.fetchone()
+              res=c.fetchone()
               uname=res[0]
+              print("hyegygd")
+              print(uname)
               c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(friend_user_name,"You and "+uname+" became friends"))
               c.execute('Select name from UserProfile where user_name=%s',friend_user_name)
-              res=cursor.fetchone()
+              res=c.fetchone()
+              print("gdhgs")
               fname=res[0]
+              print(fname)
               c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You and "+fname+" became friends"))
               
               return JsonResponse("Successfully added",safe=False)
@@ -188,7 +192,7 @@ class add_friend_in_group(APIView):
                         print(groupname)
                         c.execute("INSERT INTO UG (group_id, group_name, user_name) VALUES (%s, %s, %s)", (g_id, groupname, f_name))
                         c.execute('Select name from UserProfile where user_name=%s',f_name)
-                        res=cursor.fetchone()
+                        res=c.fetchone()
                         fname=res[0]
                         c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You added "+fname+" in groupname"+groupname))
                         return JsonResponse("Successfully added",safe=False)
@@ -667,6 +671,17 @@ class balances(APIView):
             result=result+[mymap]
             # print(result)
             return JsonResponse(result,safe=False)
+
+class getactivity(APIView):
+    def post(self,request,username,format=None):
+        with connection.cursor() as cursor:
+            print(username)
+            cursor.execute("SELECT activity_desc FROM activity WHERE user_name=%s ",[username])
+            activities=cursor.fetchall()
+            print(activities)
+            return JsonResponse(activities,safe=False)
+
+
 class balances2(APIView):
     def post(self,request,username,format=None):
         grp_id = request.data['grp_id']
