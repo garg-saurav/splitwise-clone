@@ -21,6 +21,7 @@ export class TransactionsComponent {
   members_details:any;
   all_friends:any;
   dist={}
+  name={}
   user:any;
 
   tags=['movies','food','housing','travel','others'];
@@ -30,10 +31,12 @@ export class TransactionsComponent {
   onsubmit(){
 
     this.dist[this.user.id]=(<HTMLInputElement>document.getElementById(this.user.id)).value;
+    this.name[this.user.id]=this.user.user;
     for (let sh of this.all_friends){
       console.log("Here",sh[1]);
       if(sh[0]==this.grp_id){
         this.dist[sh[1]]=(<HTMLInputElement>document.getElementById(sh[1])).value;
+        this.name[sh[1]]=sh[2];
         console.log((<HTMLInputElement>document.getElementById(sh[1])).value);
 
       }
@@ -66,12 +69,21 @@ export class TransactionsComponent {
             // console.log('_grp_id',this.grp_id)
             fd.set('_grp_id',this.grp_id);
             fd.set('_desc',this.model.desc);
-            fd.set('_amt',this.model.amount.toString());
+            var total=this.model.amount;
             fd.set('_tag',this.model.tag);
             for(let sh in this.dist){
               // if(parseFloat(this.dist[sh])<0){
                 // fd.append(sh,this.dist[sh]);
               // }
+              if(sh!= this.user.id){
+                fd.set('_amt',parseFloat((total*(this.dist[sh])/100).toString()).toFixed(2));
+                console.log(sh)
+                fd.set('_borrower',sh)
+              }
+              this.dataService.add_trans(fd)
+                .subscribe(data =>{
+                  console.log(data);
+              })
 
 
 
@@ -80,11 +92,8 @@ export class TransactionsComponent {
           //   for (var key of fd.entries()) {
           //     console.log(key[0] + ', ' + key[1]);
           // }
-          this.dataService.add_trans(fd)
-            .subscribe(data =>{
-              console.log(data);
-            })
-          this.submitted=true; 
+          
+          this.submitted=false; 
         }
   
   }
