@@ -1,25 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn } from '@angular/forms';
 import { of } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
+import { DataService } from '../data.service';
+
 @Component({
   selector: 'app-settleup',
   templateUrl: './settleup.component.html',
   styleUrls: ['./settleup.component.css']
 })
-export class SettleupComponent {
+export class SettleupComponent{
 
   form:FormGroup;
-  ordersData=[]
-  constructor(private formBuilder: FormBuilder) {
+  members:any;
+  gid:any;
+  ordersData=[];
+  constructor(
+    private formBuilder: FormBuilder,
+    private router:Router,
+    private activatedRoute:ActivatedRoute,
+    private dataService: DataService,
+    
+  ) {
     this.form = this.formBuilder.group({
       orders: new FormArray([], minSelectedCheckboxes(1))
     });
 
     // async orders
-    of(this.getOrders()).subscribe(orders => {
-      this.ordersData = orders;
-      this.addCheckboxes();
-    });}
+    }
 
   private addCheckboxes() {
     this.ordersData.forEach((o, i) => {
@@ -28,21 +36,66 @@ export class SettleupComponent {
     });
   }
   getOrders() {
-    return [
-      { id: 100, name: 'order 1' },
-      { id: 200, name: 'order 2' },
-      { id: 300, name: 'order 3' },
-      { id: 400, name: 'order 4' }
-    ];
+
+    this.dataService.get_group_members()
+      .subscribe(data =>{
+        this.members =data;
+        console.log("MEMBERS");
+        console.log(data);
+        var ans=[]
+        for( let i in data){
+          var temp={}
+          if(data[i][0]==this.gid){
+              temp['id']=data[i][1];
+              temp['name']=data[i][2];
+              console.log(data[i][2]);
+          }
+
+          ans.push(temp);
+        }
+        console.log("ANS",ans)
+        this.ordersData = ans;
+        this.addCheckboxes();
+        // return ans;
+      })
+    // return [
+    //   { id: 100, name: 'order 1' },
+    //   { id: 200, name: 'order 2' },
+    //   { id: 300, name: 'order 3' },
+    //   { id: 400, name: 'order 4' }
+    // ];
   }
 
   submit() {
     const selectedOrderIds = this.form.value.orders
       .map((v, i) => v ? this.ordersData[i].id : null)
       .filter(v => v !== null);
-    console.log(selectedOrderIds);
+    var fd = new FormData;
+    fd.append('grp_id',this.gid);
+    fd.append('friends',selectedOrderIds);
+    this.dataService.settleup(fd)
+      .subscribe (data=>{
+        console.log(data);
+      })
+    // console.log(selectedOrderIds);
   }
-}
+
+  ngOnInit(){
+    this.activatedRoute.paramMap.subscribe(params => {
+      this.gid = params['params']['gid'];
+      this.getOrders();
+    })
+
+    }
+      // .subscribe
+    
+      // this.route.paramMap.subscribe(params => {
+      //   // console.log();
+      //   this.grp_id=params['params']['grp'];
+      // });
+  
+    }
+
 
 function minSelectedCheckboxes(min = 1) {
   const validator: ValidatorFn = (formArray: FormArray) => {
@@ -52,6 +105,8 @@ function minSelectedCheckboxes(min = 1) {
 
     return totalSelected >= min ? null : { required: true };
   };
+
+  
 
   return validator;
 }

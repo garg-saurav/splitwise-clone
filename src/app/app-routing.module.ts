@@ -32,7 +32,7 @@ const routes: Routes = [
   { path:'transdet',component:TransactiondetailsComponent},
   { path:'insight',component:InsightsComponent},
   { path:'chart',component:ChartComponent},
-  { path:'settle',component:SettleupComponent},
+  { path:'settle/:gid',component:SettleupComponent},
   { path:'contri',component:ContributionsComponent}
 ];
 

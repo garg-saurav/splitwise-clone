@@ -30,15 +30,42 @@
                     <a routerLink="/member/{{g[0]}}" class="button">Add new member</a></td>
                 <td><a routerLink="/transaction/{{g[0]}}" class="button">Add Transaction</a></td>
                 
-                <td><button class="button">Leave Group</button></td>
+                <td><button class="button" (click)="leave(g[0])">Leave Group</button></td>
             </tr>
             <tr>
                     <td colspan=6>
                         <div *ngIf="show && g[0]==detailed_f_name">
-                        <a routerLink="/settle" class="button" style="margin-left: 25px;">Settle Accounts</a> &nbsp;&nbsp;
+                        <button class="button" (click)="settle(g[0])">Settle Up</button> &nbsp;&nbsp;
                         <button class="button" (click)="onClickbalance(g)">Balances</button>
                         <div *ngIf="showbalance && g[0]==f_name">
-                            Timepass
+                            <h3>Your Balances with Group members</h3>
+                            <table id="customers1">
+                                    <!-- console.log({{balance}})
+                                    <tr>{{balance[0]}}</tr> -->
+                                    <tr>
+                                        <th>Status</th>
+                                        
+                                    </tr>
+                                    <div *ngFor="let key of keys">
+                                        <tr > {{func(groupbalance['0'][key],key)}}</tr>
+                                    </div>
+
+                            </table>
+                            <h3>Other Balances in Group</h3>
+                            <table id="customers2">
+                                <tr>
+                                <th>Group Member</th>
+                                <th>Net Amount</th>
+                            </tr>
+                            <div *ngFor="let balance of groupbalance2">
+                                
+                                <tr>
+                                    <td>{{balance[0]}}</td>
+                                    <td>{{balance[1]}}</td>
+                                </tr>
+                                
+                            </div>
+                        </table>
                         </div>
                         <h2>TRANSACTIONS</h2>
                         <table width="60%" align="center" id="none">
