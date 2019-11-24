@@ -63,29 +63,25 @@ def getallgroups(request, username):
     with connection.cursor() as c:
         row = c.execute("SELECT group_id FROM UG WHERE user_name='" + username + "'")
         row = row.fetchall()
-        print("heyy")
-        print(row)
+        # print("heyy")
+        # print(row)
         for id in row:
             print(id[0])
+            amount=0
             c.execute("SELECT sum(amount) from trans where lender=%s and group_id=%s",[username,id[0]])
             moneygiven=c.fetchone()
             if moneygiven[0]!= None:
-                moneygiven=float(moneygiven[0])
-            else:
-                moneygiven=0.00
+                amount=amount+float(moneygiven[0])
             # print(moneygiven)
             c.execute("SELECT sum(amount) from trans where group_id=%s and borrower=%s", [ id[0],username])
             moneyowed = c.fetchone()
             if moneyowed[0]!= None:
-                moneyowed = float(moneyowed[0])
-            else:
-                moneyowed=0.00
+                amount = amount-float(moneyowed[0])
             print(id[0])
             name=c.execute("SELECT group_name from GId where group_id='"+str(id[0])+"'")
             name = name.fetchone()[0]
             print(name)
-            res=(id[0],name,moneygiven,moneyowed)
-            print(res)
+            res=(id[0],name,amount)
             ans.append(res)
     return JsonResponse(ans, safe=False)
 
@@ -646,22 +642,38 @@ class balances(APIView):
             for m in members:
                 amount=0
                 cursor.execute("SELECT SUM(amount) from trans where lender=%s and borrower = %s and group_id=%s",[username,m[0],grp_id])
-                am=cursor.fetchall()
-                amount=amount-float(am[0])
-                cursor.execute("SELECT SUM(amount) from trans where lender=%s borrower=%s and group_id=%s",[m[0],username,grp_id])
-                am=cursor.fetchall()
-                amount=amount+float(am[0])
+                am=cursor.fetchone()
+                if not am :
+                    amount=amount-float(am[0])
+                cursor.execute("SELECT SUM(amount) from trans where lender=%s and borrower=%s and group_id=%s",[m[0],username,grp_id])
+                am=cursor.fetchone()
+                if not am:
+                    amount=amount+float(am[0])
                 mymap[m[0]]=amount
             result=result+[mymap]
+            # print(result)
+            return JsonResponse(result,safe=False)
+class balances2(APIView):
+    def post(self,request,username,format=None):
+        grp_id = request.data['grp_id']
+        result=[]
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT user_name FROM UG WHERE group_id=%s and user_name!=%s",[grp_id,username])
+            members=cursor.fetchall()
             for m in members:
                 amount=0
                 cursor.execute("SELECT SUM(amount) from trans where lender=%s and group_id=%s",[m[0],grp_id])
-                am=cursor.fetchall()
-                amount=amount-float(am[0])
+                am=cursor.fetchone()
+                if not am:
+                    amount=amount-float(am[0])
                 cursor.execute("SELECT SUM(amount) from trans where borrower=%s and group_id=%s",[m[0],grp_id])
-                am=cursor.fetchall()
-                amount=amount+float(am[0])
+                
+                am=cursor.fetchone()
+                if not am:
+                    amount=amount+float(am[0])
                 result=result+[[m[0],amount]]
+                print([[m[0],amount]])
+                print(result)
             return JsonResponse(result,safe=False)
 
 class min_transaction(APIView):
@@ -681,7 +693,7 @@ class min_transaction(APIView):
             for r in res:
                 if r[1] in mymap:
                     if r[2] in mymap[r[1]]:
-                        mymap[r[1]][r[2]]+=float(r[4])
+                        mymap[r[1]][r[2]]=mymap[r[1]][r[2]]+float(r[4])
                     else:
                         mymap[r[1]]=Merge(mymap,{r[2]:float(r[4])})
                 else:
@@ -690,7 +702,7 @@ class min_transaction(APIView):
                     dfsfinnum[r[1]]=-1
                 if r[2] in mymap:
                     if r[1] in mymap[r[2]]:
-                        mymap[r[2]][r[1]]-=float(r[4])
+                        mymap[r[2]][r[1]]=mymap[r[2]][r[1]]-float(r[4])
                     else:
                         mymap[r[2]]=Merge(mymap,{r[1]:(-1)*float(r[4])})
                 else:

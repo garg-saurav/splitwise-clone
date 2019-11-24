@@ -23,6 +23,8 @@ export class TransactionsComponent {
   dist={}
   name={}
   user:any;
+  cnt:any;
+  last:any;
 
   tags=['movies','food','housing','travel','others'];
   model=new Transaction('','',0,'');
@@ -106,12 +108,26 @@ export class TransactionsComponent {
   ngOnInit(){
     this.route.paramMap.subscribe(params => {
       // console.log();
-      this.grp_id=params['params']['grp'];
+      this.grp_id=params['params']['grp'];})
       console.log(this.grp_id);
+    
       this.dataService.get_group_members()
         .subscribe(data => {
+          var count=1;
           this.all_friends=data;
-        })
+          for (let sh of this.all_friends){
+            console.log("Here",sh[1]);
+            if(sh[0]==this.grp_id){
+              count++;
+            }
+        }
+        this.cnt=count;
+        this.last=100-(count-1)*parseFloat((100/count).toFixed(2));
+        // for (let sh of this.all_friends){
+        //   console.log("Here",sh[1]);
+        //   (<HTMLInputElement>document.getElementById(sh[1])).value=(100/count).toFixed(2);
+        // }
+
     });
 
     this.dataService.get_profile_data()
@@ -121,5 +137,7 @@ export class TransactionsComponent {
                   // return this.profile;
                 })
   }
+
+  
 
 }

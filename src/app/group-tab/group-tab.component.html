@@ -10,8 +10,7 @@
         <table id="customers">
             <tr>
                 <th>Group Name</th>
-                <th>Amount you owe to the group</th>
-                <th>Amount the group owes to you</th>
+                <th>Amount you owe or the group owes to you</th>
                 <th>Members</th>
                 <th></th>
                 <th></th>
@@ -21,8 +20,7 @@
                 <td><button class="none" (click)="onClick(g)">
                     {{g[1]}}
                 </button></td>
-                <td>{{g[2].toFixed(2)}}</td>
-                <td>{{g[3].toFixed(2)}}</td>
+                <td>{{func(g[2].toFixed(2))}}</td>
                 <td>
                     <div *ngFor="let m of members">
                             <div *ngIf="m[0]==g[0]">
@@ -40,7 +38,34 @@
                         <button class="button" (click)="settle(g[0])">Settle Up</button> &nbsp;&nbsp;
                         <button class="button" (click)="onClickbalance(g)">Balances</button>
                         <div *ngIf="showbalance && g[0]==f_name">
-                            Timepass
+                            <h3>Your Balances with Group members</h3>
+                            <table id="customers1">
+                                    <!-- console.log({{balance}})
+                                    <tr>{{balance[0]}}</tr> -->
+                                    <tr>
+                                        <th>Status</th>
+                                        
+                                    </tr>
+                                    <div *ngFor="let key of keys">
+                                        <tr > {{func(groupbalance['0'][key],key)}}</tr>
+                                    </div>
+
+                            </table>
+                            <h3>Other Balances in Group</h3>
+                            <table id="customers2">
+                                <tr>
+                                <th>Group Member</th>
+                                <th>Net Amount</th>
+                            </tr>
+                            <div *ngFor="let balance of groupbalance2">
+                                
+                                <tr>
+                                    <td>{{balance[0]}}</td>
+                                    <td>{{balance[1]}}</td>
+                                </tr>
+                                
+                            </div>
+                        </table>
                         </div>
                         <h2>TRANSACTIONS</h2>
                         <table width="60%" align="center" id="none">

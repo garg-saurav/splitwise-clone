@@ -26,9 +26,11 @@ export class DataService {
   _URL_friendshipchart = 'http://127.0.0.1:8000/friendshipchart/';
   _URL_settleupall = 'http://127.0.0.1:8000/settleupall/';
   _URL_trans = 'http://127.0.0.1:8000/addtrans/';
+  _URL_getbalances = 'http://127.0.0.1:8000/balances/';
+  _URL_getbalances2 = 'http://127.0.0.1:8000/balances2/';
   _URL_leave = 'http://127.0.0.1:8000/leave/';
   _URL_settleup = 'http://127.0.0.1:8000/settleup/';
-
+_URL_grouptransactions='http://127.0.0.1:8000/grouptrans/';
   my_username;
   profile:any;
   friends:any;
@@ -184,7 +186,16 @@ export class DataService {
     return this.http.post(this._URL_settleupall+localStorage.getItem('username')+"/",fd);
   }
 
-
+  getbalances(grp_id){
+    const fd = new FormData;
+    fd.append('grp_id',grp_id);
+    return this.http.post(this._URL_getbalances+localStorage.getItem('username')+"/",fd);
+  }
+  getbalances2(grp_id){
+    const fd = new FormData;
+    fd.append('grp_id',grp_id);
+    return this.http.post(this._URL_getbalances2+localStorage.getItem('username')+"/",fd);
+  }
   leave(gid){
     const fd = new FormData;
     fd.append('grp_id',gid);
@@ -193,5 +204,10 @@ export class DataService {
 
   settleup(fd){
     return this.http.post(this._URL_settleup+localStorage.getItem('username')+"/",fd);
+  }
+  grouptransactions(grp_id){
+    const fd = new FormData;
+    fd.append('grp_id',grp_id);
+    return this.http.post(this._URL_grouptransactions+localStorage.getItem('username')+"/",fd);
   }
 }
