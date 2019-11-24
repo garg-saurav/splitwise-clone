@@ -15,6 +15,7 @@ export class ActivityTabComponent implements OnInit {
     this.dataService.getactivity()
                   .subscribe(data => {
                     this.activity = data;
+                    this.activity = this.activity.slice().reverse();
                     console.log("asdf",this.activity);
                   });
   }

@@ -348,6 +348,23 @@ class bargraph2(APIView):
         #         ans.append(res)
                 
         # return JsonResponse(ans,safe=False)
+class updatename(APIView):
+    def post(self,request,username,format=None):
+        new_name=request.data['name']
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE UserProfile SET name=%s where user_name=%s",[new_name,username])
+            cursor.execute('Select name from UserProfile where user_name=%s',(username,))
+            res=cursor.fetchone()
+            uname=res[0]
+            cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You changed your name to '"+uname+"' "))
+            return JsonResponse("Succesfully Updated username",safe=False)
+class updatepasswd(APIView):
+    def post(self,request,username,format=None):
+        new_passwd=request.data['passwd']
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE UserProfile SET password=%s where user_name=%s",[new_passwd,username])
+            cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You updated your password"))
+            return JsonResponse("Succesfully Updated password",safe=False)
 
 class get_friend_details(APIView):
     def post(self,request,username,format=None):

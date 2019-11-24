@@ -32,6 +32,8 @@ export class DataService {
   _URL_settleup = 'http://127.0.0.1:8000/settleup/';
 _URL_grouptransactions='http://127.0.0.1:8000/grouptrans/';
 _URL_activity='http://127.0.0.1:8000/activity/';
+_URL_updatename='http://127.0.0.1:8000/name/';
+_URL_updatepasswd='http://127.0.0.1:8000/passwd/';
   my_username;
   profile:any;
   friends:any;
@@ -110,7 +112,20 @@ _URL_activity='http://127.0.0.1:8000/activity/';
     return this.http.post(this._URL_img+localStorage.getItem('username')+"/",fd);
       
   }
-
+  updateName(name){
+    const fd=new FormData;
+    fd.append('name',name)
+    console.log("IHaveASelfishFriend",fd)
+    return this.http.post(this._URL_updatename+localStorage.getItem('username')+"/",fd);
+      
+  }
+  updatePassword(password){
+    const fd=new FormData;
+    fd.append('passwd',password)
+    console.log("IHaveASelfishFriend",fd)
+    return this.http.post(this._URL_updatepasswd+localStorage.getItem('username')+"/",fd);
+      
+  }
   post_data_register_user(entry:any){
     return this.http.post(this._URL_reg,entry,{
       headers: new HttpHeaders({
