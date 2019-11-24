@@ -497,7 +497,7 @@ class add_transaction(APIView):
         # amount=request.data['amount']
         amount=amt
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM trans where group_id=%s",[grp_id])
+            cursor.execute("SELECT group_id, lender, borrower, tag, amount FROM trans where group_id=%s",[grp_id])
             res=cursor.fetchall()
             mymap={}
             global dfsfinnum
@@ -506,10 +506,12 @@ class add_transaction(APIView):
             mymap[lender]={borrower:float(amount)}
             mymap[borrower]={lender:(-1)*float(amount)}
             for r in res:
+                print("This is r ",r)
                 if r[1] in mymap:
                     if r[2] in mymap[r[1]]:
                         mymap[r[1]][r[2]]=mymap[r[1]][r[2]]+float(r[4])
                     else:
+                        print(r[4])
                         mymap[r[1]][r[2]]=float(r[4])
                 else:
                     mymap[r[1]]={r[2]:float(r[4])}
@@ -543,7 +545,6 @@ class add_transaction(APIView):
                     n = i
                 # n=[k for k in backedge]
                 edc=mymap[parent[n]][n]
-                edc=mincost_edge(parent[n],edc)
                 def mincost_edge(node,edc):
                     global n
                     if mymap[parent[node]][node]<edc:
@@ -553,8 +554,12 @@ class add_transaction(APIView):
                     else:
                         mincost_edge(parent[node],edc)
                     return edc
+                edc=mincost_edge(parent[n],edc)
                 def add_new_transactions(node, edc):
-                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(node,parent[node],grp_id,'reducing no of transactions',edc,'others',datetime.datetime.now()))
+                    if(edc>0):
+                        cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(node,parent[node],grp_id,'reducing no of transactions',edc,'others',datetime.datetime.now()))
+                    else:
+                        cursor.execute("INSERT INTO trans (borrower,lender,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(node,parent[node],grp_id,'reducing no of transactions',-1*edc,'others',datetime.datetime.now()))
                     if parent[node]==n:
                         return
                     else:
@@ -821,6 +826,7 @@ visited={}
 dfsfinnum={}
 n=0
 def dfs(node, mymap):
+    print("Doing dfs on node ", node)
     global backedge
     if(len(backedge)!=0):
         return
@@ -828,7 +834,7 @@ def dfs(node, mymap):
         if visited[k]==0:
             visited[k]=1
             parent[k]=node
-            dfs(k)
+            dfs(k,mymap)
         elif dfsfinnum[k]==-1 and k!=parent[node]:
             backedge=[{node:k}]
             parent[k]=node
