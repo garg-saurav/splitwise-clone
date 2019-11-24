@@ -16,21 +16,49 @@ export class FriendTabComponent implements OnInit {
 
   constructor(private dataService:DataService,private router:Router) { }
   ngOnInit(){
-    this.dataService.get_friends_data()
-                  .subscribe(data => {
-                    // this.profile = data;
-                    this.friend=data;
-                    console.log(this.friend);
-                  })
+    // this.dataService.get_friends_data()
+    //               .subscribe(data => {
+    //                 // this.profile = data;
+    //                 this.friend=data;
+    //                 console.log("sdas");
+    //                 console.log(this.friend);
+    //               })
     this.dataService.get_friends_details()
                   .subscribe(data => {
                     this.all_details=data;
                     this.all_details_keys=Object.keys(this.all_details);
                     console.log("SDfsdf")
                     console.log(data);
+                    this.friend=this.set_friend(data);
                   })
                   
   }
+
+  set_friend(data){
+    var ans=[]
+    for(let i in data){
+      var temp={}
+      console.log(i.substring(i.indexOf(':')+1));
+      temp['UserName']=i.substring(0,i.indexOf(':'));
+      temp['FriendName']=i.substring(i.indexOf(':')+1);
+      var MB=0;
+      var ML=0;
+      for(let j in data[i]){
+        if(data[i][j][0]>0){
+          MB=MB+data[i][j][0];
+        }else{
+          ML=ML+(-1)*data[i][j][0];
+        }
+      }
+      temp['MoneyBorrowed']=MB;
+      temp['MoneyGiven']=ML;
+      ans.push(temp);
+    }
+    console.log(ans);
+    return ans;
+  }
+
+
   func(amount){
     if(amount==0){
       return "You are settled up"
@@ -58,6 +86,27 @@ export class FriendTabComponent implements OnInit {
     console.log(f);
   }
 
+  allset(map){
+    var ans=true;
+    for (let k of Object.keys(map)){
+      if(map[k][0]==0){
+      }else{
+        ans=false;
+        return false;
+      }
+    }
+    return ans; 
+    // return true;
+  }
+
+  settleupall(f_name){
+    this.dataService.settleupall(f_name)
+      .subscribe(data =>{
+        console.log(data);
+        window.alert(data);
+        window.location.reload();
+      })
+  }
  
 
   logout(){
