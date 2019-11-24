@@ -100,13 +100,13 @@ def add_friend(request,username,friend_user_name):
           else:
               c.execute("insert into UF (user_name, friend_user_name) values (%s,%s)",(username,friend_user_name))
               c.execute("insert into UF (friend_user_name, user_name) values (%s,%s)", (username, friend_user_name))
-              c.execute('Select name from UserProfile where user_name=%s',username)
+              c.execute('Select name from UserProfile where user_name=%s',(username,))
               res=c.fetchone()
               uname=res[0]
               print("hyegygd")
               print(uname)
               c.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(friend_user_name,"You and "+uname+" became friends"))
-              c.execute('Select name from UserProfile where user_name=%s',friend_user_name)
+              c.execute('Select name from UserProfile where user_name=%s',(friend_user_name,))
               res=c.fetchone()
               print("gdhgs")
               fname=res[0]
