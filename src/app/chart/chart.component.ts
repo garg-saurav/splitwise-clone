@@ -26,11 +26,14 @@ export class ChartComponent implements OnInit {
   public print(id): void {
     let printContents, popupWin;
     printContents = document.getElementById(id).innerHTML;
-    console.log(printContents);
+    //console.log(printContents);
     popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
     popupWin.document.open();
     //popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printContents + '</html>');
-    
+    var canvas = document.getElementById("pieChart") as HTMLCanvasElement;   
+    var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    popupWin.document.write('<img src="'+image+'"/>'); 
+    console.log(image);
     popupWin.document.write(`
       <html>
         <head>
