@@ -324,7 +324,39 @@ class get_friend_details(APIView):
 
 class settle_up_all(APIView):
     def post(self,request,username,format=None):
-        pass
+        friend_id=request.data['friend_id']
+        with connection.cursor() as cursor:
+            map={}
+            # cursor.execute("select * from UserFriend where user_name = %s and friend_user_name = %s",[username, username])
+            cursor.execute("SELECT group_id,SUM(amount) FROM trans WHERE lender = %s and borrower = %s GROUP BY group_id",[username,friend_id])
+            l1=cursor.fetchall()
+            temp={}
+            l=[]
+            for i in range(len(l1)):
+                g=l1[i][0]
+                am=l1[i][1]
+                l=l+[[g,am]]
+            temp['Lent']=l
+            cursor.execute("SELECT group_id,SUM(amount) FROM trans WHERE lender = %s and borrower = %s GROUP BY group_id",[friend_id,username])
+            l1=cursor.fetchall()
+            l=[]
+            for i in range(len(l1)):
+                g=l1[i][0]
+                m=l1[i][1]
+                l=l+[[g,m]]
+            temp['Borrowed']=l
+            map[friend_id]=temp
+            k=minimizing(map)
+            kl=k[friend_id]
+            for g_id in kl:
+                amount=kl[g_id]
+                if amount > 0:
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(username,friend_id,g_id,'settlling up',amount,'others'))
+                elif amount < 0:
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(friend_id,username,g_id,'settlling up',(-1)*amount,'others'))
+                else:
+                    pass
+            return JsonResponse("Successfully settled up", safe=False)
 #         # print("sfdfsdfsfsd")
 #         # print(request.data)
 #         f_name = request.data['friend_name']
@@ -339,6 +371,22 @@ class settle_up_all(APIView):
 #             ans['Borrowed']=row 
 #             # ans=[i for g in ans for i in g]
 #             return JsonResponse(ans, safe=False)
+
+class leave_group(APIView):
+    def post(self,request,username,format=None):
+        grp_id = request.data['grp_id']
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and group_id = %s",[username,grp_id])
+            res=cursor.fetchall()
+            if res [0] != 0:
+                return JsonResponse("Cannot Leave Group as you're not settled up yet with everyone", safe=False)
+            else:
+                cursor.execute("SELECT SUM(amount) FROM trans WHERE borrower = %s and group_id = %s",[username,grp_id])
+                if res[0] != 0:
+                    return JsonResponse("Cannot Leave Group as you're not settled up yet with everyone", safe=False)
+                else:
+                    cursor.execute("DELETE * FROM UG where user_name = %s group_id = %s",[username,grp_id])
+                    return JsonResponse("Left Group", safe=False)
 
 class add_transaction(APIView):
     def post(self,request,username,format=None):
@@ -446,21 +494,52 @@ class timeSeriesPlot(APIView):
 def minimizing(all_details):
     myMap={}
     for k in all_details:
+        temp={}
         obj=all_details[k]
-        arr=obj[Borrowed]
+        arr=obj['Borrowed']
         for i in range(len(arr)):
             g=arr[i][0]
             m=arr[i][1]
-            if g in myMap:
-                myMap[g]=myMap[g]+m
+            if g in temp:
+                temp[g]=temp[g]+m
             else:
-                myMap[g]=m
-        arr1=obj[Lent]
+                temp[g]=m
+        arr1=obj['Lent']
         for i in range(len(arr1)):
             g=arr1[i][0]
             m=arr1[i][1]
-            if g in myMap:
-                myMap[g]=myMap[g]-m
+            if g in temp:
+                temp[g]=temp[g]-m
             else:
-                myMap[g]=-m
+                temp[g]=-1*(m)
+        myMap[k]=temp
     return myMap 
+#id,lis
+class settle_up(APIView):
+    def post(self,request,username,format=None):
+        # print("sfdfsdfsfsd")
+    #     print(request.data)
+        grp_id = request.data['grp_id']
+        friend_list = request.data['friends']
+
+        with connection.cursor() as cursor:
+            # cursor.execute("select * from UserFriend where user_name = %s and friend_user_name = %s",[username, username])
+            amount=0
+            for f in friend_list:  
+                cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[f, username,grp_id])
+                am=cursor.fetchall()
+                amount=amount+am[0]
+                cursor.execute("SELECT SUM(amount) FROM trans WHERE lender = %s and borrower = %s and group_id = %s",[username,f,grp_id])
+                am=cursor.fetchall()
+                amount=amount-am[0]
+                if amount>0:
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(username,f,grp_id,'settlling up',amount,'others'))
+                elif amount<0:
+                    cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag) VALUES (%s, %s, %s, %s, %s, %s)",(f,username,grp_id,'settlling up',(-1)*amount,'others'))
+                else:
+                    pass
+            # row = cursor.fetchall()
+            # ans['Borrowed']=row 
+            # ans=[i for g in ans for i in g]
+            return JsonResponse("Successfully settled up", safe=False)
+
