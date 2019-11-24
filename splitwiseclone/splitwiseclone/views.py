@@ -70,21 +70,22 @@ def getallgroups(request, username):
             c.execute("SELECT sum(amount) from trans where lender=%s and group_id=%s",[username,id[0]])
             moneygiven=c.fetchone()
             if moneygiven[0]!= None:
-                moneygiven=moneygiven[0]
+                moneygiven=float(moneygiven[0])
             else:
-                moneygiven=0
+                moneygiven=0.00
             # print(moneygiven)
             c.execute("SELECT sum(amount) from trans where group_id=%s and borrower=%s", [ id[0],username])
             moneyowed = c.fetchone()
             if moneyowed[0]!= None:
-                moneyowed = moneyowed[0]
+                moneyowed = float(moneyowed[0])
             else:
-                moneyowed=0
+                moneyowed=0.00
             print(id[0])
             name=c.execute("SELECT group_name from GId where group_id='"+str(id[0])+"'")
             name = name.fetchone()[0]
             print(name)
             res=(id[0],name,moneygiven,moneyowed)
+            print(res)
             ans.append(res)
     return JsonResponse(ans, safe=False)
 
@@ -191,18 +192,42 @@ class get_group_members(APIView):
         # print("sfdfsdfsfsd")
     #     print(request.data)
         # grp_id = request.data['grp_id']
+        ans = []
+        ans2=[]
         with connection.cursor() as cursor:
             print(username)
             row = cursor.execute("SELECT group_name, group_id FROM UG WHERE user_name='" + username + "'")
             row = row.fetchall()
-            ans = []
             for r in row:
                 cursor.execute("select group_id, UG.user_name, name from UG inner join UserProfile on UG.user_name = UserProfile.user_name where group_id = %s and UG.user_name != %s",[r[1], username])
+    
                 res=cursor.fetchall()
+            
                 ans.append(res)
-                # print()
+                
+                print(res)
+            for k in res:
+                cursor.execute("select sum(amount) from trans where group_id = %s and lender = %s and borrower = %s",[r[1],username, k[1]])
+                lent=cursor.fetchone()
+                if lent[0]!=None:
+                    lent=lent[0]
+                else:
+                    lent=0
+                cursor.execute("select sum(amount) from trans where group_id = %s and lender = %s and borrower = %s",[r[1], k[1],username])
+                borrowed=cursor.fetchone()
+                if borrowed[0]!=None:
+                    borrowed=borrowed[0]
+                else:
+                    borrowed=0
+                print("lk",list(k))
+                o=list(k)
+                o.append(lent-borrowed)
+                ans2.append(o)
+                print("p",o)
+            print("ans2",ans2)
             ans=[i for g in ans for i in g]
-            return JsonResponse(ans, safe=False)
+            print(ans)
+            return JsonResponse(ans2, safe=False)
 
         # with connection.cursor() as cursor:
         #     cursor.execute("select * from GId where group_id = %s and username != %s",[grp_id, username])

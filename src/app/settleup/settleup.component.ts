@@ -45,13 +45,12 @@ export class SettleupComponent{
         var ans=[]
         for( let i in data){
           var temp={}
-          if(data[i][0]==this.gid){
+          if(data[i][0]==this.gid && data[i][3]!=0){
               temp['id']=data[i][1];
               temp['name']=data[i][2];
               console.log(data[i][2]);
+              ans.push(temp);
           }
-
-          ans.push(temp);
         }
         console.log("ANS",ans)
         this.ordersData = ans;
@@ -76,6 +75,8 @@ export class SettleupComponent{
     this.dataService.settleup(fd)
       .subscribe (data=>{
         console.log(data);
+        window.alert(data);
+        this.router.navigate(['/group-tab']);
       })
     // console.log(selectedOrderIds);
   }
