@@ -483,6 +483,10 @@ class leave_group(APIView):
                     break
             if(valid):
                 cursor.execute("DELETE FROM UG where user_name = %s and group_id = %s",[username,grp_id])
+                #group left option displaying in activity tab added
+                cursor.execute("select group_name from GId where group_id=%s",[grp_id])
+                gname=cursor.fetchone()
+                cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(username,"You left the group "+gname[0]) )
                 cursor.execute("SELECT * FROM UG where group_id = %s",[grp_id])
                 res=cursor.fetchall()
                 if len(res) == 0:

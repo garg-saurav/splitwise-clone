@@ -181,11 +181,12 @@ export class InsightsComponent {
           stacked: true // this should be set to make the bars stacked
        }],
 
-           yAxes: [{
-               ticks: {
-                   beginAtZero:true
-               }
-           }]
+       yAxes: [{
+        stacked:true,
+          ticks: {
+              beginAtZero:true
+          }
+          }]
        }
       }
       });
