@@ -1,6 +1,7 @@
 import { Component ,OnInit} from '@angular/core';
 import { Dates } from '../dates';
 import { DataService } from '../data.service';
+import { Router,ActivatedRoute } from '@angular/router';
 import {Chart} from 'chart.js';
 
 
@@ -17,7 +18,7 @@ export class InsightsComponent {
   bargraph1_data:any;bargraph2_data:any;piechart1_data:any;piechart2_data:any;dateRange:any;
   submitted = false;l=["movies","food","housing","travel","others"];labels_data=[];
   //timeplot=false;pi1=false;pi2=false;bar1=false;bar2=false;friendshipchart=false;
-  constructor(private dataService:DataService) { }
+  constructor(private dataService:DataService,private router:Router) { }
   BarChart:any;PieChart:any;TimePlot:any;
   onSubmit() {
     //console.log(this.model);
@@ -460,6 +461,12 @@ TimeSeriesPlot(){
 }
   newDates() {
     this.model = new Dates(new Date(),new Date());
+  }
+  logout(){
+    localStorage.removeItem('username');
+    this.router.navigate(['/login']);
+
+
   }
   
   
