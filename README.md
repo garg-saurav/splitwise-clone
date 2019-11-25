@@ -25,3 +25,16 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+## Running the Project
+
+To start the web application, we firstly need to start the server.Open the terminal in the project directory and type the following commands to start the serve:
+
+cd splitwiseclone
+python manage.py runserver
+
+The above commands will start the server.Now to start the application, navigate back to the project directory and open a new terminal over there and type the following command:
+
+ng serve --open --poll=100
+
+This will start the web application

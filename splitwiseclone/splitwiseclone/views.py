@@ -227,22 +227,20 @@ class get_group_members(APIView):
                 
                 print(res)
             ans=[i for g in ans for i in g]
+            print(ans)
             for k in ans:
-                cursor.execute("select sum(amount) from trans where group_id = %s and lender = %s and borrower = %s",[r[1],username, k[1]])
+                amount=0
+                cursor.execute("select sum(amount) from trans where group_id = %s and lender = %s and borrower = %s",[k[0],username, k[1]])
                 lent=cursor.fetchone()
                 if lent[0]!=None:
-                    lent=lent[0]
-                else:
-                    lent=0
-                cursor.execute("select sum(amount) from trans where group_id = %s and lender = %s and borrower = %s",[r[1], k[1],username])
+                    amount=amount+float(lent[0])
+                cursor.execute("select sum(amount) from trans where group_id = %s and lender = %s and borrower = %s",[k[0], k[1],username])
                 borrowed=cursor.fetchone()
                 if borrowed[0]!=None:
-                    borrowed=borrowed[0]
-                else:
-                    borrowed=0
+                    amount=amount-float(borrowed[0])
                 print("lk",list(k))
                 o=list(k)
-                o.append(lent-borrowed)
+                o.append(amount)
                 ans2.append(o)
                 print("p",o)
             print("ans2",ans2)
@@ -512,11 +510,13 @@ class add_transaction(APIView):
             cursor.execute('Select name from UserProfile where user_name=%s',(lender,))
             res=cursor.fetchone()
             lender_name=res[0]
-            cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(borrower,"You borrowed '"+amt+"' from '"+lender_name+"' in group '"+grpname+"' ") )
+            if amt!='0.00':
+                cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(borrower,"You borrowed '"+amt+"' from '"+lender_name+"' in group '"+grpname+"' ") )
             cursor.execute('Select name from UserProfile where user_name=%s',(borrower,))
             res=cursor.fetchone()
             borrower_name=res[0]
-            cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(lender,"You lent '"+amt+"' to '"+borrower_name+"' in group '"+grpname+"' "))
+            if amt!='0.00':
+                cursor.execute("insert into activity (user_name,activity_desc) values(%s,%s)",(lender,"You lent '"+amt+"' to '"+borrower_name+"' in group '"+grpname+"' "))
             # row = cursor.fetchall()
             # ans = {}
             # ans['Lent']=row
@@ -537,8 +537,7 @@ class add_transaction(APIView):
             global dfsfinnum
             global visited
             global n
-            mymap[lender]={borrower:float(amount)}
-            mymap[borrower]={lender:(-1)*float(amount)}
+            global backedge
             for r in res:
                 print("This is r ",r)
                 if r[1] in mymap:
@@ -584,21 +583,20 @@ class add_transaction(APIView):
                     if mymap[parent[node]][node]<edc:
                         edc=mymap[parent[node]][node]
                     if parent[node]==n:
-                        return
+                        return edc
                     else:
-                        mincost_edge(parent[node],edc)
+                        edc=mincost_edge(parent[node],edc)
                     return edc
                 edc=mincost_edge(parent[n],edc)
                 def add_new_transactions(node, edc):
-                    if(edc>0):
+                    global n
+                    if edc>0 :
                         cursor.execute("INSERT INTO trans (lender,borrower,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(node,parent[node],grp_id,'reducing no of transactions',edc,'others',datetime.datetime.now()))
                     else:
                         cursor.execute("INSERT INTO trans (borrower,lender,group_id,desc,amount,tag,date_time) VALUES (%s, %s, %s, %s, %s, %s, %s)",(node,parent[node],grp_id,'reducing no of transactions',-1*edc,'others',datetime.datetime.now()))
-                    if parent[node]==n:
-                        return
-                    else:
+                    if parent[node]!=n:
                         add_new_transactions(parent[node],edc)
-                    return
+                    return None
                 add_new_transactions(n,edc)
                 return JsonResponse("Successfully added and transactions minimized",safe=False)
 
@@ -864,6 +862,8 @@ n=0
 def dfs(node, mymap):
     print("Doing dfs on node ", node)
     global backedge
+    global parent
+    global visited
     if(len(backedge)!=0):
         return
     for k in mymap[node]:
@@ -874,11 +874,11 @@ def dfs(node, mymap):
         elif dfsfinnum[k]==-1 and k!=parent[node]:
             backedge=[{node:k}]
             parent[k]=node
-            return
+            return None
         else:
             continue
     dfsfinnum[node]=0
-    return
+    return None
 
                     
 
