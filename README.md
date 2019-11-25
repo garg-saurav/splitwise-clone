@@ -28,14 +28,12 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Running the Project
 
-To start the web application, we firstly need to start the server.Open the terminal in the project directory and type the following commands to start the serve:
+To start the web application, we firstly need to start the server.Open the terminal in the project directory and type the following commands to start the server:
 
-cd splitwiseclone
+`cd splitwiseclone`
 
-python manage.py runserver
+`python manage.py runserver`
 
 The above commands will start the server.Now to start the application, navigate back to the project directory and open a new terminal over there and type the following command:
 
-ng serve --open --poll=100
-
-This will start the web application
+`ng serve --open --poll=100`
